@@ -4,7 +4,6 @@ environment_variables:
   plaintext:
     REPO_NAME: "grfn-ingest-step-function"
     PIPELINE_NAME: "ingest-step-function"
-
 phases:
   build:
     commands:
