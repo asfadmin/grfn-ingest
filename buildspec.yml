@@ -8,6 +8,6 @@ environment_variables:
 phases:
   build:
     commands:
-      - $(aws ecr get-login --region us-west-2)
+      - $(aws ecr get-login --region us-east-1)
       - aws codepipeline get-pipeline-state --name $PIPELINE_NAME --query 'stageStates[*].actionStates[?actionName==`Source`].currentRevision.revisionId' --output text | cut -c1-7 > sha1.txt
       - aws stepfunctions create-state-machine -name grfn-ingest-$(cat sha1.txt) --definition '{"Comment": "A step function to conrtol lambdas for GRFN Ingest", "StartAt": "Archive", "States": {"Archive": {"Type": "Task", "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:TEST", "Next": "Echo_10_Construction", "Retry" : [{"ErrorEquals": [ "States.ALL" ], "IntervalSeconds": 3, "MaxAttempts": 2, "BackoffRate": 2.5 } ] }, "Echo_10_Construction": {"Type": "Task", "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST", "Next": "Echo_10_to_CMR", "Retry" : [{"ErrorEquals": [ "States.ALL" ], "IntervalSeconds": 3, "MaxAttempts": 2, "BackoffRate": 2.5 } ] }, "Echo_10_to_CMR": {"Type": "Task", "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:TEST", "Retry" : [{"ErrorEquals": [ "States.ALL" ], "IntervalSeconds": 3, "MaxAttempts": 2, "BackoffRate": 2.5 } ], "End": true } } }' --role-arn arn:aws:iam::406893895021:role/service-role/StatesExecutionRole-us-east-1
