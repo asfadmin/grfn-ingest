@@ -14,4 +14,4 @@ phases:
       - sed -i "s/\$MATURITY/$MATURITY/" step-function.json
   build:
     commands:
-      - aws stepfunctions create-state-machine --name $STEP_FUNCTION_NAME-$MATURITY-$(cat sha1.txt) --definition file://step-function.json --role-arn $ROLE_ARN
+      - aws stepfunctions create-state-machine --name $STEP_FUNCTION_NAME-$MATURITY-$(date +%s)-$(cat sha1.txt) --definition file://step-function.json --role-arn $ROLE_ARN
