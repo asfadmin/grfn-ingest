@@ -4,55 +4,28 @@
   "States": {
     "Archive": {
       "Type": "Task",
-<<<<<<< HEAD
-      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:TEST",
-=======
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
->>>>>>> build
       "Next": "Echo_10_Construction",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
         "IntervalSeconds": 3,
-<<<<<<< HEAD
-        "MaxAttempts": 1,
-=======
         "MaxAttempts": 2,
->>>>>>> build
         "BackoffRate": 2.5
       }]
     },
     "Echo_10_Construction": {
       "Type": "Task",
-<<<<<<< HEAD
-      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST",
-=======
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
->>>>>>> build
       "Next": "Echo_10_to_CMR",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
         "IntervalSeconds": 3,
-<<<<<<< HEAD
-        "MaxAttempts": 1,
-=======
         "MaxAttempts": 2,
->>>>>>> build
         "BackoffRate": 2.5
       }]
     },
     "Echo_10_to_CMR": {
       "Type": "Task",
-<<<<<<< HEAD
-      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:TEST",
-      "Retry": [{
-        "ErrorEquals": ["States.ALL"],
-        "IntervalSeconds": 1,
-        "MaxAttempts": 4,
-        "BackoffRate": 5
-      }],
-      "End": true
-
-=======
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:$MATURITY",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
@@ -61,7 +34,6 @@
         "BackoffRate": 2.5
       }],
       "End": true
->>>>>>> build
     }
   }
 }
