@@ -1,4 +1,5 @@
 {
+  "Comment": "A step function to conrtol lambdas for GRFN Ingest",
   "StartAt": "Archive",
   "States": {
     "Archive": {
