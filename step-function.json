@@ -43,13 +43,11 @@
     },
     "Check_Delivery_Time": {
       "Type" : "Choice",
-      "Choices": [
-        {
-          "Variable": "$.DeliveryTime",
-          "StringEquals": "",
-          "Next": "No_Notify"
-        }
-      ],
+      "Choices": [{
+        "Variable": "$.DeliveryTime",
+        "StringEquals": "",
+        "Next": "No_Notify"
+      }],
       "Default": "Notify"
     },
     "Notify": {
