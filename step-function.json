@@ -1,10 +1,11 @@
 {
-  "Comment": "A step function to conrtol lambdas for GRFN Ingest",
   "StartAt": "Archive",
   "States": {
     "Archive": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
+      "InputPath": "$.Files",
+      "ResultPath": "$.ArchiveResults",
       "Next": "Echo_10_Construction",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
@@ -16,6 +17,8 @@
     "Echo_10_Construction": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
+      "InputPath": "$.ArchiveResults",
+      "ResultPath": "$.ConstructionResults",
       "Next": "Echo_10_to_CMR",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
@@ -27,12 +30,41 @@
     "Echo_10_to_CMR": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:$MATURITY",
+      "InputPath": "$.ConstructionResults",
+      "ResultPath": "$.CmrResults",
+      "Next": "Check_Delivery_Time",
+      "Retry": [{
+        "ErrorEquals": ["States.ALL"],
+        "IntervalSeconds": 3,
+        "MaxAttempts": 2,
+        "BackoffRate": 2.5
+      }]
+    },
+    "Check_Delivery_Time": {
+      "Type" : "Choice",
+      "Choices": [
+        {
+          "Variable": "$.DeliveryTime",
+          "StringEquals": "",
+          "Next": "No_Notify"
+        }
+      ],
+      "Default": "Notify"
+    },
+    "Notify": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:notify:$MATURITY",
+      "ResultPath": "$.NotifyResults",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
         "IntervalSeconds": 3,
         "MaxAttempts": 2,
         "BackoffRate": 2.5
       }],
+      "End": true
+    },
+    "No_Notify": {
+      "Type": "Pass",
       "End": true
     }
   }
