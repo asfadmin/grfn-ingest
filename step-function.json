@@ -36,9 +36,9 @@
       "Next": "Check_Delivery_Time",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
-        "IntervalSeconds": 3,
-        "MaxAttempts": 2,
-        "BackoffRate": 2.5
+        "IntervalSeconds": 1,
+        "MaxAttempts": 6,
+        "BackoffRate": 5
       }]
     },
     "Check_Delivery_Time": {
