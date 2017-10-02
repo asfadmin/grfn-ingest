@@ -40,7 +40,7 @@
     "Echo_10_Construction": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
-      "InputPath": "$.ArchiveResults",
+      "InputPath": "$.ArchiveResults.Product",
       "ResultPath": "$.ConstructionResults",
       "Next": "Echo_10_to_CMR",
       "Retry": [{
@@ -83,17 +83,105 @@
       "Choices": [{
         "Variable": "$.NotifyResults.Status",
         "StringEquals": "success",
-        "Next": "Success"
+        "Next": "Repackage"
       }],
       "Default": "Failure"
-    },
-    "Success": {
-      "Type": "Succeed"
     },
     "Failure": {
       "Type": "Fail",
       "Error": "Ingest failed.",
       "Cause": "Ingest failed.  Inspect the 'Error' field of the Failure task's input for details."
+    },
+    "Repackage": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:us-east-1:406893895021:activity:repackage-$MATURITY",
+      "InputPath": "$.ArchiveResults.Product",
+      "ResultPath": "$.RepackageResults",
+      "TimeoutSeconds": 300,
+      "Retry": [{
+        "ErrorEquals": ["States.ALL"]
+      }],
+      "Next": "Parallel"
+    },
+    "Parallel": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "Archive_UnwGeo",
+          "States": {
+            "Archive_UnwGeo": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
+              "InputPath": "$.RepackageResults.unw_geo",
+              "ResultPath": "$.ArchiveUnwGeoResults",
+              "Next": "Echo_10_Construction_UnwGeo",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"]
+              }]
+            },
+            "Echo_10_Construction_UnwGeo": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
+              "InputPath": "$.ArchiveUnwGeoResults.Product",
+              "ResultPath": "$.ConstructionUnwGeoResults",
+              "Next": "Echo_10_to_CMR_UnwGeo",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"]
+              }]
+            },
+            "Echo_10_to_CMR_UnwGeo": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:$MATURITY",
+              "InputPath": "$.ConstructionUnwGeoResults",
+              "ResultPath": "$.CmrUnwGeoResults",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"],
+                "MaxAttempts": 6,
+                "BackoffRate": 5
+              }],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "Archive_FullRes",
+          "States": {
+            "Archive_FullRes": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
+              "InputPath": "$.RepackageResults.full_res",
+              "ResultPath": "$.ArchiveFullResResults",
+              "Next": "Echo_10_Construction_FullRes",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"]
+              }]
+            },
+            "Echo_10_Construction_FullRes": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
+              "InputPath": "$.ArchiveFullResResults.Product",
+              "ResultPath": "$.ConstructionFullResResults",
+              "Next": "Echo_10_to_CMR_FullRes",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"]
+              }]
+            },
+            "Echo_10_to_CMR_FullRes": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:$MATURITY",
+              "InputPath": "$.ConstructionFullResResults",
+              "ResultPath": "$.CmrFullResResults",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"],
+                "MaxAttempts": 6,
+                "BackoffRate": 5
+              }],
+              "End": true
+            }
+          }
+        }
+      ],
+      "End": true
     }
   }
 }
