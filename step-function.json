@@ -105,6 +105,8 @@
     },
     "Parallel": {
       "Type": "Parallel",
+      "InputPath": "$.RepackageResults",
+      "ResultPath": "$.ParallelResults",
       "Branches": [
         {
           "StartAt": "Archive_UnwGeo",
@@ -112,7 +114,7 @@
             "Archive_UnwGeo": {
               "Type": "Task",
               "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
-              "InputPath": "$.RepackageResults.unw_geo",
+              "InputPath": "$.unw_geo",
               "ResultPath": "$.ArchiveUnwGeoResults",
               "Next": "Echo_10_Construction_UnwGeo",
               "Retry": [{
@@ -149,7 +151,7 @@
             "Archive_FullRes": {
               "Type": "Task",
               "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
-              "InputPath": "$.RepackageResults.full_res",
+              "InputPath": "$.full_res",
               "ResultPath": "$.ArchiveFullResResults",
               "Next": "Echo_10_Construction_FullRes",
               "Retry": [{
