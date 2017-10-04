@@ -1,7 +1,27 @@
 {
   "Comment": "A step function to conrtol lambdas for GRFN Ingest",
-  "StartAt": "Archive",
+  "StartAt": "Verify",
   "States": {
+    "Verify": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:verify:$MATURITY",
+      "Next": "Archive",
+      "ResultPath": "$.VerifyResults",
+      "Retry": [
+        {
+          "ErrorEquals": ["INVALID_MESSAGE", "INVALID_METADATA"],
+          "MaxAttempts": 0
+        },
+        {
+          "ErrorEquals": ["States.ALL"]
+        }
+      ],
+      "Catch": [{
+        "ErrorEquals": ["States.ALL"],
+        "Next": "Notify",
+        "ResultPath": "$.Error"
+      }]
+    },
     "Archive": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
@@ -9,10 +29,12 @@
       "ResultPath": "$.ArchiveResults",
       "Next": "Echo_10_Construction",
       "Retry": [{
+        "ErrorEquals": ["States.ALL"]
+      }],
+      "Catch": [{
         "ErrorEquals": ["States.ALL"],
-        "IntervalSeconds": 3,
-        "MaxAttempts": 2,
-        "BackoffRate": 2.5
+        "Next": "Notify",
+        "ResultPath": "$.Error"
       }]
     },
     "Echo_10_Construction": {
@@ -22,10 +44,12 @@
       "ResultPath": "$.ConstructionResults",
       "Next": "Echo_10_to_CMR",
       "Retry": [{
+        "ErrorEquals": ["States.ALL"]
+      }],
+      "Catch": [{
         "ErrorEquals": ["States.ALL"],
-        "IntervalSeconds": 3,
-        "MaxAttempts": 2,
-        "BackoffRate": 2.5
+        "Next": "Notify",
+        "ResultPath": "$.Error"
       }]
     },
     "Echo_10_to_CMR": {
@@ -33,38 +57,43 @@
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:$MATURITY",
       "InputPath": "$.ConstructionResults",
       "ResultPath": "$.CmrResults",
-      "Next": "Check_Delivery_Time",
+      "Next": "Notify",
       "Retry": [{
         "ErrorEquals": ["States.ALL"],
-        "IntervalSeconds": 1,
         "MaxAttempts": 6,
         "BackoffRate": 5
-      }]
-    },
-    "Check_Delivery_Time": {
-      "Type" : "Choice",
-      "Choices": [{
-        "Variable": "$.DeliveryTime",
-        "StringEquals": "",
-        "Next": "No_Notify"
       }],
-      "Default": "Notify"
+      "Catch": [{
+        "ErrorEquals": ["States.ALL"],
+        "Next": "Notify",
+        "ResultPath": "$.Error"
+      }]
     },
     "Notify": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:notify:$MATURITY",
       "ResultPath": "$.NotifyResults",
       "Retry": [{
-        "ErrorEquals": ["States.ALL"],
-        "IntervalSeconds": 3,
-        "MaxAttempts": 2,
-        "BackoffRate": 2.5
+        "ErrorEquals": ["States.ALL"]
       }],
-      "End": true
+      "Next": "Check_Status"
     },
-    "No_Notify": {
-      "Type": "Pass",
-      "End": true
+    "Check_Status": {
+      "Type" : "Choice",
+      "Choices": [{
+        "Variable": "$.NotifyResults.Status",
+        "StringEquals": "success",
+        "Next": "Success"
+      }],
+      "Default": "Failure"
+    },
+    "Success": {
+      "Type": "Succeed"
+    },
+    "Failure": {
+      "Type": "Fail",
+      "Error": "Ingest failed.",
+      "Cause": "Ingest failed.  Inspect the 'Error' field of the Failure task's input for details."
     }
   }
 }
