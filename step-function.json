@@ -97,7 +97,7 @@
       "Resource": "arn:aws:states:us-east-1:406893895021:activity:repackage-$MATURITY",
       "InputPath": "$.ArchiveResults.Product",
       "ResultPath": "$.RepackageResults",
-      "TimeoutSeconds": 600,
+      "TimeoutSeconds": 300,
       "Retry": [{
         "ErrorEquals": ["States.ALL"]
       }],
