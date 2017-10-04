@@ -98,15 +98,9 @@
       "InputPath": "$.ArchiveResults.Product",
       "ResultPath": "$.RepackageResults",
       "TimeoutSeconds": 600,
-      "Retry": [
-        {
-          "ErrorEquals": ["States.Timeout"],
-          "MaxAttempts": 6
-        },
-        {
-          "ErrorEquals": ["States.ALL"]
-        }
-      ],
+      "Retry": [{
+        "ErrorEquals": ["States.ALL"]
+      }],
       "Next": "Parallel"
     },
     "Parallel": {
