@@ -5,7 +5,7 @@
     "Verify": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:406893895021:function:verify:$MATURITY",
-      "Next": "Archive",
+      "Next": "Ingest",
       "ResultPath": "$.VerifyResults",
       "Retry": [
         {
@@ -22,12 +22,12 @@
         "ResultPath": "$.Error"
       }]
     },
-    "Archive": {
+    "Ingest": {
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
-      "InputPath": "$.Files",
-      "ResultPath": "$.ArchiveResults",
-      "Next": "Echo_10_Construction",
+      "Resource": "arn:aws:states:us-east-1:406893895021:activity:ingest-$MATURITY",
+      "TimeoutSeconds": 600,
+      "ResultPath": "$.IngestResults",
+      "Next": "Parallel",
       "Retry": [{
         "ErrorEquals": ["States.ALL"]
       }],
@@ -36,95 +36,52 @@
         "Next": "Notify",
         "ResultPath": "$.Error"
       }]
-    },
-    "Echo_10_Construction": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
-      "InputPath": "$.ArchiveResults.Product",
-      "ResultPath": "$.ConstructionResults",
-      "Next": "Echo_10_to_CMR",
-      "Retry": [{
-        "ErrorEquals": ["States.ALL"]
-      }],
-      "Catch": [{
-        "ErrorEquals": ["States.ALL"],
-        "Next": "Notify",
-        "ResultPath": "$.Error"
-      }]
-    },
-    "Echo_10_to_CMR": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:$MATURITY",
-      "InputPath": "$.ConstructionResults",
-      "ResultPath": "$.CmrResults",
-      "Next": "Notify",
-      "Retry": [{
-        "ErrorEquals": ["States.ALL"],
-        "MaxAttempts": 6,
-        "BackoffRate": 5
-      }],
-      "Catch": [{
-        "ErrorEquals": ["States.ALL"],
-        "Next": "Notify",
-        "ResultPath": "$.Error"
-      }]
-    },
-    "Notify": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:notify:$MATURITY",
-      "ResultPath": "$.NotifyResults",
-      "Retry": [{
-        "ErrorEquals": ["States.ALL"]
-      }],
-      "Next": "Check_Status"
-    },
-    "Check_Status": {
-      "Type" : "Choice",
-      "Choices": [{
-        "Variable": "$.NotifyResults.Status",
-        "StringEquals": "success",
-        "Next": "Repackage"
-      }],
-      "Default": "Failure"
-    },
-    "Failure": {
-      "Type": "Fail",
-      "Error": "Ingest failed.",
-      "Cause": "Ingest failed.  Inspect the 'Error' field of the Failure task's input for details."
-    },
-    "Repackage": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:us-east-1:406893895021:activity:repackage-$MATURITY",
-      "InputPath": "$.ArchiveResults.Product",
-      "ResultPath": "$.RepackageResults",
-      "TimeoutSeconds": 300,
-      "Retry": [{
-        "ErrorEquals": ["States.ALL"]
-      }],
-      "Next": "Parallel"
     },
     "Parallel": {
       "Type": "Parallel",
-      "InputPath": "$.RepackageResults",
+      "InputPath": "$.IngestResults",
       "ResultPath": "$.ParallelResults",
+      "Next": "Notify",
+      "Catch": [{
+        "ErrorEquals": ["States.ALL"],
+        "Next": "Notify",
+        "ResultPath": "$.Error"
+      }],
       "Branches": [
         {
-          "StartAt": "Archive_UnwGeo",
+          "StartAt": "Echo_10_Construction_All",
           "States": {
-            "Archive_UnwGeo": {
+            "Echo_10_Construction_All": {
               "Type": "Task",
-              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
-              "InputPath": "$.unw_geo",
-              "ResultPath": "$.ArchiveUnwGeoResults",
-              "Next": "Echo_10_Construction_UnwGeo",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
+              "InputPath": "$.all",
+              "ResultPath": "$.ConstructionAllResults",
+              "Next": "Echo_10_to_CMR_All",
               "Retry": [{
                 "ErrorEquals": ["States.ALL"]
               }]
             },
+            "Echo_10_to_CMR_All": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:$MATURITY",
+              "InputPath": "$.ConstructionAllResults",
+              "ResultPath": "$.CmrAllResults",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"],
+                "MaxAttempts": 6,
+                "BackoffRate": 5
+              }],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "Echo_10_Construction_UnwGeo",
+          "States": {
             "Echo_10_Construction_UnwGeo": {
               "Type": "Task",
               "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
-              "InputPath": "$.ArchiveUnwGeoResults.Product",
+              "InputPath": "$.unw_geo",
               "ResultPath": "$.ConstructionUnwGeoResults",
               "Next": "Echo_10_to_CMR_UnwGeo",
               "Retry": [{
@@ -146,22 +103,12 @@
           }
         },
         {
-          "StartAt": "Archive_FullRes",
+          "StartAt": "Echo_10_Construction_FullRes",
           "States": {
-            "Archive_FullRes": {
-              "Type": "Task",
-              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:archive:$MATURITY",
-              "InputPath": "$.full_res",
-              "ResultPath": "$.ArchiveFullResResults",
-              "Next": "Echo_10_Construction_FullRes",
-              "Retry": [{
-                "ErrorEquals": ["States.ALL"]
-              }]
-            },
             "Echo_10_Construction_FullRes": {
               "Type": "Task",
               "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:$MATURITY",
-              "InputPath": "$.ArchiveFullResResults.Product",
+              "InputPath": "$.full_res",
               "ResultPath": "$.ConstructionFullResResults",
               "Next": "Echo_10_to_CMR_FullRes",
               "Retry": [{
@@ -182,7 +129,33 @@
             }
           }
         }
-      ],
+      ]
+    },
+    "Notify": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:notify:$MATURITY",
+      "ResultPath": "$.NotifyResults",
+      "Retry": [{
+        "ErrorEquals": ["States.ALL"]
+      }],
+      "Next": "Check_Status"
+    },
+    "Check_Status": {
+      "Type" : "Choice",
+      "Choices": [{
+        "Variable": "$.NotifyResults.Status",
+        "StringEquals": "success",
+        "Next": "Success"
+      }],
+      "Default": "Failure"
+    },
+    "Failure": {
+      "Type": "Fail",
+      "Error": "Ingest failed.",
+      "Cause": "Ingest failed.  Inspect the 'Error' field of the Failure task's input for details."
+    },
+    "Success": {
+      "Type": "Pass",
       "End": true
     }
   }
