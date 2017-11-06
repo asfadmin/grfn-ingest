@@ -25,7 +25,7 @@
     "Ingest": {
       "Type": "Task",
       "Resource": "arn:aws:states:us-east-1:406893895021:activity:ingest-$MATURITY",
-      "TimeoutSeconds": 600,
+      "TimeoutSeconds": 900,
       "ResultPath": "$.IngestResults",
       "Next": "Parallel",
       "Retry": [{
