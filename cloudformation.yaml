@@ -210,5 +210,6 @@ Resources:
       EvaluationPeriods: 1
       Period: 300
       Statistic: "Sum"
+      Threshold: 1
       Unit: "Count"
       TreatMissingData: "notBreaching"
