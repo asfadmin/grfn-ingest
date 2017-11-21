@@ -192,19 +192,18 @@ Resources:
           }
         }
 
-  SNS:
+  Topic:
     Type: "AWS::SNS::Topic"
-    Properties:
 
   Alarm:
     Type: "AWS::CloudWatch::Alarm"
     Properties:
       AlarmDescription: "Ingest failure alarm"
       AlarmActions:
-        - !Ref "AWS::SNS::Topic"
+        - !Ref "Topic"
       Dimensions:
         - Name: "StateMachineArn"
-          Value: !Ref "StepFunctionRoleArn"
+          Value: !Ref "StepFunction"
       MetricName: "ExecutionsFailed"
       Namespace: "AWS/States"
       ComparisonOperator: "GreaterThanOrEqualToThreshold"
