@@ -191,3 +191,25 @@ Resources:
             }
           }
         }
+
+  Topic:
+    Type: "AWS::SNS::Topic"
+
+  Alarm:
+    Type: "AWS::CloudWatch::Alarm"
+    Properties:
+      AlarmDescription: "Ingest failure alarm"
+      AlarmActions:
+        - !Ref "Topic"
+      Dimensions:
+        - Name: "StateMachineArn"
+          Value: !Ref "StepFunction"
+      MetricName: "ExecutionsFailed"
+      Namespace: "AWS/States"
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1
+      Unit: "Count"
+      TreatMissingData: "notBreaching"
