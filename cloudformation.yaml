@@ -214,7 +214,7 @@ Resources:
       Unit: "Count"
       TreatMissingData: "notBreaching"
 
-  IngestParkingLot:
+  PausedQueue:
     Type: AWS::SQS::Queue
     Properties:
       MessageRetentionPeriod: 1209600
