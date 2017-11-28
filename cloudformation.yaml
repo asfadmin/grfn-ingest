@@ -56,7 +56,7 @@ Resources:
             "Ingest": {
               "Type": "Task",
               "Resource": "${Activity}",
-              "TimeoutSeconds": 901,
+              "TimeoutSeconds": 600,
               "ResultPath": "$.IngestResults",
               "Next": "Parallel",
               "Retry": [{
