@@ -213,3 +213,8 @@ Resources:
       Threshold: 1
       Unit: "Count"
       TreatMissingData: "notBreaching"
+
+  PausedQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      MessageRetentionPeriod: 1209600
