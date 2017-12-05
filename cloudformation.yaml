@@ -44,8 +44,7 @@ Resources:
                   "MaxAttempts": 0
                 },
                 {
-                  "ErrorEquals": ["States.ALL"],
-                  "MaxAttempts": 5
+                  "ErrorEquals": ["States.ALL"]
                 }
               ],
               "Catch": [{
@@ -61,7 +60,8 @@ Resources:
               "ResultPath": "$.IngestResults",
               "Next": "Parallel",
               "Retry": [{
-                "ErrorEquals": ["States.ALL"]
+                "ErrorEquals": ["States.ALL"],
+                "MaxAttempts": 5
               }],
               "Catch": [{
                 "ErrorEquals": ["States.ALL"],
