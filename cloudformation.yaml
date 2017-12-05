@@ -44,7 +44,8 @@ Resources:
                   "MaxAttempts": 0
                 },
                 {
-                  "ErrorEquals": ["States.ALL"]
+                  "ErrorEquals": ["States.ALL"],
+                  "MaxAttempts": 5
                 }
               ],
               "Catch": [{
