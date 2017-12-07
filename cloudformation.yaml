@@ -16,6 +16,11 @@ Parameters:
     Type: "String"
     Default: "arn:aws:iam::406893895021:role/service-role/StatesExecutionRole-us-east-1"
 
+  OregonTopicArn:
+    Description: "ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access."
+    Type: "String"
+    Default: "arn:aws:sns:us-west-2:765666652335:grfn-archive-test"
+
 Resources:
 
   Activity:
@@ -193,7 +198,7 @@ Resources:
           }
         }
 
-  Topic:
+  ErrorTopic:
     Type: "AWS::SNS::Topic"
 
   Alarm:
@@ -201,7 +206,7 @@ Resources:
     Properties:
       AlarmDescription: "Ingest failure alarm"
       AlarmActions:
-        - !Ref "Topic"
+        - !Ref "ErrorTopic"
       Dimensions:
         - Name: "StateMachineArn"
           Value: !Ref "StepFunction"
@@ -215,7 +220,51 @@ Resources:
       Unit: "Count"
       TreatMissingData: "notBreaching"
 
-  PausedQueue:
+  JobQueue:
     Type: AWS::SQS::Queue
     Properties:
+      QueueName: !Ref AWS::StackName
       MessageRetentionPeriod: 1209600
+      VisibilityTimeout: 10
+
+  JobTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Ref AWS::StackName
+      Subscription:
+      - Protocol: sqs
+        Endpoint: !GetAtt JobQueue.Arn
+
+  JobQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument: !Sub |-
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": "${JobQueue.Arn}",
+              "Action": "sqs:SendMessage",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": "${JobTopic}"
+                }
+              }
+            },
+            {
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": "${JobQueue.Arn}",
+              "Action": "sqs:SendMessage",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": "${OregonTopicArn}"
+                }
+              }
+            }
+          ]
+        }
+      Queues:
+      - !Ref JobQueue
