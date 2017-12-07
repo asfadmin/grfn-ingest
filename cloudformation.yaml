@@ -1,38 +1,38 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
   Maturity:
-    Description: "Maturity level alias used when invoking lambda functions"
-    Type: "String"
-    Default: "TEST"
+    Description: Maturity level alias used when invoking lambda functions
+    Type: String
+    Default: TEST
     AllowedValues:
-      - "$LATEST"
-      - "TEST"
-      - "PROD"
+      - $LATEST
+      - TEST
+      - PROD
 
   StepFunctionRoleArn:
-    Description: "IAM execution role to attach to step function"
-    Type: "String"
-    Default: "arn:aws:iam::406893895021:role/service-role/StatesExecutionRole-us-east-1"
+    Description: IAM execution role to attach to step function
+    Type: String
+    Default: arn:aws:iam::406893895021:role/service-role/StatesExecutionRole-us-east-1
 
   OregonTopicArn:
-    Description: "ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access."
-    Type: "String"
-    Default: "arn:aws:sns:us-west-2:765666652335:grfn-archive-test"
+    Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
+    Type: String
+    Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
 
 Resources:
 
   Activity:
-    Type: "AWS::StepFunctions::Activity"
+    Type: AWS::StepFunctions::Activity
     Properties:
-      Name: !Ref "AWS::StackName"
+      Name: !Ref AWS::StackName
 
   StepFunction:
-    Type: "AWS::StepFunctions::StateMachine"
+    Type: AWS::StepFunctions::StateMachine
     Properties:
-      StateMachineName: !Ref "AWS::StackName"
-      RoleArn: !Ref "StepFunctionRoleArn"
+      StateMachineName: !Ref AWS::StackName
+      RoleArn: !Ref StepFunctionRoleArn
       DefinitionString: !Sub |-
         {
           "Comment": "A step function to control lambdas for GRFN Ingest",
@@ -199,26 +199,26 @@ Resources:
         }
 
   ErrorTopic:
-    Type: "AWS::SNS::Topic"
+    Type: AWS::SNS::Topic
 
   Alarm:
-    Type: "AWS::CloudWatch::Alarm"
+    Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: "Ingest failure alarm"
+      AlarmDescription: Ingest failure alarm
       AlarmActions:
-        - !Ref "ErrorTopic"
+        - !Ref ErrorTopic
       Dimensions:
-        - Name: "StateMachineArn"
-          Value: !Ref "StepFunction"
-      MetricName: "ExecutionsFailed"
-      Namespace: "AWS/States"
-      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+        - Name: StateMachineArn
+          Value: !Ref StepFunction
+      MetricName: ExecutionsFailed
+      Namespace: AWS/States
+      ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 1
       Period: 300
-      Statistic: "Sum"
+      Statistic: Sum
       Threshold: 1
-      Unit: "Count"
-      TreatMissingData: "notBreaching"
+      Unit: Count
+      TreatMissingData: notBreaching
 
   JobQueue:
     Type: AWS::SQS::Queue
