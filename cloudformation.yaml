@@ -60,7 +60,8 @@ Resources:
               "ResultPath": "$.IngestResults",
               "Next": "Parallel",
               "Retry": [{
-                "ErrorEquals": ["States.ALL"]
+                "ErrorEquals": ["States.ALL"],
+                "MaxAttempts": 5
               }],
               "Catch": [{
                 "ErrorEquals": ["States.ALL"],
@@ -213,3 +214,8 @@ Resources:
       Threshold: 1
       Unit: "Count"
       TreatMissingData: "notBreaching"
+
+  PausedQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      MessageRetentionPeriod: 1209600
