@@ -23,10 +23,21 @@ Parameters:
 
 Resources:
 
-  Activity:
+  IngestActivity:
     Type: AWS::StepFunctions::Activity
     Properties:
-      Name: !Ref AWS::StackName
+      Name: !Join
+      - '-'
+      - - !Ref AWS::StackName
+        - ingest
+
+  CmrActivity:
+    Type: AWS::StepFunctions::Activity
+    Properties:
+      Name: !Join
+      - '-'
+      - - !Ref AWS::StackName
+        - cmr
 
   StepFunction:
     Type: AWS::StepFunctions::StateMachine
@@ -60,7 +71,7 @@ Resources:
             },
             "Ingest": {
               "Type": "Task",
-              "Resource": "${Activity}",
+              "Resource": "${IngestActivity}",
               "TimeoutSeconds": 600,
               "ResultPath": "$.IngestResults",
               "Next": "Parallel",
@@ -100,7 +111,8 @@ Resources:
                     },
                     "Echo_10_to_CMR_All": {
                       "Type": "Task",
-                      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:${Maturity}",
+                      "Resource": "${CmrActivity}",
+                      "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionAllResults",
                       "ResultPath": "$.CmrAllResults",
                       "Retry": [{
@@ -127,7 +139,8 @@ Resources:
                     },
                     "Echo_10_to_CMR_UnwGeo": {
                       "Type": "Task",
-                      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:${Maturity}",
+                      "Resource": "${CmrActivity}",
+                      "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionUnwGeoResults",
                       "ResultPath": "$.CmrUnwGeoResults",
                       "Retry": [{
@@ -154,7 +167,8 @@ Resources:
                     },
                     "Echo_10_to_CMR_FullRes": {
                       "Type": "Task",
-                      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-to-cmr:${Maturity}",
+                      "Resource": "${CmrActivity}",
+                      "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionFullResResults",
                       "ResultPath": "$.CmrFullResResults",
                       "Retry": [{
