@@ -2,7 +2,6 @@ import boto3
 import os
 import re
 import json
-import yaml
 from jinja2 import Template
 from datetime import datetime
 from logging import getLogger
@@ -15,23 +14,8 @@ log = getLogger()
 TEMPLATE_FILE = 'echo10.template'
 
 
-def get_maturity(arn):
-    arn_tail = arn.split(':')[-1]
-    if arn_tail in ['DEV', 'TEST', 'PROD']:
-        maturity = arn_tail
-    else:
-        maturity = 'LATEST'
-    return maturity
-
-
-def get_config(maturity):
-    config_contents = get_file_content_from_s3(os.environ['CONFIG_BUCKET'], os.environ[maturity])
-    return yaml.load(config_contents)
-
-
-def setup(arn):
-    maturity = get_maturity(arn)
-    config = get_config(maturity)
+def setup():
+    config = json.loads(os.environ['CONFIG'])
     log.setLevel(config['log_level'])
     log.debug('Config: {0}'.format(config))
     return config
@@ -191,8 +175,7 @@ def create_granule_echo10_in_s3(inputs, config):
 
 
 def lambda_handler(event, context):
-    arn = context.invoked_function_arn
-    config = setup(arn)
+    config = setup()
     log.debug('Payload: {0}'.format(str(event)))
     output = []
     for product in event:
