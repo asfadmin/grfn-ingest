@@ -10,7 +10,7 @@ log = getLogger()
 def setup():
     config = json.loads(os.environ['CONFIG'])
     log.setLevel(config['log_level'])
-    log.info('Config: %s', config)
+    log.debug('Config: %s', config)
     return config
 
 
