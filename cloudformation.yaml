@@ -33,7 +33,7 @@ Resources:
     Properties:
       Parameters:
         LogLevel: !Ref LogLevel
-        QueueName: !Ref JobQueue
+        QueueUrl: !Ref JobQueue
         QueueArn: !GetAtt JobQueue.Arn
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       TemplateURL: invoke-ingest/cloudformation.yaml

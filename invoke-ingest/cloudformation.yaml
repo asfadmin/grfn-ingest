@@ -12,7 +12,7 @@ Parameters:
     - INFO
     - DEBUG
 
-  QueueName:
+  QueueUrl:
     Type: String
 
   QueueArn:
@@ -70,9 +70,20 @@ Resources:
         TargetArn: !GetAtt DeadLetterQueue.Arn
       Environment:
         Variables:
-          LOG_LEVEL: !Ref LogLevel
-          QUEUE_NAME: !Ref QueueName
-          STEP_FUNCTION_ARN: !Ref StepFunctionArn
+          CONFIG: !Sub |-
+            {
+              "log_level": "${LogLevel}",
+              "invoke": {
+                "queue_url": "${QueueUrl}",
+                "max_messages_to_process": 95,
+                "max_messages_per_receive": 10,
+                "wait_time_in_seconds": 0,
+                "message": {
+                  "message_error_key": "MessageError",
+                  "step_function_arn": "${StepFunctionArn}"
+                }
+              }
+            }
       Handler: main.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn

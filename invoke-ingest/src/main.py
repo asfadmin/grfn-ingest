@@ -1,5 +1,4 @@
 import boto3
-import yaml
 import os
 import json
 from logging import getLogger
@@ -8,35 +7,11 @@ from logging import getLogger
 log = getLogger()
 
 
-def get_maturity(arn):
-    arn_tail = arn.split(':')[-1]
-    if arn_tail in ['DEV', 'TEST', 'PROD']:
-        maturity = arn_tail
-    else:
-        maturity = 'LATEST'
-    return maturity
-
-
-def get_config(maturity):
-    config_contents = get_file_content_from_s3(os.environ['CONFIG_BUCKET'], os.environ[maturity])
-    return yaml.load(config_contents)
-
-
-def setup(arn):
-    maturity = get_maturity(arn)
-    config = get_config(maturity)
+def setup():
+    config = json.loads(os.environ['CONFIG'])
     log.setLevel(config['log_level'])
-    log.info('Maturity: %s', maturity)
-    log.debug('Config: %s', config)
+    log.info('Config: %s', config)
     return config
-
-
-def get_file_content_from_s3(bucket, key):
-    s3 = boto3.resource('s3')
-    obj = s3.Object(bucket, key)
-    response = obj.get()
-    contents = response['Body'].read()
-    return contents
 
 
 def validate_message(message, message_error_key):
@@ -59,7 +34,7 @@ def process_sqs_message(sfn_client, config, sqs_message):
 
 def invoke_ingest(config):
     sqs = boto3.resource('sqs')
-    queue = sqs.get_queue_by_name(QueueName=config['queue_name'])
+    queue = sqs.Queue(config['queue_url'])
     sfn = boto3.client('stepfunctions')
     messages_processed = 0
 
@@ -80,6 +55,5 @@ def invoke_ingest(config):
 
 
 def lambda_handler(event, context):
-    arn = context.invoked_function_arn
-    config = setup(arn)
+    config = setup()
     invoke_ingest(config['invoke'])
