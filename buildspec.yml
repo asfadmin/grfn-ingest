@@ -8,7 +8,7 @@ environment_variables:
 phases:
   build:
     commands:
-      - pip install -r invoke-ingest/requirements.txt -t invoke-ingest/src/
+      - pip install -r invoke/requirements.txt -t invoke/src/
       - aws cloudformation package --template-file cloudformation.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
 artifacts:
   type: zip

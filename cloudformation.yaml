@@ -28,7 +28,7 @@ Resources:
         Echo10ConstructionLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST
       TemplateURL: step-function/cloudformation.yaml
 
-  InvokeIngestStack:
+  InvokeStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
@@ -36,7 +36,7 @@ Resources:
         QueueUrl: !Ref JobQueue
         QueueArn: !GetAtt JobQueue.Arn
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
-      TemplateURL: invoke-ingest/cloudformation.yaml
+      TemplateURL: invoke/cloudformation.yaml
 
   ErrorTopic:
     Type: AWS::SNS::Topic
