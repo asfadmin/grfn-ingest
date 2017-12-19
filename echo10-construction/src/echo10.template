@@ -1,0 +1,88 @@
+<Granule xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
+    <GranuleUR>{{ granule_ur }}</GranuleUR>
+    <InsertTime>{{ insert_time }}</InsertTime>
+    <LastUpdate>{{ last_update }}</LastUpdate>
+    <Collection>
+        <DataSetId>{{ collection }}</DataSetId>
+    </Collection>
+    <DataGranule>
+        <SizeMBDataGranule>{{ size_mb_data_granule }}</SizeMBDataGranule>
+        <ProducerGranuleId>{{ producer_granule_id }}</ProducerGranuleId>
+        <DayNightFlag>UNSPECIFIED</DayNightFlag>
+        <ProductionDateTime>{{ production_date_time }}</ProductionDateTime>
+    </DataGranule>
+    <Temporal>
+        <RangeDateTime>
+            <BeginningDateTime>{{ beginning_date_time }}</BeginningDateTime>
+            <EndingDateTime>{{ ending_date_time }}</EndingDateTime>
+        </RangeDateTime>
+    </Temporal>
+    <Spatial>
+        <HorizontalSpatialDomain>
+            <Geometry>
+                <GPolygon>
+                  <Boundary> 
+                  {% for point in bbox  %}
+                    <Point>
+                    <PointLongitude>{{ point.1 }}</PointLongitude>
+                    <PointLatitude>{{ point.0 }}</PointLatitude>
+                    </Point>
+                  {% endfor %}
+                </Boundary>
+                </GPolygon>
+            </Geometry>
+        </HorizontalSpatialDomain>
+    </Spatial>
+    <OrbitCalculatedSpatialDomains>
+        {% for orbit in orbits %}
+        <OrbitCalculatedSpatialDomain>
+          <OrbitNumber>{{ orbit }}</OrbitNumber>
+        </OrbitCalculatedSpatialDomain>
+        {% endfor %}
+    </OrbitCalculatedSpatialDomains>
+    <Platforms>
+        {% for platform in platforms %}
+        <Platform>
+            <ShortName>{{ platform }}</ShortName>
+            <Instruments>
+                <Instrument>
+                    <ShortName>{{ platform }} C-Band SAR</ShortName>
+                    <Sensors>
+                        <Sensor>
+                            <ShortName>{{ sensor_short_name }}</ShortName>
+                        </Sensor>
+                    </Sensors>
+                </Instrument>
+            </Instruments>
+        </Platform>
+        {% endfor %}
+    </Platforms>
+    <AdditionalAttributes>
+        {% for name, value in additional_attributes.iteritems() %}
+        <AdditionalAttribute>
+            <Name>{{ name }}</Name>
+            <Values>
+                <Value>{{ value }}</Value>
+            </Values>
+        </AdditionalAttribute>
+        {% endfor %}
+    </AdditionalAttributes>
+    <InputGranules>
+        {% for granule in input_granules %}
+        <InputGranule>{{ granule }}</InputGranule>
+        {% endfor %}
+    </InputGranules>
+    <OnlineAccessURLs>
+        <OnlineAccessURL>
+            <URL>{{ online_access_url }}</URL>
+        </OnlineAccessURL>
+    </OnlineAccessURLs>
+    <Orderable>{{ orderable }}</Orderable>
+    <Visible>{{ visible }}</Visible>
+    <AssociatedBrowseImageUrls>
+        <ProviderBrowseUrl>
+            <URL>{{ browse_url }}</URL>
+        </ProviderBrowseUrl>
+    </AssociatedBrowseImageUrls>
+</Granule>
+
