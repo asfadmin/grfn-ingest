@@ -2,19 +2,15 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
-  Maturity:
-    Description: Maturity level alias used when invoking lambda functions
+  LogLevel:
     Type: String
-    Default: TEST
+    Default: INFO
     AllowedValues:
-      - $LATEST
-      - TEST
-      - PROD
-
-  StepFunctionRoleArn:
-    Description: IAM execution role to attach to step function
-    Type: String
-    Default: arn:aws:iam::406893895021:role/service-role/StatesExecutionRole-us-east-1
+    - CRITICAL
+    - ERROR
+    - WARNING
+    - INFO
+    - DEBUG
 
   OregonTopicArn:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
@@ -23,199 +19,29 @@ Parameters:
 
 Resources:
 
-  IngestActivity:
-    Type: AWS::StepFunctions::Activity
+  StepFunctionStack:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      Name: !Join
-      - '-'
-      - - !Ref AWS::StackName
-        - ingest
+      Parameters:
+        VerifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:verify:TEST
+        NotifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:notify:TEST
+        Echo10ConstructionLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST
+      TemplateURL: step-function/cloudformation.yaml
 
-  CmrActivity:
-    Type: AWS::StepFunctions::Activity
+  InvokeIngestStack:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      Name: !Join
-      - '-'
-      - - !Ref AWS::StackName
-        - cmr
-
-  StepFunction:
-    Type: AWS::StepFunctions::StateMachine
-    Properties:
-      StateMachineName: !Ref AWS::StackName
-      RoleArn: !Ref StepFunctionRoleArn
-      DefinitionString: !Sub |-
-        {
-          "Comment": "A step function to control lambdas for GRFN Ingest",
-          "StartAt": "Verify",
-          "States": {
-            "Verify": {
-              "Type": "Task",
-              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:verify:${Maturity}",
-              "Next": "Ingest",
-              "ResultPath": "$.VerifyResults",
-              "Retry": [
-                {
-                  "ErrorEquals": ["INVALID_MESSAGE", "INVALID_METADATA"],
-                  "MaxAttempts": 0
-                },
-                {
-                  "ErrorEquals": ["States.ALL"]
-                }
-              ],
-              "Catch": [{
-                "ErrorEquals": ["States.ALL"],
-                "Next": "Notify",
-                "ResultPath": "$.Error"
-              }]
-            },
-            "Ingest": {
-              "Type": "Task",
-              "Resource": "${IngestActivity}",
-              "TimeoutSeconds": 600,
-              "ResultPath": "$.IngestResults",
-              "Next": "Parallel",
-              "Retry": [{
-                "ErrorEquals": ["States.ALL"],
-                "MaxAttempts": 5
-              }],
-              "Catch": [{
-                "ErrorEquals": ["States.ALL"],
-                "Next": "Notify",
-                "ResultPath": "$.Error"
-              }]
-            },
-            "Parallel": {
-              "Type": "Parallel",
-              "InputPath": "$.IngestResults",
-              "ResultPath": "$.ParallelResults",
-              "Next": "Notify",
-              "Catch": [{
-                "ErrorEquals": ["States.ALL"],
-                "Next": "Notify",
-                "ResultPath": "$.Error"
-              }],
-              "Branches": [
-                {
-                  "StartAt": "Echo_10_Construction_All",
-                  "States": {
-                    "Echo_10_Construction_All": {
-                      "Type": "Task",
-                      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:${Maturity}",
-                      "InputPath": "$.all",
-                      "ResultPath": "$.ConstructionAllResults",
-                      "Next": "Echo_10_to_CMR_All",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"]
-                      }]
-                    },
-                    "Echo_10_to_CMR_All": {
-                      "Type": "Task",
-                      "Resource": "${CmrActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.ConstructionAllResults",
-                      "ResultPath": "$.CmrAllResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
-                        "BackoffRate": 5
-                      }],
-                      "End": true
-                    }
-                  }
-                },
-                {
-                  "StartAt": "Echo_10_Construction_UnwGeo",
-                  "States": {
-                    "Echo_10_Construction_UnwGeo": {
-                      "Type": "Task",
-                      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:${Maturity}",
-                      "InputPath": "$.unw_geo",
-                      "ResultPath": "$.ConstructionUnwGeoResults",
-                      "Next": "Echo_10_to_CMR_UnwGeo",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"]
-                      }]
-                    },
-                    "Echo_10_to_CMR_UnwGeo": {
-                      "Type": "Task",
-                      "Resource": "${CmrActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.ConstructionUnwGeoResults",
-                      "ResultPath": "$.CmrUnwGeoResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
-                        "BackoffRate": 5
-                      }],
-                      "End": true
-                    }
-                  }
-                },
-                {
-                  "StartAt": "Echo_10_Construction_FullRes",
-                  "States": {
-                    "Echo_10_Construction_FullRes": {
-                      "Type": "Task",
-                      "Resource": "arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:${Maturity}",
-                      "InputPath": "$.full_res",
-                      "ResultPath": "$.ConstructionFullResResults",
-                      "Next": "Echo_10_to_CMR_FullRes",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"]
-                      }]
-                    },
-                    "Echo_10_to_CMR_FullRes": {
-                      "Type": "Task",
-                      "Resource": "${CmrActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.ConstructionFullResResults",
-                      "ResultPath": "$.CmrFullResResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
-                        "BackoffRate": 5
-                      }],
-                      "End": true
-                    }
-                  }
-                }
-              ]
-            },
-            "Notify": {
-              "Type": "Task",
-              "Resource": "arn:aws:lambda:us-east-1:406893895021:function:notify:${Maturity}",
-              "ResultPath": "$.NotifyResults",
-              "Retry": [{
-                "ErrorEquals": ["States.ALL"]
-              }],
-              "Next": "Check_Status"
-            },
-            "Check_Status": {
-              "Type" : "Choice",
-              "Choices": [{
-                "Variable": "$.NotifyResults.Status",
-                "StringEquals": "success",
-                "Next": "Success"
-              }],
-              "Default": "Failure"
-            },
-            "Failure": {
-              "Type": "Fail",
-              "Error": "Ingest failed.",
-              "Cause": "Ingest failed.  Inspect the 'Error' field of the Failure task's input for details."
-            },
-            "Success": {
-              "Type": "Pass",
-              "End": true
-            }
-          }
-        }
+      Parameters:
+        LogLevel: !Ref LogLevel
+        QueueName: !Ref JobQueue
+        QueueArn: !GetAtt JobQueue.Arn
+        StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
+      TemplateURL: invoke-ingest/cloudformation.yaml
 
   ErrorTopic:
     Type: AWS::SNS::Topic
 
-  Alarm:
+  ErrorAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
       AlarmDescription: Ingest failure alarm
@@ -223,7 +49,7 @@ Resources:
         - !Ref ErrorTopic
       Dimensions:
         - Name: StateMachineArn
-          Value: !Ref StepFunction
+          Value: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       MetricName: ExecutionsFailed
       Namespace: AWS/States
       ComparisonOperator: GreaterThanOrEqualToThreshold
@@ -237,7 +63,6 @@ Resources:
   JobQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Ref AWS::StackName
       MessageRetentionPeriod: 1209600
       VisibilityTimeout: 10
 

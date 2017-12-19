@@ -1,0 +1,16 @@
+version: 0.1
+
+environment_variables:
+  plaintext:
+    BUCKET: "grfn-software"
+    PREFIX: "templates"
+
+phases:
+  build:
+    commands:
+      - pip install -r invoke-ingest/requirements.txt -t invoke-ingest/src/
+      - aws cloudformation package --template-file cloudformation.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
+artifacts:
+  type: zip
+  files:
+    - cloudformation-final.yaml
