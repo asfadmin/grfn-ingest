@@ -53,7 +53,7 @@ Resources:
             - logs:CreateLogGroup
             - logs:CreateLogStream
             - logs:PutLogEvents
-            Resource: arn:aws:logs:*:*:/aws/*
+            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${Name}*"
           - Effect: Allow
             Action: sqs:SendMessage
             Resource: !GetAtt DeadLetterQueue.Arn
