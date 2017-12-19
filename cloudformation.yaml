@@ -12,6 +12,18 @@ Parameters:
     - INFO
     - DEBUG
 
+  PrivateBucket:
+    Type: String
+    Default: grfn-private-test
+
+  PublicBucket:
+    Type: String
+    Default: grfn-public-test
+
+  Echo10Bucket:
+    Type: String
+    Default: grfn-echo10-test
+
   OregonTopicArn:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
     Type: String
@@ -26,7 +38,7 @@ Resources:
         Name: !Ref AWS::StackName
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:notify:TEST
-        Echo10ConstructionLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST
+        Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
       TemplateURL: step-function/cloudformation.yaml
 
   InvokeStack:
@@ -47,6 +59,17 @@ Resources:
         Name: !Sub "${AWS::StackName}-verify"
         LogLevel: !Ref LogLevel
       TemplateURL: verify/cloudformation.yaml
+
+  Echo10ConstructionStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-echo10-construction"
+        LogLevel: !Ref LogLevel
+        PrivateBucket: !Ref PrivateBucket
+        PublicBucket: !Ref PublicBucket
+        Echo10Bucket: !Ref Echo1Bucket
+      TemplateURL: echo10-construction/cloudformation.yaml
 
   ErrorTopic:
     Type: AWS::SNS::Topic
