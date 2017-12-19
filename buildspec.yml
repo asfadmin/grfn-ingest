@@ -10,6 +10,7 @@ phases:
     commands:
       - pip install -r invoke/requirements.txt -t invoke/src/
       - pip install -r verify/requirements.txt -t verify/src/
+      - pip install -r echo10-construction/requirements.txt -t echo10-construction/src/
       - aws cloudformation package --template-file cloudformation.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
 artifacts:
   type: zip
