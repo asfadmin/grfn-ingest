@@ -1,6 +1,6 @@
 import boto3
-import os
 import json
+from os import environ
 from logging import getLogger
 
 
@@ -8,7 +8,7 @@ log = getLogger()
 
 
 def setup():
-    config = json.loads(os.environ['CONFIG'])
+    config = json.loads(environ['CONFIG'])
     log.setLevel(config['log_level'])
     log.debug('Config: %s', config)
     return config
