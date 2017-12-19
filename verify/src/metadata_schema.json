@@ -1,0 +1,141 @@
+{
+  "type": "object",
+  "required": [
+    "label",
+    "metadata",
+    "creation_timestamp"
+  ],
+  "properties": {
+    "label": {
+      "type": "string",
+      "minLength": 1
+    },
+    "creation_timestamp": {
+      "$ref": "#/definitions/iso_datetime"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "bbox",
+        "master_scenes",
+        "slave_scenes",
+        "sensingStart",
+        "sensingStop",
+        "orbitNumber",
+        "platform",
+        "beamMode",
+        "direction",
+        "dataset_type",
+        "product_type",
+        "lookDirection",
+        "trackNumber",
+        "perpendicularBaseline",
+        "swath"
+      ],
+      "properties": {
+        "bbox": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": [
+              {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              }
+            ]
+          }
+        },
+        "master_scenes": {
+          "$ref": "#/definitions/granule_list"
+        },
+        "slave_scenes": {
+          "$ref": "#/definitions/granule_list"
+        },
+        "sensingStart": {
+          "$ref": "#/definitions/datetime"
+        },
+        "sensingStop": {
+          "$ref": "#/definitions/datetime"
+        },
+        "orbitNumber": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "platform": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["Sentinel-1A", "Sentinel-1B"]
+          }
+        },
+        "beamMode": {
+          "type": "string",
+          "enum": ["IW", "EW", "WV", "S1", "S2", "S3", "S4", "S5", "S6"]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["asc", "dsc", "ascending", "descending"]
+        },
+        "dataset_type": {
+          "type": "string"
+        },
+        "product_type": {
+          "type": "string"
+        },
+        "polarization": {
+          "type": "string",
+          "enum": ["VV", "HH", "VV+VH", "HH+HV"]
+        },
+        "lookDirection": {
+          "type": "string",
+          "enum": ["right", "left"]
+        },
+        "trackNumber": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 175
+        },
+        "perpendicularBaseline": {
+          "type": "number"
+        },
+        "swath": {
+          "type": "integer",
+          "enum": [1, 2, 3]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "granule_list": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "datetime": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(3[0-1]|[1-2][0-9]|0[1-9])T(2[0-3]|[0-1][0-9]):[0-5][0-9]:[0-5][0-9]$"
+    },
+    "iso_datetime": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(3[0-1]|[1-2][0-9]|0[1-9])T(2[0-3]|[0-1][0-9]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{6}Z$"
+    }
+  }
+}
