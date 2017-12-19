@@ -24,7 +24,7 @@ Resources:
     Properties:
       Parameters:
         Name: !Ref AWS::StackName
-        VerifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:verify:TEST
+        VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:notify:TEST
         Echo10ConstructionLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST
       TemplateURL: step-function/cloudformation.yaml
@@ -39,6 +39,14 @@ Resources:
         QueueArn: !GetAtt JobQueue.Arn
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       TemplateURL: invoke/cloudformation.yaml
+
+  VerifyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-verify"
+        LogLevel: !Ref LogLevel
+      TemplateURL: verify/cloudformation.yaml
 
   ErrorTopic:
     Type: AWS::SNS::Topic
