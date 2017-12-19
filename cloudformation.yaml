@@ -68,7 +68,7 @@ Resources:
         LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
-        Echo10Bucket: !Ref Echo1Bucket
+        Echo10Bucket: !Ref Echo10Bucket
       TemplateURL: echo10-construction/cloudformation.yaml
 
   ErrorTopic:

@@ -5,6 +5,16 @@ Parameters:
   Name:
     Type: String
 
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues:
+    - CRITICAL
+    - ERROR
+    - WARNING
+    - INFO
+    - DEBUG
+
   PrivateBucket:
     Type: String
 
