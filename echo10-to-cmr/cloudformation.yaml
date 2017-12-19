@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      MessageRetentionPeriod: 1209600
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Action: sts:AssumeRole
+          Principal:
+            Service: lambda.amazonaws.com
+          Effect: Allow
+      ManagedPolicyArns:
+      - arn:aws:iam::406893895021:policy/grfn-sqs-publisher
+      - arn:aws:iam::406893895021:policy/grfn-s3-config-read
+      - arn:aws:iam::406893895021:policy/grfn-cloudwatch-logs-write
+      - arn:aws:iam::406893895021:policy/grfn-s3-echo10-read
+      - arn:aws:iam::406893895021:policy/grfn-lambda-cmr-token-invoke
+      - arn:aws:iam::406893895021:policy/grfn-sfn-activity-worker
+
+  Lambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref AWS::StackName
+      Code: src/
+      DeadLetterConfig:
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Description: grfn-echo10-to-cmr $SHA1
+      Environment:
+        Variables:
+          CONFIG_BUCKET: grfn-config
+          PROD: echo10-to-cmr.prod.yaml
+          TEST: echo10-to-cmr.test.yaml
+          LATEST: echo10-to-cmr.test.yaml
+      Handler: daemon.lambda_handler
+      MemorySize: 128
+      Role: !GetAtt Role.Arn
+      Runtime: python2.7
+      Timeout: 300
+
+  LambdaVersion:
+    Type: Custom::LambdaVersion
+    Properties:
+      ServiceToken: arn:aws:lambda:us-east-1:406893895021:function:publish-lambda-version:PROD
+      FunctionName: !Ref Lambda
+      DynamicValueToForceUpdate: "$SHA1"
+
+  TestAlias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !Ref Lambda
+      Name: TEST
+      FunctionVersion: !GetAtt LambdaVersion.Version
+
+  TestSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(1 minute)"
+      State: ENABLED
+      Targets:
+        - Arn: !Ref TestAlias
+          Id: echo10-to-cmr-test
+
+  TestLambdaEventPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref TestAlias
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt TestSchedule.Arn

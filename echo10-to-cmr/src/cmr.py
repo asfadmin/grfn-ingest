@@ -1,0 +1,92 @@
+# Report granule .echo10 xml files stored in AWS S3 to the Common Metadata Repository (CMR) via their web API
+# https://wiki.earthdata.nasa.gov/display/CMR/CMR+Data+Partner+User+Guide
+# https://cmr.earthdata.nasa.gov/ingest/site/ingest_api_docs.html#create-update-granule
+
+import boto3
+import requests
+import os
+import yaml
+from logging import getLogger
+from xml.etree import ElementTree
+from urlparse import urljoin
+
+
+log = getLogger()
+
+
+def get_maturity(arn):
+    arn_tail = arn.split(':')[-1]
+    if arn_tail in ['DEV', 'TEST', 'PROD']:
+        maturity = arn_tail
+    else:
+        maturity = 'LATEST'
+    return maturity
+
+
+def get_config(maturity):
+    config_contents = get_file_content_from_s3(os.environ['CONFIG_BUCKET'], os.environ[maturity])
+    return yaml.load(config_contents)
+
+
+def setup(arn):
+    maturity = get_maturity(arn)
+    config = get_config(maturity)
+    log.setLevel(config['log_level'])
+    log.debug('Config: {0}'.format(config))
+    return config
+
+
+def send_request(session, base_url, echo10_content):
+    granule_native_id = get_granule_native_id(echo10_content)
+    url = urljoin(base_url, granule_native_id)
+    response = session.put(url, data=echo10_content)
+    log.info('Response text: {0}'.format(response.text))
+    return response
+
+
+def get_session(config):
+    token = get_cached_token(config)
+    session = requests.Session()
+    headers = {'Content-Type': 'application/echo10+xml', 'Echo-Token': token}
+    session.headers.update(headers)
+    return session
+
+
+def get_file_content_from_s3(bucket, key):
+    s3 = boto3.resource('s3')
+    obj = s3.Object(bucket, key)
+    response = obj.get()
+    contents = response['Body'].read()
+    return contents
+
+
+def get_cached_token(config):
+    try:
+        return get_file_content_from_s3(config['bucket'], config['key'])
+    except Exception as e:
+        return None
+
+
+def get_granule_native_id(echo10_content):
+    xml_element_tree = ElementTree.fromstring(echo10_content)
+    granule_name = xml_element_tree.find('GranuleUR').text
+    return granule_name
+
+
+def push_echo10_granule_to_cmr(session, echo10_content, config):
+    response = send_request(session, config['granule_url'], echo10_content)
+    if response.status_code == 401:
+        lamb = boto3.client('lambda')
+        lamb.invoke(FunctionName=config['cmr_token_lambda'])
+        token = get_cached_token(config['cached_token'])
+        session.headers.update({'Echo-Token': token})
+        response = send_request(session, config['granule_url'], echo10_content)
+    response.raise_for_status()
+    return response
+
+
+def process_task(task_input, config, session):
+    log.info(task_input)
+    echo10_content = get_file_content_from_s3(task_input['bucket'], task_input['key'])
+    response = push_echo10_granule_to_cmr(session, echo10_content, config)
+    return {'status': response.status_code, 'text': response.text}
