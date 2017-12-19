@@ -23,6 +23,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
+        Name: !Ref AWS::StackName
         VerifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:verify:TEST
         NotifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:notify:TEST
         Echo10ConstructionLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST
@@ -32,6 +33,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
+        Name: !Sub "${AWS::StackName}-invoke"
         LogLevel: !Ref LogLevel
         QueueUrl: !Ref JobQueue
         QueueArn: !GetAtt JobQueue.Arn
@@ -40,10 +42,13 @@ Resources:
 
   ErrorTopic:
     Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "${AWS::StackName}-errors"
 
   ErrorAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
+      AlarmName: !Sub "${AWS::StackName}-errors"
       AlarmDescription: Ingest failure alarm
       AlarmActions:
         - !Ref ErrorTopic
@@ -63,13 +68,14 @@ Resources:
   JobQueue:
     Type: AWS::SQS::Queue
     Properties:
+      QueueName: !Sub "${AWS::StackName}-jobs"
       MessageRetentionPeriod: 1209600
       VisibilityTimeout: 10
 
   JobTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Ref AWS::StackName
+      TopicName: !Sub "${AWS::StackName}-jobs"
       Subscription:
       - Protocol: sqs
         Endpoint: !GetAtt JobQueue.Arn

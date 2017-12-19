@@ -2,6 +2,9 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
+  Name:
+    Type: String
+
   StepFunctionRoleArn:
     Description: IAM execution role to attach to step function
     Type: String
@@ -35,22 +38,17 @@ Resources:
   IngestActivity:
     Type: AWS::StepFunctions::Activity
     Properties:
-      Name: !Join
-      - '-'
-      - - !Ref AWS::StackName
-        - ingest
+      Name: !Sub "${Name}-ingest"
 
   CmrActivity:
     Type: AWS::StepFunctions::Activity
     Properties:
-      Name: !Join
-      - '-'
-      - - !Ref AWS::StackName
-        - cmr
+      Name: !Sub "${Name}-echo10-to-cmr"
 
   StepFunction:
     Type: AWS::StepFunctions::StateMachine
     Properties:
+      StateMachineName: !Ref Name
       RoleArn: !Ref StepFunctionRoleArn
       DefinitionString: !Sub |-
         {

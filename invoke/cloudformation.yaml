@@ -2,6 +2,9 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
 
+  Name:
+    Type: String
+
   LogLevel:
     Type: String
     Default: INFO
@@ -26,11 +29,13 @@ Resources:
   DeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties:
+      QueueName: !Sub "${Name}-dlq"
       MessageRetentionPeriod: 1209600
 
   Role:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Ref Name
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -65,6 +70,7 @@ Resources:
   Lambda:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Ref Name
       Code: src/
       DeadLetterConfig:
         TargetArn: !GetAtt DeadLetterQueue.Arn
@@ -93,6 +99,7 @@ Resources:
   Schedule:
     Type: AWS::Events::Rule
     Properties:
+      Name: !Ref Name
       ScheduleExpression: "rate(1 minute)"
       State: ENABLED
       Targets:
