@@ -1,0 +1,13 @@
+log_level: INFO
+
+default_topic:
+  Arn: arn:aws:sns:us-west-2:136244619446:product-notification-test
+  Region: us-west-2
+errors:
+  key: 'Error'
+  codes:
+    - INVALID_MESSAGE
+    - INVALID_TOPIC
+    - MISSING_FILE
+    - INVALID_METADATA
+  default_code: INGEST_ERROR
