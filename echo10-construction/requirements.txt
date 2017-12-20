@@ -1,0 +1,3 @@
+jinja2==2.8
+pyyaml==3.12
+shapely==1.5.17
