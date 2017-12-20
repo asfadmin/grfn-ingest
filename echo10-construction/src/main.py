@@ -177,8 +177,5 @@ def create_granule_echo10_in_s3(inputs, config):
 def lambda_handler(event, context):
     config = setup()
     log.debug('Payload: {0}'.format(str(event)))
-    output = []
-    for product in event:
-        result = create_granule_echo10_in_s3(product, config['echo10_construction'])
-        output.append(result)
+    output = create_granule_echo10_in_s3(event, config['echo10_construction'])
     return output
