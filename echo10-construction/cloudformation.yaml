@@ -65,11 +65,11 @@ Resources:
           - Effect: Allow
             Action: s3:GetObject
             Resource:
-            - !Sub "arn:aws:s3:::${PrivateBucket}"
-            - !Sub "arn:aws:s3:::${PublicBucket}"
+            - !Sub "arn:aws:s3:::${PrivateBucket}/*"
+            - !Sub "arn:aws:s3:::${PublicBucket}/*"
           - Effect: Allow
             Action: s3:PutObject
-            Resource: !Sub "arn:aws:s3:::${Echo10Bucket}"
+            Resource: !Sub "arn:aws:s3:::${Echo10Bucket}/*"
 
   Lambda:
     Type: AWS::Lambda::Function
