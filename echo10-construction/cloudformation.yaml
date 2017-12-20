@@ -1,59 +1,136 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  Name:
+    Type: String
+
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues:
+    - CRITICAL
+    - ERROR
+    - WARNING
+    - INFO
+    - DEBUG
+
+  PrivateBucket:
+    Type: String
+
+  PublicBucket:
+    Type: String
+
+  Echo10Bucket:
+    Type: String
+
+Outputs:
+
+  LambdaArn:
+    Value: !GetAtt Lambda.Arn
 
 Resources:
+
   DeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties:
+      QueueName: !Sub "${Name}-dlq"
       MessageRetentionPeriod: 1209600
 
   Role:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Ref Name
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: 2012-10-17
         Statement:
           Action: sts:AssumeRole
           Principal:
             Service: lambda.amazonaws.com
           Effect: Allow
-      ManagedPolicyArns:
-      - arn:aws:iam::406893895021:policy/grfn-s3-config-read
-      - arn:aws:iam::406893895021:policy/grfn-cloudwatch-logs-write
-      - arn:aws:iam::406893895021:policy/grfn-sqs-publisher
-      - arn:aws:iam::406893895021:policy/grfn-s3-public-read
-      - arn:aws:iam::406893895021:policy/grfn-s3-private-read
-      - arn:aws:iam::406893895021:policy/grfn-s3-echo10-write
+      Policies:
+      - PolicyName: policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${Name}*"
+          - Effect: Allow
+            Action: sqs:SendMessage
+            Resource: !GetAtt DeadLetterQueue.Arn
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource:
+            - !Sub "arn:aws:s3:::${PrivateBucket}/*"
+            - !Sub "arn:aws:s3:::${PublicBucket}/*"
+          - Effect: Allow
+            Action: s3:PutObject
+            Resource: !Sub "arn:aws:s3:::${Echo10Bucket}/*"
 
   Lambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Ref AWS::StackName
+      FunctionName: !Ref Name
       Code: src/
       DeadLetterConfig:
         TargetArn: !GetAtt DeadLetterQueue.Arn
-      Description: grfn-echo10-construction $SHA1
       Environment:
         Variables:
-          CONFIG_BUCKET: grfn-config
-          PROD: echo10-construction.prod.yaml
-          TEST: echo10-construction.test.yaml
-          LATEST: echo10-construction.test.yaml
+          CONFIG: !Sub |-
+            {
+              "log_level": "${LogLevel}",
+              "echo10_construction": {
+                "output_bucket": "${Echo10Bucket}",
+                "granule_data": {
+                  "download_path": "https://grfn-test.asf.alaska.edu/door/download/{0}",
+                  "browse_path": "https://grfn-public-test.asf.alaska.edu/{0}",
+                  "missions": [
+                    {"name": "S1 I-grams (BETA) - Western Pakistan", "coords": [[20,56],[20,70],[34,70],[34,56]]},
+                    {"name": "S1 I-grams (BETA) - Mexico City, Mexico", "coords": [[14,-103],[14,-97],[23,-97],[23,-103]]},
+                    {"name": "S1 I-grams (BETA) - Northern Equador", "coords": [[-4,-82],[-4,-75],[3,-75],[3,-82]]},
+                    {"name": "S1 I-grams (BETA) - Kilauea Volcano, HI", "coords": [[16,-159],[16,-150],[23,-150],[23,-159]]},
+                    {"name": "S1 I-grams (BETA) - Healy, AK", "coords": [[62,-154],[62,-144],[66,-144],[66,-154]]},
+                    {"name": "S1 I-grams (BETA) - Mount Okmok, AK", "coords": [[51,-174],[51,-166.5],[55,-166.5],[55,-174]]},
+                    {"name": "S1 I-grams (BETA) - Unimak Island, AK", "coords": [[52,-166.5],[52,-159],[57,-159],[57,-166.5]]},
+                    {"name": "S1 I-grams (BETA) - Southern LA", "coords": [[27,-93],[27,-87],[32,-87],[32,-93]]},
+                    {"name": "S1 I-grams (BETA) - Carlsbad, NM", "coords": [[29,-107],[29,-100],[35,-100],[35,-107]]},
+                    {"name": "S1 I-grams (BETA) - Cedar City, UT", "coords": [[36.5,-115.5],[36.5,-110.5],[40,-110.5],[40,-115.5]]},
+                    {"name": "S1 I-grams (BETA) - Western CO", "coords": [[37,-110],[37,-106],[41,-106],[41,-110]]},
+                    {"name": "S1 I-grams (BETA) - Southern AZ", "coords": [[31,-114],[31,-109],[35,-109],[35,-114]]},
+                    {"name": "S1 I-grams (BETA) - Northern CA", "coords": [[38.4,-126],[38.4,-116],[42,-116],[42,-126]]},
+                    {"name": "S1 I-grams (BETA) - Central CA", "coords": [[37,-126],[37,-116],[38.4,-116],[38.4,-126]]},
+                    {"name": "S1 I-grams (BETA) - Southern CA", "coords": [[30,-123],[30,-114],[37,-114],[37,-123]]},
+                    {"name": "S1 I-grams (BETA) - Other", "coords": [[-90,-180],[-90,180],[90,180],[90,-180]]}
+                  ],
+                  "collections": {
+                    "unw_geo": {
+                      "dataset_id": "Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA)",
+                      "processing_type_display": "Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA)",
+                      "processing_description": "Sentinel-1 unwrapped interferogram and coherence image generated by JPL using ISCE v2.0.0, repackaged and delivered by ASF",
+                      "processing_type": "Unwrapped"
+                    },
+                    "full_res": {
+                      "dataset_id": "Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA)",
+                      "processing_type_display": "Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA)",
+                      "processing_description": "OpenTopo DEM and Sentinel-1 full resolution wrapped SLC interferogram generated by JPL using ISCE v2.0.0, repackaged and delivered by ASF",
+                      "processing_type": "Full"
+                    },
+                    "default": {
+                      "dataset_id": "Sentinel-1 All Interferometric Products (BETA)",
+                      "processing_type_display": "Sentinel-1 All Interferometric Products (BETA)",
+                      "processing_description": "Sentinel-1 SLC interferometric products generated by JPL using ISCE v2.0.0, delivered by ASF",
+                      "processing_type": "All"
+                    }
+                  }
+                }
+              }
+            }
       Handler: main.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python2.7
       Timeout: 60
-
-  LambdaVersion:
-    Type: Custom::LambdaVersion
-    Properties:
-      ServiceToken: arn:aws:lambda:us-east-1:406893895021:function:publish-lambda-version:PROD
-      FunctionName: !Ref Lambda
-      DynamicValueToForceUpdate: "$SHA1"
-
-  TestAlias:
-    Type: AWS::Lambda::Alias
-    Properties:
-      FunctionName: !Ref Lambda
-      Name: TEST
-      FunctionVersion: !GetAtt LambdaVersion.Version
