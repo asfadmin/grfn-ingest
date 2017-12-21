@@ -1,0 +1,10 @@
+log_level: INFO
+
+custom_metrics:
+  step_function_arn: arn:aws:states:us-east-1:406893895021:stateMachine:grfn-ingest-TEST-1507246940-f28bff0
+  cloudwatch_metrics:
+    Namespace: TEST
+    MetricData:
+      - MetricName: IngestsRunning
+        Unit: Count
+        Value: 0
