@@ -105,6 +105,15 @@ Resources:
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
       TemplateURL: notify/cloudformation.yaml
 
+  MetricsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-metrics"
+        LogLevel: !Ref LogLevel
+        StepFunctionArn: !Ref StepFunctionStack.Outputs.StepFunctionArn
+      TemplateURL: metrics/cloudformation.yaml
+
   ErrorTopic:
     Type: AWS::SNS::Topic
     Properties:
