@@ -85,7 +85,7 @@ Resources:
               "custom_metrics": {
                 "step_function_arn": "${StepFunctionArn}",
                 "cloudwatch_metrics": {
-                  "Namespace": "${Namespace}",
+                  "Namespace": "${Name}",
                   "MetricData": [
                     {
                       "MetricName": "${MetricName}",

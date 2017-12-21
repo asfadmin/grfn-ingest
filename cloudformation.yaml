@@ -111,7 +111,7 @@ Resources:
       Parameters:
         Name: !Sub "${AWS::StackName}-metrics"
         LogLevel: !Ref LogLevel
-        StepFunctionArn: !Ref StepFunctionStack.Outputs.StepFunctionArn
+        StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       TemplateURL: metrics/cloudformation.yaml
 
   ErrorTopic:
