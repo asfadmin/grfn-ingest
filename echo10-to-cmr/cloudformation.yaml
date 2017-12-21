@@ -18,6 +18,10 @@ Parameters:
   StepFunctionArn:
     Type: String
 
+  PublicBucket:
+    Type: String
+    Default: grfn-public-test
+
 Outputs:
 
   LambdaArn:
@@ -85,6 +89,7 @@ Resources:
   TestSchedule:
     Type: AWS::Events::Rule
     Properties:
+      Name: !Ref Name
       ScheduleExpression: "rate(1 minute)"
       State: ENABLED
       Targets:
