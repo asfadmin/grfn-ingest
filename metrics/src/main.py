@@ -1,40 +1,17 @@
 import boto3
-import os
-import yaml
+import json
+from os import environ
 from logging import getLogger
 
 
 log = getLogger()
 
 
-def get_maturity(arn):
-    arn_tail = arn.split(':')[-1]
-    if arn_tail in ['DEV', 'TEST', 'PROD']:
-        maturity = arn_tail
-    else:
-        maturity = 'LATEST'
-    return maturity
-
-
-def get_config(maturity):
-    config_contents = get_file_content_from_s3(os.environ['CONFIG_BUCKET'], os.environ[maturity])
-    return yaml.load(config_contents)
-
-
-def setup(arn):
-    maturity = get_maturity(arn)
-    config = get_config(maturity)
+def setup():
+    config = json.loads(environ['CONFIG'])
     log.setLevel(config['log_level'])
     log.debug('Config: {0}'.format(config))
     return config
-
-
-def get_file_content_from_s3(bucket, key):
-    s3 = boto3.resource('s3')
-    obj = s3.Object(bucket, key)
-    response = obj.get()
-    contents = response['Body'].read()
-    return contents
 
 
 def get_IngestsRunning(step_function_arn):
@@ -71,6 +48,5 @@ def publish_custom_metrics(config):
 
 
 def lambda_handler(event, context):
-    arn = context.invoked_function_arn
-    config = setup(arn)
+    config = setup()
     publish_custom_metrics(config['custom_metrics'])
