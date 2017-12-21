@@ -1,15 +1,47 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Parameters:
+
+  Name:
+    Type: String
+
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues:
+    - CRITICAL
+    - ERROR
+    - WARNING
+    - INFO
+    - DEBUG
+
+  MetricName:
+    Type: String
+    Default: IngestsRunning
+
+  StepFunctionArn:
+    Type: String
+
+Outputs:
+
+  Namespace:
+    Value: !Ref Name
+
+  MetricName:
+    Value: !Ref MetricName
+
 Resources:
 
   DeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties:
+      QueueName: !Sub "${Name}-dlq"
       MessageRetentionPeriod: 1209600
 
   Role:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Ref Name
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -17,29 +49,73 @@ Resources:
           Principal:
             Service: lambda.amazonaws.com
           Effect: Allow
-      ManagedPolicyArns:
-      - arn:aws:iam::406893895021:policy/grfn-s3-config-read
-      - arn:aws:iam::406893895021:policy/grfn-cloudwatch-logs-write
-      - arn:aws:iam::406893895021:policy/grfn-cloudwatch-metrics-publish
-      - arn:aws:iam::406893895021:policy/grfn-sqs-publisher
-      - arn:aws:iam::aws:policy/AWSStepFunctionsReadOnlyAccess
+      Policies:
+      - PolicyName: policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${Name}*"
+          - Effect: Allow
+            Action: sqs:SendMessage
+            Resource: !GetAtt DeadLetterQueue.Arn
+          - Effect: Allow
+            Action: states:ListExecutions
+            Resource: !Ref StepFunctionArn
+          - Effect: Allow
+            Action: cloudwatch:PutMetricData
+            Resource:  *
 
   Lambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Ref AWS::StackName
+      FunctionName: !Ref Name
       Code: src/
       DeadLetterConfig:
         TargetArn: !GetAtt DeadLetterQueue.Arn
-      Description: grfn-custom-metrics $SHA1
       Environment:
         Variables:
-          CONFIG_BUCKET: grfn-config
-          PROD: custom-metrics.prod.yaml
-          TEST: custom-metrics.test.yaml
-          LATEST: custom-metrics.test.yaml
+          CONFIG: !Sub |-
+            {
+              "log_level": "${LogLevel}",
+              "custom_metrics": {
+                "step_function_arn": "${StepFunctionArn}",
+                "cloudwatch_metrics": {
+                  "Namespace": "${Namespace}",
+                  "MetricData": [
+                    {
+                      "MetricName": "${MetricName}",
+                      "Unit": "Count",
+                      "Value": 0
+                    }
+                  ]
+                }
+              }
+            }
       Handler: main.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python2.7
       Timeout: 60
+
+  Schedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Ref Name
+      ScheduleExpression: "rate(1 minute)"
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt Lambda.Arn
+          Id: !Ref Name
+
+  EventPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt Lambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt Schedule.Arn
