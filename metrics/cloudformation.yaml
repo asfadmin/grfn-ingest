@@ -68,7 +68,7 @@ Resources:
             Resource: !Ref StepFunctionArn
           - Effect: Allow
             Action: cloudwatch:PutMetricData
-            Resource:  *
+            Resource: "*"
 
   Lambda:
     Type: AWS::Lambda::Function
