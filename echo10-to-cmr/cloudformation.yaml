@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
@@ -15,12 +15,24 @@ Parameters:
     - INFO
     - DEBUG
 
-  StepFunctionArn:
+  ActivityArn:
     Type: String
 
-  PublicBucket:
+  Echo10Bucket:
     Type: String
-    Default: grfn-public-test
+    Default: grfn-echo10-test
+
+  CachedCmrTokenKey:
+    Type: String
+    Default: cached-cmr-auth-token-test
+
+  CmrTokenLambda:
+    Type: String
+    Default: cmr-token:TEST
+
+  CmrGranuleUrl:
+    Type: String
+    Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
 
 Outputs:
 
@@ -28,6 +40,7 @@ Outputs:
     Value: !GetAtt Lambda.Arn
 
 Resources:
+
   DeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties:
@@ -39,19 +52,38 @@ Resources:
     Properties:
       RoleName: !Ref Name
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: 2012-10-17
         Statement:
           Action: sts:AssumeRole
           Principal:
             Service: lambda.amazonaws.com
           Effect: Allow
-      ManagedPolicyArns:
-      - arn:aws:iam::406893895021:policy/grfn-sqs-publisher
-      - arn:aws:iam::406893895021:policy/grfn-s3-config-read
-      - arn:aws:iam::406893895021:policy/grfn-cloudwatch-logs-write
-      - arn:aws:iam::406893895021:policy/grfn-s3-echo10-read
-      - arn:aws:iam::406893895021:policy/grfn-lambda-cmr-token-invoke
-      - arn:aws:iam::406893895021:policy/grfn-sfn-activity-worker
+      Policies:
+      - PolicyName: policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${Name}*"
+          - Effect: Allow
+            Action: sqs:SendMessage
+            Resource: !GetAtt DeadLetterQueue.Arn
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${Echo10Bucket}/*"
+          - Effect: Allow
+            Action: lambda:InvokeFunction
+            Resource: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${CmrTokenLambda}"
+          - Effect: Allow
+            Action:
+            - states:GetActivityTask
+            - states:SendTaskSuccess
+            - states:SendTaskFailure
+            Resource: !Ref ActivityArn
 
   Lambda:
     Type: AWS::Lambda::Function
@@ -62,44 +94,46 @@ Resources:
         TargetArn: !GetAtt DeadLetterQueue.Arn
       Environment:
         Variables:
-          Config:!Sub |-
+          CONFIG: !Sub |-
             {
               "log_level": "${LogLevel}",
-              "daemon":
+              "daemon": {
                 "max_task_time_in_millis": 65000,
                 "sfn_connect_timeout": 65,
                 "activity": {
-                  "arn": !Ref StepFunctionArn
-                  "worker_name": echo10-to-cmr:TEST,
+                  "arn": "${ActivityArn}",
+                  "worker_name": "${Name}"
                 },
-                "cmr":
-                  "granule_url": "https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/",
+                "cmr": {
+                  "granule_url": "${CmrGranuleUrl}",
                   "cached_token": {
-                    "bucket": !Ref PublicBucket
-                    "key": cached-cmr-auth-token-test
+                    "bucket": "${Echo10Bucket}",
+                    "key": "${CachedCmrTokenKey}"
                   },
-                  "cmr_token_lambda": cmr-token:TEST
+                  "cmr_token_lambda": "${CmrTokenLambda}"
+                }
+              }
             }
-    Handler: daemon.lambda_handler
-    MemorySize: 128
-    Role: !GetAtt Role.Arn
-    Runtime: python2.7
-    Timeout: 300
+      Handler: daemon.lambda_handler
+      MemorySize: 128
+      Role: !GetAtt Role.Arn
+      Runtime: python2.7
+      Timeout: 300
 
-  TestSchedule:
+  Schedule:
     Type: AWS::Events::Rule
     Properties:
       Name: !Ref Name
       ScheduleExpression: "rate(1 minute)"
       State: ENABLED
       Targets:
-        - Arn: !Ref TestAlias
-          Id: echo10-to-cmr-test
+        - Arn: !GetAtt Lambda.Arn
+          Id: !Ref Name
 
-  TestLambdaEventPermission:
+  EventPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !Ref TestAlias
+      FunctionName: !GetAtt Lambda.Arn
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt TestSchedule.Arn
+      SourceArn: !GetAtt Schedule.Arn
