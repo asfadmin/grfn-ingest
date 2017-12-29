@@ -1,0 +1,220 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Select a VPC that allows instances to access the Internet.
+    Default: vpc-008e6979
+
+  SubnetId:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Select at least two subnets in your selected VPC.
+    Default: subnet-25d39d19,subnet-5387281b,subnet-6083e36c,subnet-75658d2f,subnet-844ab8a8
+
+  Ami:
+    Type: AWS::EC2::Image::Id
+    Description: Runtime AMI
+    Default: ami-fad25980
+
+  ConfigFile:
+    Type: String
+    Description: S3 url for grfn-ingest runtime config file
+    Default: s3://grfn-config/ingest.test.yaml
+
+  ContainerImage:
+    Type: String
+    Description: URL for runtime docker container (repository-url/image:tag)
+    Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
+
+  MetricNamespace:
+    Type: String
+    Description: Namespace of CloudWatch metric to drive scaling alarm
+    Default: TEST
+
+  MaxSpotPrice:
+    Type: String
+    Description: Maximum price to pay on the spot market
+    Default: '0.08'
+
+Resources:
+
+  Cluster:
+    Type: AWS::ECS::Cluster
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: security group for grfn-ingest machines
+      VpcId: !Ref VpcId
+
+  Alarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      MetricName: IngestsRunning
+      Namespace: !Ref MetricNamespace
+      Period: 60
+      Statistic: Maximum
+      Threshold: 0
+      TreatMissingData: ignore
+      Unit: Count
+      AlarmActions:
+      - !Ref GroupScalingPolicy
+      - !Ref ServiceScalingPolicy
+
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: true
+      IamInstanceProfile: arn:aws:iam::406893895021:instance-profile/ecsInstanceRole
+      ImageId: !Ref Ami
+      InstanceType: i3.large
+      SpotPrice: !Ref MaxSpotPrice
+      SecurityGroups:
+      - !Ref SecurityGroup
+      InstanceMonitoring: false
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+          - ''
+          - - "#!/bin/bash -xe\n"
+            - "pvcreate /dev/nvme0n1\n"
+            - "vgextend docker /dev/nvme0n1\n"
+            - "lvextend -l 100%FREE /dev/docker/docker-pool\n"
+            - "echo ECS_CLUSTER="
+            - !Ref Cluster
+            - " >> /etc/ecs/ecs.config\n"
+            - "echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=1m >> /etc/ecs/ecs.config\n"
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: !Ref SubnetId
+      LaunchConfigurationName: !Ref LaunchConfiguration
+      MinSize: 0
+      MaxSize: 192
+      Tags:
+      - Key: Name
+        Value: !Ref AWS::StackName
+        PropagateAtLaunch: true
+
+  TaskIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Action: sts:AssumeRole
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+            - ecs-tasks.amazonaws.com
+          Effect: Allow
+      ManagedPolicyArns:
+      - arn:aws:iam::406893895021:policy/grfn-s3-config-read
+      - arn:aws:iam::406893895021:policy/grfn-sfn-activity-worker
+      - arn:aws:iam::406893895021:policy/grfn-s3-jpl-read
+      - arn:aws:iam::406893895021:policy/grfn-s3-private-write
+      - arn:aws:iam::406893895021:policy/grfn-s3-public-write
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 30
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      TaskRoleArn: !Ref TaskIamRole
+      ContainerDefinitions:
+      - Name: grfn-ingest
+        Image: !Ref ContainerImage
+        MemoryReservation: 256
+        Cpu: 896
+        Command:
+        - "-c"
+        - !Ref ConfigFile
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref LogGroup
+            awslogs-region: !Ref AWS::Region
+
+  GroupScalingPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      PolicyType: StepScaling
+      EstimatedInstanceWarmup: 30
+      AdjustmentType: ExactCapacity
+      StepAdjustments:
+      - ScalingAdjustment: 0
+        MetricIntervalLowerBound: 0
+        MetricIntervalUpperBound: 1
+      - ScalingAdjustment: 1
+        MetricIntervalLowerBound: 1
+        MetricIntervalUpperBound: 4
+      - ScalingAdjustment: 2
+        MetricIntervalLowerBound: 4
+        MetricIntervalUpperBound: 8
+      - ScalingAdjustment: 4
+        MetricIntervalLowerBound: 8
+        MetricIntervalUpperBound: 16
+      - ScalingAdjustment: 8
+        MetricIntervalLowerBound: 16
+        MetricIntervalUpperBound: 32
+      - ScalingAdjustment: 16
+        MetricIntervalLowerBound: 32
+        MetricIntervalUpperBound: 64
+      - ScalingAdjustment: 32
+        MetricIntervalLowerBound: 64
+        MetricIntervalUpperBound: 128
+      - ScalingAdjustment: 64
+        MetricIntervalLowerBound: 128
+        MetricIntervalUpperBound: 256
+      - ScalingAdjustment: 128
+        MetricIntervalLowerBound: 256
+        MetricIntervalUpperBound: 384
+      - ScalingAdjustment: 192
+        MetricIntervalLowerBound: 384
+
+  ServiceScalingTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MinCapacity: 0
+      MaxCapacity: 384
+      ResourceId:
+        Fn::Join:
+        - ''
+        - - service/
+          - !Ref Cluster
+          - "/"
+          - !GetAtt Service.Name
+      RoleARN: arn:aws:iam::406893895021:role/ecsAutoscaleRole
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+
+  ServiceScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: scaling
+      PolicyType: StepScaling
+      ScalingTargetId: !Ref ServiceScalingTarget
+      StepScalingPolicyConfiguration:
+        Cooldown: 180
+        AdjustmentType: ExactCapacity
+        StepAdjustments:
+        - ScalingAdjustment: 0
+          MetricIntervalLowerBound: 0
+          MetricIntervalUpperBound: 1
+        - ScalingAdjustment: 384
+          MetricIntervalLowerBound: 1
+
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      DesiredCount: 0
+      TaskDefinition: !Ref TaskDefinition

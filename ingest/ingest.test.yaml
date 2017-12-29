@@ -1,0 +1,45 @@
+log:
+  base_level: INFO
+  boto_level: WARN
+
+aws_region: us-east-1
+
+daemon:
+
+  activity:
+    arn: arn:aws:states:us-east-1:406893895021:activity:ingest-step-function-test-ingest
+    timeout: 65
+    worker_name: $INSTANCE_ID
+
+  ingest:
+    browse_bucket: grfn-public-test
+    metadata_bucket: grfn-public-test
+    product_bucket: grfn-private-test
+
+    derived_products:
+      - name: unw_geo
+        files:
+          - fine_interferogram.xml
+          - filt_topophase.unw.geo.browse_small.png
+          - filt_topophase.unw.geo.browse.png
+          - merged/filt_topophase.unw.geo
+          - merged/filt_topophase.unw.geo.hdr
+          - merged/filt_topophase.unw.geo.vrt
+          - merged/filt_topophase.unw.geo.xml
+          - merged/phsig.cor.geo
+          - merged/phsig.cor.geo.hdr
+          - merged/phsig.cor.geo.vrt
+          - merged/phsig.cor.geo.xml
+      - name: full_res
+        files:
+          - fine_interferogram.xml
+          - amplitude.geo.browse_small.png
+          - amplitude.geo.browse.png
+          - merged/filt_topophase.flat
+          - merged/filt_topophase.flat.hdr
+          - merged/filt_topophase.flat.vrt
+          - merged/filt_topophase.flat.xml
+          - merged/dem.crop
+          - merged/dem.crop.hdr
+          - merged/dem.crop.vrt
+          - merged/dem.crop.xml
