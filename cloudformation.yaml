@@ -54,6 +54,18 @@ Parameters:
     Type: String
     Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
 
+  CachedCmrTokenKey:
+    Type: String
+    Default: cached-cmr-auth-token-test
+
+  CmrTokenLambda:
+    Type: String
+    Default: cmr-token:TEST
+
+  CmrGranuleUrl:
+    Type: String
+    Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
+
 Resources:
 
   StepFunctionStack:
@@ -95,6 +107,19 @@ Resources:
         PublicBucket: !Ref PublicBucket
         Echo10Bucket: !Ref Echo10Bucket
       TemplateURL: echo10-construction/cloudformation.yaml
+
+  Echo10ToCmrStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-echo10-to-cmr"
+        LogLevel: !Ref LogLevel
+        ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
+        Echo10Bucket: !Ref Echo10Bucket
+        CachedCmrTokenKey: !Ref CachedCmrTokenKey
+        CmrTokenLambda: !Ref CmrTokenLambda
+        CmrGranuleUrl: !Ref CmrGranuleUrl
+      TemplateURL: echo10-to-cmr/cloudformation.yaml
 
   NotifyStack:
     Type: AWS::CloudFormation::Stack
