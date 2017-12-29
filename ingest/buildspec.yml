@@ -23,7 +23,3 @@ phases:
       - docker push $IMAGE_HOST/$IMAGE_NAME:latest
       - docker push $IMAGE_HOST/$IMAGE_NAME:$MATURITY
       - docker push $IMAGE_HOST/$IMAGE_NAME:$(cat sha1.txt)
-artifacts:
-  type: zip
-  files:
-    - cloudformation.yaml

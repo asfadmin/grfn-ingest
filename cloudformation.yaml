@@ -66,6 +66,10 @@ Parameters:
     Type: String
     Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
 
+  IngestContainerImage:
+    Type: String
+    Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
+
 Resources:
 
   StepFunctionStack:
@@ -138,6 +142,20 @@ Resources:
         LogLevel: !Ref LogLevel
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       TemplateURL: metrics/cloudformation.yaml
+
+  IngestStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-ingest"
+        LogLevel: !Ref LogLevel
+        ContainerImage: !Ref IngestContainerImage
+        MetricName: !GetAtt MetricsStack.Outputs.MetricName
+        MetricNamespace: !GetAtt MetricsStack.Outputs.Namespace
+        ActivityArn: !GetAtt StepFunctionStack.Outputs.IngestActivityArn
+        PublicBucket: !Ref PublicBucket
+        PrivateBucket: !Ref PrivateBucket
+      TemplateURL: ingest/cloudformation.yaml
 
   ErrorTopic:
     Type: AWS::SNS::Topic
