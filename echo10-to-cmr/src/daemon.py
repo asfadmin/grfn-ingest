@@ -1,12 +1,20 @@
 import json
 import boto3
+from os import environ
 from logging import getLogger
 from botocore.client import Config
 from botocore.exceptions import ClientError
-from cmr import process_task, get_session, setup
+from cmr import process_task, get_session
 
 
 log = getLogger()
+
+
+def setup():
+    config = json.loads(environ['CONFIG'])
+    log.setLevel(config['log_level'])
+    log.debug('Config: {0}'.format(config))
+    return config
 
 
 def get_sfn_client(connect_timeout):
@@ -55,8 +63,7 @@ def daemon_loop(config, get_remaining_time_in_millis_fcn):
             log.exception('Failed to process task.')
             send_task_response(sfn_client, task['taskToken'], exception=e)
 
- 
+
 def lambda_handler(event, context):
-    arn = context.invoked_function_arn
-    config = setup(arn)
+    config = setup()
     daemon_loop(config['daemon'], context.get_remaining_time_in_millis)
