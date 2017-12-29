@@ -12,6 +12,43 @@ Parameters:
     - INFO
     - DEBUG
 
+  PrivateBucket:
+    Type: String
+    Default: grfn-private-test
+
+  PublicBucket:
+    Type: String
+    Default: grfn-public-test
+
+  Echo10Bucket:
+    Type: String
+    Default: grfn-echo10-test
+
+  DefaultResponseTopicArn:
+    Type: String
+    Default: arn:aws:sns:us-east-1:406893895021:success-test
+
+  DefaultResponseTopicRegion:
+    Type: String
+    Default: us-east-1
+    AllowedValues:
+    - us-east-2
+    - us-east-1
+    - us-west-1
+    - us-west-2
+    - ap-south-1
+    - ap-northeast-2
+    - ap-southeast-1
+    - ap-southeast-2
+    - ap-northeast-1
+    - ca-central-1
+    - cn-north-1
+    - eu-central-1
+    - eu-west-1
+    - eu-west-2
+    - eu-west-3
+    - sa-east-1
+
   OregonTopicArn:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
     Type: String
@@ -25,8 +62,8 @@ Resources:
       Parameters:
         Name: !Ref AWS::StackName
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
-        NotifyLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:notify:TEST
-        Echo10ConstructionLambdaArn: arn:aws:lambda:us-east-1:406893895021:function:echo10-construction:TEST
+        NotifyLambdaArn: !GetAtt NotifyStack.Outputs.LambdaArn
+        Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
       TemplateURL: step-function/cloudformation.yaml
 
   InvokeStack:
@@ -47,6 +84,35 @@ Resources:
         Name: !Sub "${AWS::StackName}-verify"
         LogLevel: !Ref LogLevel
       TemplateURL: verify/cloudformation.yaml
+
+  Echo10ConstructionStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-echo10-construction"
+        LogLevel: !Ref LogLevel
+        PrivateBucket: !Ref PrivateBucket
+        PublicBucket: !Ref PublicBucket
+        Echo10Bucket: !Ref Echo10Bucket
+      TemplateURL: echo10-construction/cloudformation.yaml
+
+  NotifyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-notify"
+        DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
+        DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
+      TemplateURL: notify/cloudformation.yaml
+
+  MetricsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${AWS::StackName}-metrics"
+        LogLevel: !Ref LogLevel
+        StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
+      TemplateURL: metrics/cloudformation.yaml
 
   ErrorTopic:
     Type: AWS::SNS::Topic
