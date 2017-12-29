@@ -12,7 +12,7 @@ phases:
       - pip install -r verify/requirements.txt -t verify/src/
       - pip install -r notify/requirements.txt -t notify/src/
       - pip install -r metrics/requirements.txt -t metrics/src/
-      - pip install -r echo10-to-cmr/requirements.txt -t echo10-construction/src/
+      - pip install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
       - apt-get update
       - apt-get install -y libgeos-dev
       - mkdir echo10-construction/src/lib
