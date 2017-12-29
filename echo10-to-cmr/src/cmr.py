@@ -4,36 +4,12 @@
 
 import boto3
 import requests
-import os
-import yaml
 from logging import getLogger
 from xml.etree import ElementTree
 from urlparse import urljoin
 
 
 log = getLogger()
-
-
-def get_maturity(arn):
-    arn_tail = arn.split(':')[-1]
-    if arn_tail in ['DEV', 'TEST', 'PROD']:
-        maturity = arn_tail
-    else:
-        maturity = 'LATEST'
-    return maturity
-
-
-def get_config(maturity):
-    config_contents = get_file_content_from_s3(os.environ['CONFIG_BUCKET'], os.environ[maturity])
-    return yaml.load(config_contents)
-
-
-def setup(arn):
-    maturity = get_maturity(arn)
-    config = get_config(maturity)
-    log.setLevel(config['log_level'])
-    log.debug('Config: {0}'.format(config))
-    return config
 
 
 def send_request(session, base_url, echo10_content):
