@@ -172,7 +172,7 @@ Resources:
         MemoryReservation: 256
         Cpu: 896
         Command:
-        - "-c"
+        - "-j"
         - !Sub |-
           {
             "log": {
