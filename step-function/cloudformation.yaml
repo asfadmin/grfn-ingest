@@ -1,0 +1,219 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  Name:
+    Type: String
+
+  StepFunctionRoleArn:
+    Description: IAM execution role to attach to step function
+    Type: String
+    Default: arn:aws:iam::406893895021:role/service-role/StatesExecutionRole-us-east-1
+
+  VerifyLambdaArn:
+    Description: ARN of verify lambda
+    Type: String
+
+  NotifyLambdaArn:
+    Description: ARN of notify lambda
+    Type: String
+
+  Echo10ConstructionLambdaArn:
+    Description: ARN of echo10-construction lambda
+    Type: String
+
+Outputs:
+
+  StepFunctionArn:
+    Value: !Ref StepFunction
+
+  IngestActivityArn:
+    Value: !Ref IngestActivity
+
+  CmrActivityArn:
+    Value: !Ref CmrActivity
+
+Resources:
+
+  IngestActivity:
+    Type: AWS::StepFunctions::Activity
+    Properties:
+      Name: !Sub "${Name}-ingest"
+
+  CmrActivity:
+    Type: AWS::StepFunctions::Activity
+    Properties:
+      Name: !Sub "${Name}-echo10-to-cmr"
+
+  StepFunction:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: !Ref Name
+      RoleArn: !Ref StepFunctionRoleArn
+      DefinitionString: !Sub |-
+        {
+          "Comment": "A step function to control lambdas for GRFN Ingest",
+          "StartAt": "Verify",
+          "States": {
+            "Verify": {
+              "Type": "Task",
+              "Resource": "${VerifyLambdaArn}",
+              "Next": "Ingest",
+              "ResultPath": "$.VerifyResults",
+              "Retry": [
+                {
+                  "ErrorEquals": ["INVALID_MESSAGE", "INVALID_METADATA"],
+                  "MaxAttempts": 0
+                },
+                {
+                  "ErrorEquals": ["States.ALL"]
+                }
+              ],
+              "Catch": [{
+                "ErrorEquals": ["States.ALL"],
+                "Next": "Notify",
+                "ResultPath": "$.Error"
+              }]
+            },
+            "Ingest": {
+              "Type": "Task",
+              "Resource": "${IngestActivity}",
+              "TimeoutSeconds": 600,
+              "ResultPath": "$.IngestResults",
+              "Next": "Parallel",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"],
+                "MaxAttempts": 5
+              }],
+              "Catch": [{
+                "ErrorEquals": ["States.ALL"],
+                "Next": "Notify",
+                "ResultPath": "$.Error"
+              }]
+            },
+            "Parallel": {
+              "Type": "Parallel",
+              "InputPath": "$.IngestResults",
+              "ResultPath": "$.ParallelResults",
+              "Next": "Notify",
+              "Catch": [{
+                "ErrorEquals": ["States.ALL"],
+                "Next": "Notify",
+                "ResultPath": "$.Error"
+              }],
+              "Branches": [
+                {
+                  "StartAt": "Echo_10_Construction_All",
+                  "States": {
+                    "Echo_10_Construction_All": {
+                      "Type": "Task",
+                      "Resource": "${Echo10ConstructionLambdaArn}",
+                      "InputPath": "$.all",
+                      "ResultPath": "$.ConstructionAllResults",
+                      "Next": "Echo_10_to_CMR_All",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"]
+                      }]
+                    },
+                    "Echo_10_to_CMR_All": {
+                      "Type": "Task",
+                      "Resource": "${CmrActivity}",
+                      "TimeoutSeconds": 30,
+                      "InputPath": "$.ConstructionAllResults",
+                      "ResultPath": "$.CmrAllResults",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"],
+                        "MaxAttempts": 6,
+                        "BackoffRate": 5
+                      }],
+                      "End": true
+                    }
+                  }
+                },
+                {
+                  "StartAt": "Echo_10_Construction_UnwGeo",
+                  "States": {
+                    "Echo_10_Construction_UnwGeo": {
+                      "Type": "Task",
+                      "Resource": "${Echo10ConstructionLambdaArn}",
+                      "InputPath": "$.unw_geo",
+                      "ResultPath": "$.ConstructionUnwGeoResults",
+                      "Next": "Echo_10_to_CMR_UnwGeo",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"]
+                      }]
+                    },
+                    "Echo_10_to_CMR_UnwGeo": {
+                      "Type": "Task",
+                      "Resource": "${CmrActivity}",
+                      "TimeoutSeconds": 30,
+                      "InputPath": "$.ConstructionUnwGeoResults",
+                      "ResultPath": "$.CmrUnwGeoResults",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"],
+                        "MaxAttempts": 6,
+                        "BackoffRate": 5
+                      }],
+                      "End": true
+                    }
+                  }
+                },
+                {
+                  "StartAt": "Echo_10_Construction_FullRes",
+                  "States": {
+                    "Echo_10_Construction_FullRes": {
+                      "Type": "Task",
+                      "Resource": "${Echo10ConstructionLambdaArn}",
+                      "InputPath": "$.full_res",
+                      "ResultPath": "$.ConstructionFullResResults",
+                      "Next": "Echo_10_to_CMR_FullRes",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"]
+                      }]
+                    },
+                    "Echo_10_to_CMR_FullRes": {
+                      "Type": "Task",
+                      "Resource": "${CmrActivity}",
+                      "TimeoutSeconds": 30,
+                      "InputPath": "$.ConstructionFullResResults",
+                      "ResultPath": "$.CmrFullResResults",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"],
+                        "MaxAttempts": 6,
+                        "BackoffRate": 5
+                      }],
+                      "End": true
+                    }
+                  }
+                }
+              ]
+            },
+            "Notify": {
+              "Type": "Task",
+              "Resource": "${NotifyLambdaArn}",
+              "ResultPath": "$.NotifyResults",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"]
+              }],
+              "Next": "Check_Status"
+            },
+            "Check_Status": {
+              "Type" : "Choice",
+              "Choices": [{
+                "Variable": "$.NotifyResults.Status",
+                "StringEquals": "success",
+                "Next": "Success"
+              }],
+              "Default": "Failure"
+            },
+            "Failure": {
+              "Type": "Fail",
+              "Error": "Ingest failed.",
+              "Cause": "Ingest failed.  Inspect the 'Error' field of the Failure task's input for details."
+            },
+            "Success": {
+              "Type": "Pass",
+              "End": true
+            }
+          }
+        }

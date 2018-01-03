@@ -1,0 +1,94 @@
+{
+  "type": "object",
+  "required": ["ProductName", "DeliveryTime", "Metadata", "Browse", "ProductFiles"],
+  "additionalProperties": false,
+  "properties": {
+    "ProductName": {
+      "$ref": "#/definitions/non_empty_string"
+    },
+    "DeliveryTime": {
+      "$ref": "#/definitions/non_empty_string"
+    },
+    "Metadata": {
+      "$ref": "#/definitions/s3_object"
+    },
+    "Browse": {
+      "$ref": "#/definitions/s3_object"
+    },
+    "ProductFiles": {
+      "$ref": "#/definitions/s3_object_collection"
+    },
+    "ResponseTopic": {
+      "$ref": "#/definitions/topic"
+    }
+  },
+  "definitions": {
+    "s3_object": {
+      "type": "object",
+      "required": ["Bucket", "Key"],
+      "additionalProperties": false,
+      "properties": {
+        "Bucket": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "Key": {
+          "$ref": "#/definitions/non_empty_string"
+        }
+      }
+    },
+    "s3_object_collection": {
+      "type": "object",
+      "required": ["Bucket", "Keys"],
+      "additionalProperties": false,
+      "properties": {
+        "Bucket": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "Prefix": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "Keys": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/non_empty_string"
+          }
+        }
+      }
+    },
+    "topic": {
+      "type": "object",
+      "required": ["Region", "Arn"],
+      "additionalProperties": false,
+      "properties": {
+        "Region": {
+          "type": "string",
+          "enum": [
+            "us-east-1",
+            "us-east-2",
+            "us-west-1",
+            "us-west-2",
+            "ap-south-1",
+            "ap-northeast-2",
+            "ap-southeast-1",
+            "ap-southeast-2",
+            "ap-northeast-1",
+            "ca-central-1",
+            "eu-central-1",
+            "eu-west-1",
+            "eu-west-2",
+            "sa-east-1"
+          ]
+        },
+        "Arn": {
+          "$ref": "#/definitions/non_empty_string"
+        }
+      }
+    },
+    "non_empty_string": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

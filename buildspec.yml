@@ -1,0 +1,42 @@
+version: 0.1
+
+environment_variables:
+  plaintext:
+    BUCKET: "grfn-software"
+    PREFIX: "lambda"
+    PIPELINE_NAME: "ingest-test"
+    IMAGE_NAME: "ingest"
+    IMAGE_HOST: "406893895021.dkr.ecr.us-east-1.amazonaws.com"
+    MATURITY: "TEST"
+
+phases:
+  pre_build:
+    commands:
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+      - aws codepipeline get-pipeline-state --name $PIPELINE_NAME --query 'stageStates[*].actionStates[?actionName==`Source`].currentRevision.revisionId' --output text | cut -c1-7 > sha1.txt
+  build:
+    commands:
+      - cd ingest/; docker build -t $IMAGE_NAME .
+      - docker tag $IMAGE_NAME:latest $IMAGE_HOST/$IMAGE_NAME:latest
+      - docker tag $IMAGE_NAME:latest $IMAGE_HOST/$IMAGE_NAME:$MATURITY
+      - docker tag $IMAGE_NAME:latest $IMAGE_HOST/$IMAGE_NAME:$(cat sha1.txt)
+      - pip install -r invoke/requirements.txt -t invoke/src/
+      - pip install -r verify/requirements.txt -t verify/src/
+      - pip install -r notify/requirements.txt -t notify/src/
+      - pip install -r metrics/requirements.txt -t metrics/src/
+      - pip install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
+      - apt-get update
+      - apt-get install -y libgeos-dev
+      - mkdir echo10-construction/src/lib
+      - cp -L /usr/lib/libgeos*.so* echo10-construction/src/lib/
+      - pip install -r echo10-construction/requirements.txt -t echo10-construction/src/
+      - aws cloudformation package --template-file cloudformation.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
+  post_build:
+    commands:
+      - docker push $IMAGE_HOST/$IMAGE_NAME:latest
+      - docker push $IMAGE_HOST/$IMAGE_NAME:$MATURITY
+      - docker push $IMAGE_HOST/$IMAGE_NAME:$(cat sha1.txt)
+artifacts:
+  type: zip
+  files:
+    - cloudformation-final.yaml
