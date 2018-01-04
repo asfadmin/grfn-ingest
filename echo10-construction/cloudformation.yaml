@@ -24,6 +24,14 @@ Parameters:
   Echo10Bucket:
     Type: String
 
+  DistributionBaseUrl:
+    Type: String
+    Default: https://grfn-test.asf.alaska.edu/door/download
+
+  BrowseBaseUrl:
+    Type: String
+    Default: https://grfn-public-test.asf.alaska.edu
+
 Outputs:
 
   LambdaArn:
@@ -86,8 +94,8 @@ Resources:
               "echo10_construction": {
                 "output_bucket": "${Echo10Bucket}",
                 "granule_data": {
-                  "download_path": "https://grfn-test.asf.alaska.edu/door/download/{0}",
-                  "browse_path": "https://grfn-public-test.asf.alaska.edu/{0}",
+                  "download_path": "${DistributionBaseUrl}/{0}",
+                  "browse_path": "${BrowseBaseUrl}/{0}",
                   "missions": [
                     {"name": "S1 I-grams (BETA) - Western Pakistan", "coords": [[20,56],[20,70],[34,70],[34,56]]},
                     {"name": "S1 I-grams (BETA) - Mexico City, Mexico", "coords": [[14,-103],[14,-97],[23,-97],[23,-103]]},
