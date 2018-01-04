@@ -24,6 +24,14 @@ Parameters:
     Type: String
     Default: grfn-echo10-test
 
+  DistributionBaseUrl:
+    Type: String
+    Default: https://grfn-test.asf.alaska.edu/door/download
+
+  BrowseBaseUrl:
+    Type: String
+    Default: https://grfn-public-test.asf.alaska.edu
+
   DefaultResponseTopicArn:
     Type: String
     Default: arn:aws:sns:us-east-1:406893895021:success-test
@@ -110,6 +118,8 @@ Resources:
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         Echo10Bucket: !Ref Echo10Bucket
+        DistributionBaseUrl: !Ref DistributionBaseUrl
+        BrowseBaseUrl: !Ref BrowseBaseUrl
       TemplateURL: echo10-construction/cloudformation.yaml
 
   Echo10ToCmrStack:
