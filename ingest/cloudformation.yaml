@@ -123,7 +123,7 @@ Resources:
         Value: !Ref Name
         PropagateAtLaunch: true
       LifecycleHookSpecificationList:
-      - LifecycleHookName: !Ref Name
+      - LifecycleHookName: terminate
         LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
         HeartbeatTimeout: 300
         DefaultResult: CONTINUE
