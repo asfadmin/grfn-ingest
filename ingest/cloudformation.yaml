@@ -122,6 +122,11 @@ Resources:
       - Key: Name
         Value: !Ref Name
         PropagateAtLaunch: true
+      LifecycleHookSpecificationList:
+      - LifecycleHookName: !Ref Name
+        LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
+        HeartbeatTimeout: 300
+        DefaultResult: CONTINUE
 
   TaskIamRole:
     Type: AWS::IAM::Role
