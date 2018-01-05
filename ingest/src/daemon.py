@@ -5,6 +5,7 @@ import tempfile
 from argparse import ArgumentParser
 from os import chdir
 from shutil import rmtree
+from time import sleep
 
 import boto3
 from boto.utils import get_instance_metadata
@@ -107,7 +108,6 @@ def in_service():
 
 
 def daemon_loop(config):
-    log.info('Ingest daemon started')
     while in_service():
         task = get_task(config['activity'])
         if 'taskToken' in task:
@@ -121,7 +121,6 @@ def daemon_loop(config):
                 send_task_response(task['taskToken'], exception=e)
             finally:
                 rmtree(working_directory)
-    log.info('Instance is not in service.  Exiting')
 
 
 def setup():
@@ -140,8 +139,18 @@ def setup():
     return config
 
 
+def main():
+    config = setup()
+    log.info('Ingest daemon started')
+
+    daemon_loop(config['daemon'])
+
+    log.info('Sleeping %s seconds before exiting.', config['termination_wait_in_seconds'])
+    sleep(config['termination_wait_in_seconds'])
+    log.info('Exiting')
+
+
 log = get_logger()
 
 if __name__ == "__main__":
-    config = setup()
-    daemon_loop(config['daemon'])
+    main()
