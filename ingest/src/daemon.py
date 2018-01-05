@@ -96,9 +96,19 @@ def setup_working_directory():
     return working_directory
 
 
+def in_service():
+    metadata = get_instance_metadata()
+    instance_id = metadata['instance-id']
+    asg = boto3.client('autoscaling')
+    response = asg.describe_auto_scaling_instances(InstanceIds=[instance_id])
+    if not response['AutoScalingInstances']:
+        return True
+    return response['AutoScalingInstances'][0]['LifecycleState'] == 'InService'
+
+
 def daemon_loop(config):
     log.info('Ingest daemon started')
-    while True:
+    while in_service():
         task = get_task(config['activity'])
         if 'taskToken' in task:
             try:
@@ -111,6 +121,7 @@ def daemon_loop(config):
                 send_task_response(task['taskToken'], exception=e)
             finally:
                 rmtree(working_directory)
+    log.info('Instance is not in service.  Exiting')
 
 
 def setup():

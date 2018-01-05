@@ -160,6 +160,9 @@ Resources:
             Resource:
             - !Sub "arn:aws:s3:::${PublicBucket}/*"
             - !Sub "arn:aws:s3:::${PrivateBucket}/*"
+          - Effect: Allow
+            Action: autoscaling:DescribeAutoScalingInstances
+            Resource: "*"
 
   LogGroup:
     Type: AWS::Logs::LogGroup
