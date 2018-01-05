@@ -160,6 +160,9 @@ Resources:
             Resource:
             - !Sub "arn:aws:s3:::${PublicBucket}/*"
             - !Sub "arn:aws:s3:::${PrivateBucket}/*"
+          - Effect: Allow
+            Action: autoscaling:DescribeAutoScalingInstances
+            Resource: "*"
 
   LogGroup:
     Type: AWS::Logs::LogGroup
@@ -185,6 +188,7 @@ Resources:
               "boto_level": "WARN"
             },
             "aws_region": "${AWS::Region}",
+            "termination_wait_in_seconds": 300,
             "daemon": {
               "activity": {
                 "arn": "${ActivityArn}",

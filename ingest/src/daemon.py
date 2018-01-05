@@ -5,6 +5,7 @@ import tempfile
 from argparse import ArgumentParser
 from os import chdir
 from shutil import rmtree
+from time import sleep
 
 import boto3
 from boto.utils import get_instance_metadata
@@ -96,9 +97,18 @@ def setup_working_directory():
     return working_directory
 
 
+def in_service():
+    metadata = get_instance_metadata()
+    instance_id = metadata['instance-id']
+    asg = boto3.client('autoscaling')
+    response = asg.describe_auto_scaling_instances(InstanceIds=[instance_id])
+    if not response['AutoScalingInstances']:
+        return True
+    return response['AutoScalingInstances'][0]['LifecycleState'] == 'InService'
+
+
 def daemon_loop(config):
-    log.info('Ingest daemon started')
-    while True:
+    while in_service():
         task = get_task(config['activity'])
         if 'taskToken' in task:
             try:
@@ -129,8 +139,18 @@ def setup():
     return config
 
 
+def main():
+    config = setup()
+    log.info('Ingest daemon started')
+
+    daemon_loop(config['daemon'])
+
+    log.info('Sleeping %s seconds before exiting.', config['termination_wait_in_seconds'])
+    sleep(config['termination_wait_in_seconds'])
+    log.info('Exiting')
+
+
 log = get_logger()
 
 if __name__ == "__main__":
-    config = setup()
-    daemon_loop(config['daemon'])
+    main()
