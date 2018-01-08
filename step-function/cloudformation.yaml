@@ -82,8 +82,7 @@ Resources:
               "ResultPath": "$.IngestResults",
               "Next": "Parallel",
               "Retry": [{
-                "ErrorEquals": ["States.ALL"],
-                "MaxAttempts": 5
+                "ErrorEquals": ["States.ALL"]
               }],
               "Catch": [{
                 "ErrorEquals": ["States.ALL"],
