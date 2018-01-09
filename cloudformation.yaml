@@ -78,6 +78,17 @@ Parameters:
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
+  Maturity:
+    Type: String
+    Default: Test
+
+Properties:
+  Tags:
+    - Key: Project
+      Value: GRFN
+    - Key: Maturity
+      Value: !Ref Maturity
+
 Resources:
 
   StepFunctionStack:
