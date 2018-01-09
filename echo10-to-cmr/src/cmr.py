@@ -20,7 +20,7 @@ def send_request(session, base_url, echo10_content):
     return response
 
 
-def get_session(config):
+def get_session(config, s3):
     token = get_cached_token(config, s3)
     session = requests.Session()
     headers = {'Content-Type': 'application/echo10+xml', 'Echo-Token': token}
