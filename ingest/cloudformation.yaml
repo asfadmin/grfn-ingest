@@ -280,7 +280,7 @@ Resources:
         MetricIntervalUpperBound: 256
       - ScalingAdjustment: 128
         MetricIntervalLowerBound: 256
-        MetricIntervalUpperBound: 384
+        MetricIntervalUpperBound: 512
       - ScalingAdjustment: 256
         MetricIntervalLowerBound: 512
         MetricIntervalUpperBound: 768
