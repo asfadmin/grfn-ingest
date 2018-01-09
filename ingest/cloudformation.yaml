@@ -28,7 +28,7 @@ Parameters:
   Ami:
     Type: AWS::EC2::Image::Id
     Description: Runtime AMI
-    Default: ami-fad25980
+    Default: ami-13401669
 
   ContainerImage:
     Type: String
