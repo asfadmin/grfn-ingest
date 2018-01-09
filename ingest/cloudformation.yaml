@@ -117,7 +117,7 @@ Resources:
       VPCZoneIdentifier: !Ref SubnetId
       LaunchConfigurationName: !Ref LaunchConfiguration
       MinSize: 0
-      MaxSize: 192
+      MaxSize: 384
       Tags:
       - Key: Name
         Value: !Ref Name
@@ -281,14 +281,17 @@ Resources:
       - ScalingAdjustment: 128
         MetricIntervalLowerBound: 256
         MetricIntervalUpperBound: 384
-      - ScalingAdjustment: 192
-        MetricIntervalLowerBound: 384
+      - ScalingAdjustment: 256
+        MetricIntervalLowerBound: 512
+        MetricIntervalUpperBound: 768
+      - ScalingAdjustment: 384
+        MetricIntervalLowerBound: 768
 
   ServiceScalingTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
       MinCapacity: 0
-      MaxCapacity: 384
+      MaxCapacity: 768
       ResourceId: !Sub "service/${Cluster}/${Service.Name}"
       RoleARN: !Sub "arn:aws:iam::${AWS::AccountId}:role/ecsAutoscaleRole"
       ScalableDimension: ecs:service:DesiredCount
@@ -307,7 +310,7 @@ Resources:
         - ScalingAdjustment: 0
           MetricIntervalLowerBound: 0
           MetricIntervalUpperBound: 1
-        - ScalingAdjustment: 384
+        - ScalingAdjustment: 768
           MetricIntervalLowerBound: 1
 
   Service:
