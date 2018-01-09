@@ -47,7 +47,7 @@ Parameters:
   MaxSpotPrice:
     Type: String
     Description: Maximum price to pay on the spot market
-    Default: '0.08'
+    Default: '0.16'
 
   ActivityArn:
     Type: String
