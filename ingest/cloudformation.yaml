@@ -97,7 +97,7 @@ Resources:
       AssociatePublicIpAddress: true
       IamInstanceProfile: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/ecsInstanceRole"
       ImageId: !Ref Ami
-      InstanceType: i3.large
+      InstanceType: i3.xlarge
       SpotPrice: !Ref MaxSpotPrice
       SecurityGroups:
       - !Ref SecurityGroup
@@ -117,7 +117,7 @@ Resources:
       VPCZoneIdentifier: !Ref SubnetId
       LaunchConfigurationName: !Ref LaunchConfiguration
       MinSize: 0
-      MaxSize: 384
+      MaxSize: 192
       Tags:
       - Key: Name
         Value: !Ref Name
@@ -178,7 +178,7 @@ Resources:
       - Name: !Ref Name
         Image: !Ref ContainerImage
         MemoryReservation: 256
-        Cpu: 896
+        Cpu: 1024
         Command:
         - "-j"
         - !Sub |-
@@ -259,32 +259,29 @@ Resources:
         MetricIntervalUpperBound: 1
       - ScalingAdjustment: 1
         MetricIntervalLowerBound: 1
-        MetricIntervalUpperBound: 4
-      - ScalingAdjustment: 2
-        MetricIntervalLowerBound: 4
         MetricIntervalUpperBound: 8
-      - ScalingAdjustment: 4
+      - ScalingAdjustment: 2
         MetricIntervalLowerBound: 8
         MetricIntervalUpperBound: 16
-      - ScalingAdjustment: 8
+      - ScalingAdjustment: 4
         MetricIntervalLowerBound: 16
         MetricIntervalUpperBound: 32
-      - ScalingAdjustment: 16
+      - ScalingAdjustment: 8
         MetricIntervalLowerBound: 32
         MetricIntervalUpperBound: 64
-      - ScalingAdjustment: 32
+      - ScalingAdjustment: 16
         MetricIntervalLowerBound: 64
         MetricIntervalUpperBound: 128
-      - ScalingAdjustment: 64
+      - ScalingAdjustment: 32
         MetricIntervalLowerBound: 128
         MetricIntervalUpperBound: 256
-      - ScalingAdjustment: 128
+      - ScalingAdjustment: 64
         MetricIntervalLowerBound: 256
         MetricIntervalUpperBound: 512
-      - ScalingAdjustment: 256
+      - ScalingAdjustment: 128
         MetricIntervalLowerBound: 512
         MetricIntervalUpperBound: 768
-      - ScalingAdjustment: 384
+      - ScalingAdjustment: 192
         MetricIntervalLowerBound: 768
 
   ServiceScalingTarget:
