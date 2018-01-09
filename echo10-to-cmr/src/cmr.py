@@ -28,8 +28,7 @@ def get_session(config):
     return session
 
 
-def get_file_content_from_s3(bucket, key):
-    s3 = boto3.resource('s3')
+def get_file_content_from_s3(bucket, key, s3):
     obj = s3.Object(bucket, key)
     response = obj.get()
     contents = response['Body'].read()
@@ -38,7 +37,7 @@ def get_file_content_from_s3(bucket, key):
 
 def get_cached_token(config):
     try:
-        return get_file_content_from_s3(config['bucket'], config['key'])
+        return get_file_content_from_s3(config['bucket'], config['key'], s3)
     except Exception as e:
         return None
 
@@ -61,8 +60,8 @@ def push_echo10_granule_to_cmr(session, echo10_content, config):
     return response
 
 
-def process_task(task_input, config, session):
+def process_task(task_input, config, session, s3):
     log.info(task_input)
-    echo10_content = get_file_content_from_s3(task_input['bucket'], task_input['key'])
+    echo10_content = get_file_content_from_s3(task_input['bucket'], task_input['key'], s3)
     response = push_echo10_granule_to_cmr(session, echo10_content, config)
     return {'status': response.status_code, 'text': response.text}
