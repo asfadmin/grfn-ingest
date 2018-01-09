@@ -82,12 +82,18 @@ Parameters:
     Type: String
     Default: Test
 
+  Application:
+    Type: String
+    Default: Ingest
+
 Properties:
   Tags:
-    - Key: Project
-      Value: GRFN
+    - Key: Stack
+      Value: !Ref AWS::StackName
     - Key: Maturity
       Value: !Ref Maturity
+    - Key: Application
+      Value: !Ref Application
 
 Resources:
 
