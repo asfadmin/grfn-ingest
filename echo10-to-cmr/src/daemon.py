@@ -44,6 +44,7 @@ def send_task_response(sfn_client, token, output=None, exception=None):
 def daemon_loop(config, get_remaining_time_in_millis_fcn):
     log.info('Daemon started')
     session = get_session(config['cmr']['cached_token'])
+    s3 = boto3.resource('s3')
     sfn_client = get_sfn_client(config['sfn_connect_timeout'])
     while True:
         if get_remaining_time_in_millis_fcn() < config['max_task_time_in_millis']:
@@ -57,7 +58,7 @@ def daemon_loop(config, get_remaining_time_in_millis_fcn):
 
         try:
             task_input = json.loads(task['input'])
-            output = process_task(task_input, config['cmr'], session)
+            output = process_task(task_input, config['cmr'], session, s3)
             send_task_response(sfn_client, task['taskToken'], output)
         except Exception as e:
             log.exception('Failed to process task.')
