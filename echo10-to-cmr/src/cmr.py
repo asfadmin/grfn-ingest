@@ -21,7 +21,7 @@ def send_request(session, base_url, echo10_content):
 
 
 def get_session(config):
-    token = get_cached_token(config)
+    token = get_cached_token(config, s3)
     session = requests.Session()
     headers = {'Content-Type': 'application/echo10+xml', 'Echo-Token': token}
     session.headers.update(headers)
