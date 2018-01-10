@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues:
+    - CRITICAL
+    - ERROR
+    - WARNING
+    - INFO
+    - DEBUG
+
+  PrivateBucket:
+    Type: String
+    Default: grfn-private-test
+
+  PublicBucket:
+    Type: String
+    Default: grfn-public-test
+
+  Echo10Bucket:
+    Type: String
+    Default: grfn-echo10-test
+
+  DistributionBaseUrl:
+    Type: String
+    Default: https://grfn-test.asf.alaska.edu/door/download
+
+  BrowseBaseUrl:
+    Type: String
+    Default: https://grfn-public-test.asf.alaska.edu
+
+  DefaultResponseTopicArn:
+    Type: String
+    Default: arn:aws:sns:us-east-1:406893895021:success-test
+
+  DefaultResponseTopicRegion:
+    Type: String
+    Default: us-east-1
+    AllowedValues:
+    - us-east-2
+    - us-east-1
+    - us-west-1
+    - us-west-2
+    - ap-south-1
+    - ap-northeast-2
+    - ap-southeast-1
+    - ap-southeast-2
+    - ap-northeast-1
+    - ca-central-1
+    - cn-north-1
+    - eu-central-1
+    - eu-west-1
+    - eu-west-2
+    - eu-west-3
+    - sa-east-1
+
+  OregonTopicArn:
+    Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
+    Type: String
+    Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
+
+  CachedCmrTokenKey:
+    Type: String
+    Default: cached-cmr-auth-token-test
+
+  CmrTokenLambda:
+    Type: String
+    Default: cmr-token:TEST
+
+  CmrGranuleUrl:
+    Type: String
+    Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
+
+  IngestContainerImage:
+    Type: String
+    Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
+
+  Maturity:
+    Type: String
+    Default: Test
+    AllowedValues:
+      - Test
+      - Prod
+
+Resources:
+
+  WrapperStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: Stack
+          Value: !Ref AWS::StackName
+        - Key: Maturity
+          Value: !Ref Maturity
+        - Key: Application
+          Value: Ingest
+      Parameters:
+        Name: !Ref AWS::StackName
+        LogLevel: !Ref LogLevel
+        QueueUrl: !Ref JobQueue
+        PrivateBucket: !Ref PrivateBucket
+        PublicBucket: !Ref PublicBucket
+        Echo10Bucket: !Ref Echo10Bucket
+        DistributionBaseUrl: !Ref DistributionBaseUrl
+        BrowseBaseUrl: !Ref BrowseBaseUrl
+        CachedCmrTokenKey: !Ref CachedCmrTokenKey
+        CmrTokenLambda: !Ref CmrTokenLambda
+        CmrGranuleUrl: !Ref CmrGranuleUrl
+        DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
+        DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
+        ContainerImage: !Ref IngestContainerImage
+        OregonTopicArn: !Ref OregonTopicArn
+      TemplateURL: cloudformation-main.yaml

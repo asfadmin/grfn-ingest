@@ -78,23 +78,6 @@ Parameters:
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
-  Maturity:
-    Type: String
-    Default: Test
-
-  Application:
-    Type: String
-    Default: Ingest
-
-Properties:
-  Tags:
-    - Key: Stack
-      Value: !Ref AWS::StackName
-    - Key: Maturity
-      Value: !Ref Maturity
-    - Key: Application
-      Value: !Ref Application
-
 Resources:
 
   StepFunctionStack:
