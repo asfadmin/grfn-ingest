@@ -84,10 +84,11 @@ Parameters:
     AllowedValues:
       - Test
       - Prod
+      - Dev
 
 Resources:
 
-  WrapperStack:
+  MainStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Tags:
@@ -100,7 +101,6 @@ Resources:
       Parameters:
         Name: !Ref AWS::StackName
         LogLevel: !Ref LogLevel
-        QueueUrl: !Ref JobQueue
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         Echo10Bucket: !Ref Echo10Bucket
