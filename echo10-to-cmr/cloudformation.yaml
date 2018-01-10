@@ -142,7 +142,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Name: !Sub "${Name}-B"
-      ScheduleExpression: "rate(2 minute)"
+      ScheduleExpression: "rate(2 minutes)"
       State: ENABLED
       Targets:
         - Arn: !GetAtt Lambda.Arn
