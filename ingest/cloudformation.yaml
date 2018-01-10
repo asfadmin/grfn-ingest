@@ -117,7 +117,7 @@ Resources:
       VPCZoneIdentifier: !Ref SubnetId
       LaunchConfigurationName: !Ref LaunchConfiguration
       MinSize: 0
-      MaxSize: 192
+      MaxSize: 200
       Tags:
       - Key: Name
         Value: !Ref Name
@@ -262,33 +262,36 @@ Resources:
         MetricIntervalUpperBound: 8
       - ScalingAdjustment: 2
         MetricIntervalLowerBound: 8
-        MetricIntervalUpperBound: 16
-      - ScalingAdjustment: 4
-        MetricIntervalLowerBound: 16
-        MetricIntervalUpperBound: 32
-      - ScalingAdjustment: 8
-        MetricIntervalLowerBound: 32
-        MetricIntervalUpperBound: 64
-      - ScalingAdjustment: 16
-        MetricIntervalLowerBound: 64
-        MetricIntervalUpperBound: 128
-      - ScalingAdjustment: 32
-        MetricIntervalLowerBound: 128
-        MetricIntervalUpperBound: 256
-      - ScalingAdjustment: 64
-        MetricIntervalLowerBound: 256
-        MetricIntervalUpperBound: 512
-      - ScalingAdjustment: 128
-        MetricIntervalLowerBound: 512
-        MetricIntervalUpperBound: 768
-      - ScalingAdjustment: 192
-        MetricIntervalLowerBound: 768
+        MetricIntervalUpperBound: 20
+      - ScalingAdjustment: 5
+        MetricIntervalLowerBound: 20
+        MetricIntervalUpperBound: 40
+      - ScalingAdjustment: 10
+        MetricIntervalLowerBound: 40
+        MetricIntervalUpperBound: 80
+      - ScalingAdjustment: 20
+        MetricIntervalLowerBound: 80
+        MetricIntervalUpperBound: 160
+      - ScalingAdjustment: 40
+        MetricIntervalLowerBound: 160
+        MetricIntervalUpperBound: 320
+      - ScalingAdjustment: 80
+        MetricIntervalLowerBound: 320
+        MetricIntervalUpperBound: 480
+      - ScalingAdjustment: 120
+        MetricIntervalLowerBound: 480
+        MetricIntervalUpperBound: 640
+      - ScalingAdjustment: 160
+        MetricIntervalLowerBound: 640
+        MetricIntervalUpperBound: 800
+      - ScalingAdjustment: 200
+        MetricIntervalLowerBound: 800
 
   ServiceScalingTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
       MinCapacity: 0
-      MaxCapacity: 768
+      MaxCapacity: 800
       ResourceId: !Sub "service/${Cluster}/${Service.Name}"
       RoleARN: !Sub "arn:aws:iam::${AWS::AccountId}:role/ecsAutoscaleRole"
       ScalableDimension: ecs:service:DesiredCount
@@ -307,7 +310,7 @@ Resources:
         - ScalingAdjustment: 0
           MetricIntervalLowerBound: 0
           MetricIntervalUpperBound: 1
-        - ScalingAdjustment: 768
+        - ScalingAdjustment: 800
           MetricIntervalLowerBound: 1
 
   Service:
