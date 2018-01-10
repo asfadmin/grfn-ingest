@@ -111,6 +111,6 @@ Resources:
         CmrGranuleUrl: !Ref CmrGranuleUrl
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
-        ContainerImage: !Ref IngestContainerImage
+        IngestContainerImage: !Ref IngestContainerImage
         OregonTopicArn: !Ref OregonTopicArn
       TemplateURL: cloudformation-main.yaml
