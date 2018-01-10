@@ -78,13 +78,17 @@ Parameters:
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
+  Name:
+    Type: String
+    Default: NotSet
+
 Resources:
 
   StepFunctionStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Ref AWS::StackName
+        Name: !Ref Name
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: !GetAtt NotifyStack.Outputs.LambdaArn
         Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
@@ -94,7 +98,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-invoke"
+        Name: !Sub "${Name}-invoke"
         LogLevel: !Ref LogLevel
         QueueUrl: !Ref JobQueue
         QueueArn: !GetAtt JobQueue.Arn
@@ -105,7 +109,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-verify"
+        Name: !Sub "${Name}-verify"
         LogLevel: !Ref LogLevel
       TemplateURL: verify/cloudformation.yaml
 
@@ -113,7 +117,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-echo10-construction"
+        Name: !Sub "${Name}-echo10-construction"
         LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
@@ -126,7 +130,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-echo10-to-cmr"
+        Name: !Sub "${Name}-echo10-to-cmr"
         LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
         Echo10Bucket: !Ref Echo10Bucket
@@ -139,7 +143,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-notify"
+        Name: !Sub "${Name}-notify"
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
       TemplateURL: notify/cloudformation.yaml
@@ -148,7 +152,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-metrics"
+        Name: !Sub "${Name}-metrics"
         LogLevel: !Ref LogLevel
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       TemplateURL: metrics/cloudformation.yaml
@@ -157,7 +161,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-ingest"
+        Name: !Sub "${Name}-ingest"
         LogLevel: !Ref LogLevel
         ContainerImage: !Ref IngestContainerImage
         MetricName: !GetAtt MetricsStack.Outputs.MetricName
@@ -170,12 +174,12 @@ Resources:
   ErrorTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Sub "${AWS::StackName}-errors"
+      TopicName: !Sub "${Name}-errors"
 
   ErrorAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "${AWS::StackName}-errors"
+      AlarmName: !Sub "${Name}-errors"
       AlarmDescription: Ingest failure alarm
       AlarmActions:
         - !Ref ErrorTopic
@@ -195,14 +199,14 @@ Resources:
   JobQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub "${AWS::StackName}-jobs"
+      QueueName: !Sub "${Name}-jobs"
       MessageRetentionPeriod: 1209600
       VisibilityTimeout: 10
 
   JobTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: !Sub "${AWS::StackName}-jobs"
+      TopicName: !Sub "${Name}-jobs"
       Subscription:
       - Protocol: sqs
         Endpoint: !GetAtt JobQueue.Arn
