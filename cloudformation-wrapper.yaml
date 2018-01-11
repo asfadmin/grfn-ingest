@@ -80,11 +80,11 @@ Parameters:
 
   Maturity:
     Type: String
-    Default: Test
+    Default: DEV
     AllowedValues:
-      - Test
-      - Prod
-      - Dev
+      - TEST
+      - PROD
+      - DEV
 
 Resources:
 
@@ -92,12 +92,10 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Tags:
-        - Key: Stack
-          Value: !Ref AWS::StackName
-        - Key: Maturity
+        - Key: MATURITY
           Value: !Ref Maturity
-        - Key: Application
-          Value: Ingest
+        - Key: APPLICATION
+          Value: GRFN-INGEST
       Parameters:
         Name: !Ref AWS::StackName
         LogLevel: !Ref LogLevel
