@@ -7,7 +7,7 @@ environment_variables:
     IMAGE_NAME: "ingest"
     IMAGE_HOST: "406893895021.dkr.ecr.us-east-1.amazonaws.com"
     MATURITY: "PROD"
-    SHA1: "fb85aff"
+    SHA1: "2f6442a"
 
 phases:
   pre_build:
@@ -27,7 +27,7 @@ phases:
       - mkdir echo10-construction/src/lib
       - cp -L /usr/lib/libgeos*.so* echo10-construction/src/lib/
       - pip install -r echo10-construction/requirements.txt -t echo10-construction/src/
-      - aws cloudformation package --template-file cloudformation.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
+      - aws cloudformation package --template-file cloudformation-wrapper.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
   post_build:
     commands:
       - docker push $IMAGE_HOST/$IMAGE_NAME:$MATURITY
