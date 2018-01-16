@@ -20,10 +20,6 @@ Parameters:
     Type: String
     Default: grfn-public-test
 
-  Echo10Bucket:
-    Type: String
-    Default: grfn-echo10-test
-
   DistributionBaseUrl:
     Type: String
     Default: https://grfn-test.asf.alaska.edu/door/download
@@ -61,6 +57,10 @@ Parameters:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
     Type: String
     Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
+
+  CachedCmrTokenBucket:
+    Type: String
+    Default: grfn-echo10-test
 
   CachedCmrTokenKey:
     Type: String
@@ -121,7 +121,7 @@ Resources:
         LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
-        Echo10Bucket: !Ref Echo10Bucket
+        TempBucket: !Ref TempBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
       TemplateURL: echo10-construction/cloudformation.yaml
@@ -133,7 +133,8 @@ Resources:
         Name: !Sub "${Name}-echo10-to-cmr"
         LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
-        Echo10Bucket: !Ref Echo10Bucket
+        TempBucket: !Ref TempBucket
+        CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
         CmrGranuleUrl: !Ref CmrGranuleUrl
@@ -169,7 +170,17 @@ Resources:
         ActivityArn: !GetAtt StepFunctionStack.Outputs.IngestActivityArn
         PublicBucket: !Ref PublicBucket
         PrivateBucket: !Ref PrivateBucket
+        TempBucket: !Ref TempBucket
       TemplateURL: ingest/cloudformation.yaml
+
+  TempBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${Name}-temp"
+      LifecycleConfiguration:
+        Rules:
+        - ExpirationInDays: 3
+          Status: Enabled
 
   ErrorTopic:
     Type: AWS::SNS::Topic

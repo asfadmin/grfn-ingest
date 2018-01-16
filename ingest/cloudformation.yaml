@@ -60,6 +60,9 @@ Parameters:
     Type: String
     Default: grfn-private-test
 
+  TempBucket:
+    Type: String
+
 Resources:
 
   Cluster:
@@ -160,6 +163,7 @@ Resources:
             Resource:
             - !Sub "arn:aws:s3:::${PublicBucket}/*"
             - !Sub "arn:aws:s3:::${PrivateBucket}/*"
+            - !Sub "arn:aws:s3:::${TempBucket}/*"
           - Effect: Allow
             Action: autoscaling:DescribeAutoScalingInstances
             Resource: "*"
@@ -197,7 +201,7 @@ Resources:
               },
               "ingest": {
                 "browse_bucket": "${PublicBucket}",
-                "metadata_bucket": "${PublicBucket}",
+                "metadata_bucket": "${TempBucket}",
                 "product_bucket": "${PrivateBucket}",
                 "transfer_config": {
                   "multipart_threshold": 61644800,
