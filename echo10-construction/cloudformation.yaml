@@ -21,7 +21,7 @@ Parameters:
   PublicBucket:
     Type: String
 
-  Echo10Bucket:
+  TempBucket:
     Type: String
 
   DistributionBaseUrl:
@@ -77,7 +77,7 @@ Resources:
             - !Sub "arn:aws:s3:::${PublicBucket}/*"
           - Effect: Allow
             Action: s3:PutObject
-            Resource: !Sub "arn:aws:s3:::${Echo10Bucket}/*"
+            Resource: !Sub "arn:aws:s3:::${TempBucket}/*"
 
   Lambda:
     Type: AWS::Lambda::Function
@@ -92,7 +92,7 @@ Resources:
             {
               "log_level": "${LogLevel}",
               "echo10_construction": {
-                "output_bucket": "${Echo10Bucket}",
+                "output_bucket": "${TempBucket}",
                 "granule_data": {
                   "download_path": "${DistributionBaseUrl}/{0}",
                   "browse_path": "${BrowseBaseUrl}/{0}",
