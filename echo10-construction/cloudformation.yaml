@@ -75,6 +75,7 @@ Resources:
             Resource:
             - !Sub "arn:aws:s3:::${PrivateBucket}/*"
             - !Sub "arn:aws:s3:::${PublicBucket}/*"
+            - !Sub "arn:aws:s3:::${TempBucket}/*"
           - Effect: Allow
             Action: s3:PutObject
             Resource: !Sub "arn:aws:s3:::${TempBucket}/*"
