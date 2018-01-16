@@ -18,47 +18,47 @@ Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
     Description: Select a VPC that allows instances to access the Internet.
-    Default: vpc-008e6979
+#   Default:
 
   SubnetId:
     Type: List<AWS::EC2::Subnet::Id>
     Description: Select at least two subnets in your selected VPC.
-    Default: subnet-25d39d19,subnet-5387281b,subnet-75658d2f,subnet-844ab8a8,subnet-6083e36c
+#   Default:
 
   Ami:
     Type: AWS::EC2::Image::Id
     Description: Runtime AMI
-    Default: ami-13401669
+#   Default:
 
   ContainerImage:
     Type: String
     Description: URL for runtime docker container (repository-url/image:tag)
-    Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
+#   Default:
 
   MetricName:
     Type: String
-    Default: IngestsRunning
+#   Default:
 
   MetricNamespace:
     Type: String
     Description: Namespace of CloudWatch metric to drive scaling alarm
-    Default: TEST
+#    Default:
 
   MaxSpotPrice:
     Type: String
     Description: Maximum price to pay on the spot market
-    Default: '0.32'
+#    Default:
 
   ActivityArn:
     Type: String
 
   PublicBucket:
     Type: String
-    Default: grfn-public-test
+#   Default:
 
   PrivateBucket:
     Type: String
-    Default: grfn-private-test
+#    Default:
 
 Resources:
 
