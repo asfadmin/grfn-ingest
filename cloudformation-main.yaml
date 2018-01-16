@@ -177,10 +177,6 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub "${Name}-temp"
-      LifecycleConfiguration:
-        Rules:
-        - ExpirationInDays: 3
-          Status: Enabled
 
   ErrorTopic:
     Type: AWS::SNS::Topic
