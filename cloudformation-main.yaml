@@ -121,7 +121,7 @@ Resources:
         LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
-        TempBucket: !Ref TempBucket
+        AuxBucket: !Ref AuxBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
       TemplateURL: echo10-construction/cloudformation.yaml
@@ -133,7 +133,7 @@ Resources:
         Name: !Sub "${Name}-echo10-to-cmr"
         LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
-        TempBucket: !Ref TempBucket
+        AuxBucket: !Ref AuxBucket
         CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
@@ -170,13 +170,13 @@ Resources:
         ActivityArn: !GetAtt StepFunctionStack.Outputs.IngestActivityArn
         PublicBucket: !Ref PublicBucket
         PrivateBucket: !Ref PrivateBucket
-        TempBucket: !Ref TempBucket
+        AuxBucket: !Ref AuxBucket
       TemplateURL: ingest/cloudformation.yaml
 
-  TempBucket:
+  AuxBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${Name}-temp"
+      BucketName: !Sub "${Name}-aux"
 
   ErrorTopic:
     Type: AWS::SNS::Topic

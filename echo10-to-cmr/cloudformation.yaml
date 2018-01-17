@@ -18,7 +18,7 @@ Parameters:
   ActivityArn:
     Type: String
 
-  TempBucket:
+  AuxBucket:
     Type: String
 
   CachedCmrTokenBucket:
@@ -77,7 +77,7 @@ Resources:
             Resource: !GetAtt DeadLetterQueue.Arn
           - Effect: Allow
             Action: s3:GetObject
-            Resource: !Sub "arn:aws:s3:::${TempBucket}/*"
+            Resource: !Sub "arn:aws:s3:::${AuxBucket}/*"
           - Effect: Allow
             Action: s3:GetObject
             Resource: !Sub "arn:aws:s3:::${CachedCmrTokenBucket}/${CachedCmrTokenKey}"
