@@ -83,6 +83,11 @@ Parameters:
     MinValue: 0
     Default: 300
 
+  IngestActivityTimeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
   Name:
     Type: String
     Default: NotSet
@@ -97,7 +102,7 @@ Resources:
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: !GetAtt NotifyStack.Outputs.LambdaArn
         Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
-        IngestEc2Timeout: !Ref IngestEc2Timeout
+        IngestActivityTimeout: !Ref IngestActivityTimeout
       TemplateURL: step-function/cloudformation.yaml
 
   InvokeStack:

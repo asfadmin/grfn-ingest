@@ -83,6 +83,11 @@ Parameters:
     MinValue: 0
     Default: 300
 
+  IngestActivityTimeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
   Maturity:
     Type: String
     Default: DEV
@@ -116,5 +121,6 @@ Resources:
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
         IngestContainerImage: !Ref IngestContainerImage
         IngestEc2Timeout: !Ref IngestEc2Timeout
+        IngestActivityTimeout: !Ref IngestActivityTimeout
         OregonTopicArn: !Ref OregonTopicArn
       TemplateURL: cloudformation-main.yaml
