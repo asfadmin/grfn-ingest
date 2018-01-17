@@ -20,10 +20,6 @@ Parameters:
     Type: String
     Default: grfn-public-test
 
-  Echo10Bucket:
-    Type: String
-    Default: grfn-echo10-test
-
   DistributionBaseUrl:
     Type: String
     Default: https://grfn-test.asf.alaska.edu/door/download
@@ -61,6 +57,10 @@ Parameters:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
     Type: String
     Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
+
+  CachedCmrTokenBucket:
+    Type: String
+    Default: grfn-echo10-test
 
   CachedCmrTokenKey:
     Type: String
@@ -101,9 +101,9 @@ Resources:
         LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
-        Echo10Bucket: !Ref Echo10Bucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
+        CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
         CmrGranuleUrl: !Ref CmrGranuleUrl

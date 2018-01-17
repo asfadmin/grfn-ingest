@@ -18,7 +18,10 @@ Parameters:
   ActivityArn:
     Type: String
 
-  Echo10Bucket:
+  AuxBucket:
+    Type: String
+
+  CachedCmrTokenBucket:
     Type: String
     Default: grfn-echo10-test
 
@@ -74,7 +77,10 @@ Resources:
             Resource: !GetAtt DeadLetterQueue.Arn
           - Effect: Allow
             Action: s3:GetObject
-            Resource: !Sub "arn:aws:s3:::${Echo10Bucket}/*"
+            Resource: !Sub "arn:aws:s3:::${AuxBucket}/*"
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${CachedCmrTokenBucket}/${CachedCmrTokenKey}"
           - Effect: Allow
             Action: lambda:InvokeFunction
             Resource: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${CmrTokenLambda}"
@@ -107,7 +113,7 @@ Resources:
                 "cmr": {
                   "granule_url": "${CmrGranuleUrl}",
                   "cached_token": {
-                    "bucket": "${Echo10Bucket}",
+                    "bucket": "${CachedCmrTokenBucket}",
                     "key": "${CachedCmrTokenKey}"
                   },
                   "cmr_token_lambda": "${CmrTokenLambda}"
