@@ -86,7 +86,7 @@ Parameters:
   IngestActivityTimeout:
     Type: Number
     MinValue: 0
-    Default: 300
+    Default: 600
 
   Name:
     Type: String
