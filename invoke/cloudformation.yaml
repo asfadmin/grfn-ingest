@@ -81,7 +81,7 @@ Resources:
               "log_level": "${LogLevel}",
               "invoke": {
                 "queue_url": "${QueueUrl}",
-                "max_messages_to_process": 185,
+                "max_messages_to_process": 200,
                 "max_messages_per_receive": 10,
                 "wait_time_in_seconds": 0,
                 "message": {
