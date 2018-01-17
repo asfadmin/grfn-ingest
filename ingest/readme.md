@@ -1,4 +1,4 @@
-#COPYRIGHT NOTICE + LICENSE:
+# COPYRIGHT NOTICE + LICENSE:
 
 *Copyright 2017 University of Alaska Fairbanks*
 
