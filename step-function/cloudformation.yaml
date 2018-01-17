@@ -22,6 +22,11 @@ Parameters:
     Description: ARN of echo10-construction lambda
     Type: String
 
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
 Outputs:
 
   StepFunctionArn:
@@ -78,7 +83,7 @@ Resources:
             "Ingest": {
               "Type": "Task",
               "Resource": "${IngestActivity}",
-              "TimeoutSeconds": 600,
+              "TimeoutSeconds": ${IngestEc2Timeout},
               "ResultPath": "$.IngestResults",
               "Next": "Parallel",
               "Retry": [{

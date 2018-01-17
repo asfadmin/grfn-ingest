@@ -78,6 +78,11 @@ Parameters:
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
   Maturity:
     Type: String
     Default: DEV
@@ -110,5 +115,6 @@ Resources:
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
         IngestContainerImage: !Ref IngestContainerImage
+        IngestEc2Timeout: !Ref IngestEc2Timeout
         OregonTopicArn: !Ref OregonTopicArn
       TemplateURL: cloudformation-main.yaml

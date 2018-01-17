@@ -63,6 +63,11 @@ Parameters:
   AuxBucket:
     Type: String
 
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
 Resources:
 
   Cluster:
@@ -130,7 +135,7 @@ Resources:
       LifecycleHookSpecificationList:
       - LifecycleHookName: terminate
         LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
-        HeartbeatTimeout: 300
+        HeartbeatTimeout: !Ref IngestEc2Timeout
         DefaultResult: CONTINUE
 
   TaskIamRole:
@@ -194,7 +199,7 @@ Resources:
               "boto_level": "WARN"
             },
             "aws_region": "${AWS::Region}",
-            "termination_wait_in_seconds": 300,
+            "termination_wait_in_seconds": ${IngestEc2Timeout},
             "daemon": {
               "activity": {
                 "arn": "${ActivityArn}",
