@@ -104,7 +104,7 @@ def in_service():
     response = asg.describe_auto_scaling_instances(InstanceIds=[instance_id])
     if not response['AutoScalingInstances']:
         return True
-    return response['AutoScalingInstances'][0]['LifecycleState'] == 'InService'
+    return response['AutoScalingInstances'][0]['LifecycleState'] in ['InService', 'Pending']
 
 
 def daemon_loop(config):
