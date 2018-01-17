@@ -112,6 +112,8 @@ Resources:
           lvextend -l 100%FREE /dev/docker/docker-pool
           echo ECS_CLUSTER="${Cluster}" >> /etc/ecs/ecs.config
           echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=1m >> /etc/ecs/ecs.config
+          echo 'OPTIONS="$''OPTIONS --storage-opt dm.basesize=80G"' >> /etc/sysconfig/docker
+          /etc/init.d/docker restart
       InstanceMonitoring: false
 
   AutoScalingGroup:
