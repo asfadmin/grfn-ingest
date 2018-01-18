@@ -12,6 +12,12 @@ Parameters:
     - INFO
     - DEBUG
 
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+
+  SubnetId:
+    Type: List<AWS::EC2::Subnet::Id>
+
   PrivateBucket:
     Type: String
 
@@ -100,6 +106,8 @@ Resources:
       Parameters:
         Name: !Ref AWS::StackName
         LogLevel: !Ref LogLevel
+        VpcId: !Ref VpcId
+        SubnetId: !Ref SubnetId
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
