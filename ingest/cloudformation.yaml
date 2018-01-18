@@ -18,47 +18,42 @@ Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
     Description: Select a VPC that allows instances to access the Internet.
-#   Default:
 
   SubnetId:
     Type: List<AWS::EC2::Subnet::Id>
     Description: Select at least two subnets in your selected VPC.
-#   Default:
 
   Ami:
     Type: AWS::EC2::Image::Id
     Description: Runtime AMI
-#   Default:
+    Default: ami-13401669
 
   ContainerImage:
     Type: String
     Description: URL for runtime docker container (repository-url/image:tag)
-#   Default:
 
   MetricName:
     Type: String
-#   Default:
+    Default: IngestsRunning
 
   MetricNamespace:
     Type: String
     Description: Namespace of CloudWatch metric to drive scaling alarm
-#    Default:
+    Default: GRFN
 
   MaxSpotPrice:
     Type: String
     Description: Maximum price to pay on the spot market
-#    Default:
+    Default: '0.32'
 
   ActivityArn:
     Type: String
 
   PublicBucket:
     Type: String
-#   Default:
 
   PrivateBucket:
     Type: String
-#    Default:
 
   AuxBucket:
     Type: String

@@ -14,23 +14,18 @@ Parameters:
 
   PrivateBucket:
     Type: String
-    Default: grfn-private-test
 
   PublicBucket:
     Type: String
-    Default: grfn-public-test
 
   DistributionBaseUrl:
     Type: String
-    Default: https://grfn-test.asf.alaska.edu/door/download
 
   BrowseBaseUrl:
     Type: String
-    Default: https://grfn-public-test.asf.alaska.edu
 
   DefaultResponseTopicArn:
     Type: String
-    Default: arn:aws:sns:us-east-1:406893895021:success-test
 
   DefaultResponseTopicRegion:
     Type: String
@@ -56,11 +51,9 @@ Parameters:
   OregonTopicArn:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
     Type: String
-    Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
 
   CachedCmrTokenBucket:
     Type: String
-    Default: grfn-echo10-test
 
   CachedCmrTokenKey:
     Type: String
@@ -72,11 +65,9 @@ Parameters:
 
   CmrGranuleUrl:
     Type: String
-    Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
 
   IngestContainerImage:
     Type: String
-    Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
   IngestEc2Timeout:
     Type: Number
@@ -90,7 +81,6 @@ Parameters:
 
   Name:
     Type: String
-    Default: NotSet
 
 Resources:
 
