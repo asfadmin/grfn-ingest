@@ -63,6 +63,11 @@ Parameters:
   AuxBucket:
     Type: String
 
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
 Resources:
 
   Cluster:
@@ -112,6 +117,8 @@ Resources:
           lvextend -l 100%FREE /dev/docker/docker-pool
           echo ECS_CLUSTER="${Cluster}" >> /etc/ecs/ecs.config
           echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=1m >> /etc/ecs/ecs.config
+          echo 'OPTIONS="$''OPTIONS --storage-opt dm.basesize=80G"' >> /etc/sysconfig/docker
+          /etc/init.d/docker restart
       InstanceMonitoring: false
 
   AutoScalingGroup:
@@ -128,7 +135,7 @@ Resources:
       LifecycleHookSpecificationList:
       - LifecycleHookName: terminate
         LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
-        HeartbeatTimeout: 300
+        HeartbeatTimeout: !Ref IngestEc2Timeout
         DefaultResult: CONTINUE
 
   TaskIamRole:
@@ -192,7 +199,7 @@ Resources:
               "boto_level": "WARN"
             },
             "aws_region": "${AWS::Region}",
-            "termination_wait_in_seconds": 300,
+            "termination_wait_in_seconds": ${IngestEc2Timeout},
             "daemon": {
               "activity": {
                 "arn": "${ActivityArn}",
