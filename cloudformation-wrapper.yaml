@@ -20,10 +20,6 @@ Parameters:
     Type: String
     Default: grfn-public-test
 
-  Echo10Bucket:
-    Type: String
-    Default: grfn-echo10-test
-
   DistributionBaseUrl:
     Type: String
     Default: https://grfn-test.asf.alaska.edu/door/download
@@ -62,6 +58,10 @@ Parameters:
     Type: String
     Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
 
+  CachedCmrTokenBucket:
+    Type: String
+    Default: grfn-echo10-test
+
   CachedCmrTokenKey:
     Type: String
     Default: cached-cmr-auth-token-test
@@ -77,6 +77,16 @@ Parameters:
   IngestContainerImage:
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
+
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
+  IngestActivityTimeout:
+    Type: Number
+    MinValue: 0
+    Default: 600
 
   Maturity:
     Type: String
@@ -101,14 +111,16 @@ Resources:
         LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
-        Echo10Bucket: !Ref Echo10Bucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
+        CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
         CmrGranuleUrl: !Ref CmrGranuleUrl
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
         IngestContainerImage: !Ref IngestContainerImage
+        IngestEc2Timeout: !Ref IngestEc2Timeout
+        IngestActivityTimeout: !Ref IngestActivityTimeout
         OregonTopicArn: !Ref OregonTopicArn
       TemplateURL: cloudformation-main.yaml

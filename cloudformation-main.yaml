@@ -20,10 +20,6 @@ Parameters:
     Type: String
     Default: grfn-public-test
 
-  Echo10Bucket:
-    Type: String
-    Default: grfn-echo10-test
-
   DistributionBaseUrl:
     Type: String
     Default: https://grfn-test.asf.alaska.edu/door/download
@@ -62,6 +58,10 @@ Parameters:
     Type: String
     Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
 
+  CachedCmrTokenBucket:
+    Type: String
+    Default: grfn-echo10-test
+
   CachedCmrTokenKey:
     Type: String
     Default: cached-cmr-auth-token-test
@@ -78,6 +78,16 @@ Parameters:
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
+  IngestActivityTimeout:
+    Type: Number
+    MinValue: 0
+    Default: 600
+
   Name:
     Type: String
     Default: NotSet
@@ -92,6 +102,7 @@ Resources:
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: !GetAtt NotifyStack.Outputs.LambdaArn
         Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
+        IngestActivityTimeout: !Ref IngestActivityTimeout
       TemplateURL: step-function/cloudformation.yaml
 
   InvokeStack:
@@ -121,7 +132,7 @@ Resources:
         LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
-        Echo10Bucket: !Ref Echo10Bucket
+        AuxBucket: !Ref AuxBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
       TemplateURL: echo10-construction/cloudformation.yaml
@@ -133,7 +144,8 @@ Resources:
         Name: !Sub "${Name}-echo10-to-cmr"
         LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
-        Echo10Bucket: !Ref Echo10Bucket
+        AuxBucket: !Ref AuxBucket
+        CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
         CmrGranuleUrl: !Ref CmrGranuleUrl
@@ -169,7 +181,14 @@ Resources:
         ActivityArn: !GetAtt StepFunctionStack.Outputs.IngestActivityArn
         PublicBucket: !Ref PublicBucket
         PrivateBucket: !Ref PrivateBucket
+        AuxBucket: !Ref AuxBucket
+        IngestEc2Timeout: !Ref IngestEc2Timeout
       TemplateURL: ingest/cloudformation.yaml
+
+  AuxBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${Name}-aux"
 
   ErrorTopic:
     Type: AWS::SNS::Topic
