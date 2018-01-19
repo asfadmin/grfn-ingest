@@ -138,11 +138,14 @@ Resources:
       - Key: Name
         Value: !Ref Name
         PropagateAtLaunch: true
-      LifecycleHookSpecificationList:
-      - LifecycleHookName: terminate
-        LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
-        HeartbeatTimeout: !Ref IngestEc2Timeout
-        DefaultResult: CONTINUE
+
+  LifecycleHook:
+    Type: AWS::AutoScaling::LifecycleHook
+    Properties:
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
+      HeartbeatTimeout: !Ref IngestEc2Timeout
+      DefaultResult: CONTINUE
 
   TaskIamRole:
     Type: AWS::IAM::Role
