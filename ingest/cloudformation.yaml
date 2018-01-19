@@ -63,6 +63,11 @@ Parameters:
   AuxBucket:
     Type: String
 
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
 Resources:
 
   Cluster:
@@ -106,12 +111,20 @@ Resources:
       - !Ref SecurityGroup
       UserData:
         Fn::Base64: !Sub |-
+          Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+          MIME-Version: 1.0
+          --==BOUNDARY==
+          Content-Type: text/cloud-boothook; charset="us-ascii"
+          cloud-init-per once docker_options echo 'OPTIONS="$''OPTIONS --storage-opt dm.basesize=80G"' >> /etc/sysconfig/docker
+          --==BOUNDARY==
+          Content-Type: text/x-shellscript; charset="us-ascii"
           #!/bin/bash -xe
           pvcreate /dev/nvme0n1
           vgextend docker /dev/nvme0n1
           lvextend -l 100%FREE /dev/docker/docker-pool
           echo ECS_CLUSTER="${Cluster}" >> /etc/ecs/ecs.config
           echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=1m >> /etc/ecs/ecs.config
+          --==BOUNDARY==--
       InstanceMonitoring: false
 
   AutoScalingGroup:
@@ -128,7 +141,7 @@ Resources:
       LifecycleHookSpecificationList:
       - LifecycleHookName: terminate
         LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
-        HeartbeatTimeout: 300
+        HeartbeatTimeout: !Ref IngestEc2Timeout
         DefaultResult: CONTINUE
 
   TaskIamRole:
@@ -192,7 +205,7 @@ Resources:
               "boto_level": "WARN"
             },
             "aws_region": "${AWS::Region}",
-            "termination_wait_in_seconds": 300,
+            "termination_wait_in_seconds": ${IngestEc2Timeout},
             "daemon": {
               "activity": {
                 "arn": "${ActivityArn}",

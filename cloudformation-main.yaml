@@ -78,6 +78,16 @@ Parameters:
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
+  IngestEc2Timeout:
+    Type: Number
+    MinValue: 0
+    Default: 300
+
+  IngestActivityTimeout:
+    Type: Number
+    MinValue: 0
+    Default: 600
+
   Name:
     Type: String
     Default: NotSet
@@ -92,6 +102,7 @@ Resources:
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: !GetAtt NotifyStack.Outputs.LambdaArn
         Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
+        IngestActivityTimeout: !Ref IngestActivityTimeout
       TemplateURL: step-function/cloudformation.yaml
 
   InvokeStack:
@@ -171,6 +182,7 @@ Resources:
         PublicBucket: !Ref PublicBucket
         PrivateBucket: !Ref PrivateBucket
         AuxBucket: !Ref AuxBucket
+        IngestEc2Timeout: !Ref IngestEc2Timeout
       TemplateURL: ingest/cloudformation.yaml
 
   AuxBucket:
