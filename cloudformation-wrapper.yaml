@@ -107,7 +107,7 @@ Resources:
         Name: !Ref AWS::StackName
         LogLevel: !Ref LogLevel
         VpcId: !Ref VpcId
-        SubnetId: !Ref SubnetId
+        SubnetId: !Join [",", !Ref SubnetId]
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl

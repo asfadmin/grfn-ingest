@@ -173,7 +173,7 @@ Resources:
         Name: !Sub "${Name}-ingest"
         LogLevel: !Ref LogLevel
         VpcId: !Ref VpcId
-        SubnetId: !Ref SubnetId
+        SubnetId: !Join [",", !Ref SubnetId]
         ContainerImage: !Ref IngestContainerImage
         MetricName: !GetAtt MetricsStack.Outputs.MetricName
         MetricNamespace: !GetAtt MetricsStack.Outputs.Namespace
