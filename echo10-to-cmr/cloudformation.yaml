@@ -148,7 +148,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Name: !Sub "${Name}-B"
-      ScheduleExpression: "rate(2 minutes)"
+      ScheduleExpression: "rate(1 minute)"
       State: ENABLED
       Targets:
         - Arn: !GetAtt Lambda.Arn
@@ -161,3 +161,21 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt ScheduleB.Arn
+
+  ScheduleC:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub "${Name}-C"
+      ScheduleExpression: "rate(1 minute)"
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt Lambda.Arn
+          Id: !Ref Name
+
+  EventPermissionC:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt Lambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ScheduleC.Arn
