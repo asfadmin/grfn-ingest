@@ -26,11 +26,9 @@ Parameters:
 
   DistributionBaseUrl:
     Type: String
-    Default: https://grfn-test.asf.alaska.edu/door/download
 
   BrowseBaseUrl:
     Type: String
-    Default: https://grfn-public-test.asf.alaska.edu
 
 Outputs:
 
