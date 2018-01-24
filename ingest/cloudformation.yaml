@@ -26,7 +26,7 @@ Parameters:
   Ami:
     Type: AWS::EC2::Image::Id
     Description: Runtime AMI
-    Default: ami-13401669
+    Default: ami-28456852
 
   ContainerImage:
     Type: String
