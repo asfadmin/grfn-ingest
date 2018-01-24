@@ -7,7 +7,7 @@ environment_variables:
     IMAGE_NAME: "ingest"
     IMAGE_HOST: "406893895021.dkr.ecr.us-east-1.amazonaws.com"
     MATURITY: "PROD"
-    SHA1: "a73f46d"
+    SHA1: "c97cce3"
 
 phases:
   pre_build:
