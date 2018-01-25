@@ -3,6 +3,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Parameters:
 
   LogLevel:
+    Description: Application logging level
     Type: String
     Default: INFO
     AllowedValues:
@@ -13,26 +14,32 @@ Parameters:
     - DEBUG
 
   PrivateBucket:
+    Description: Name of S3 bucket in which zipped output products will be archived
     Type: String
     Default: grfn-private-test
 
   PublicBucket:
+    Description: Name of S3 bucket in which browse images will be archived
     Type: String
     Default: grfn-public-test
 
   DistributionBaseUrl:
+    Description: Base URL for product distribution, e.g. http://foo.com will generate download URLs of http://foo.com/<product-file-name>
     Type: String
     Default: https://grfn-test.asf.alaska.edu/door/download
 
   BrowseBaseUrl:
+    Description: Base URL for browse images, e.g. http://foo.com will generate browse image URLs of http://foo.com/<browse-file-name>
     Type: String
     Default: https://grfn-public-test.asf.alaska.edu
 
   DefaultResponseTopicArn:
+    Description: SNS topic arn where error/success responses will be sent for each product
     Type: String
     Default: arn:aws:sns:us-east-1:406893895021:success-test
 
   DefaultResponseTopicRegion:
+    Description: AWS region for the topic specified for DefaultResponseTopicArn
     Type: String
     Default: us-east-1
     AllowedValues:
@@ -59,36 +66,44 @@ Parameters:
     Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
 
   CachedCmrTokenBucket:
+    Description: Name of S3 bucket where cached CMR authentication token is stored
     Type: String
     Default: grfn-echo10-test
 
   CachedCmrTokenKey:
+    Description: S3 key where cached CMR authentication token is stored
     Type: String
     Default: cached-cmr-auth-token-test
 
   CmrTokenLambda:
+    Description: Name of lambda function for fetching new CMR authentication tokens
     Type: String
     Default: cmr-token:TEST
 
   CmrGranuleUrl:
+    Description: Base URL for the CMR Create/Update granule endpoint
     Type: String
     Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
 
   IngestContainerImage:
+    Description: Full URL path of the docker container image to use for ingest activities
     Type: String
     Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
   IngestEc2Timeout:
+    Description: Duration of EC2 autoscaling lifecycle termination hook, in seconds
     Type: Number
     MinValue: 0
     Default: 300
 
   IngestActivityTimeout:
+    Description: Timeout for step function ingest activity, in seconds
     Type: Number
     MinValue: 0
     Default: 600
 
   Maturity:
+    Description: Value for MATURITY tag to be applied to all taggable resources
     Type: String
     Default: DEV
     AllowedValues:
@@ -103,7 +118,7 @@ Outputs:
     Value: !GetAtt MainStack.Outputs.JobTopic
 
   ErrorTopic:
-    Description: Subscribe to this topic to receive error notifications
+    Description: Subscribe to this topic to receive a notification when one or more ingest jobs fail
     Value: !GetAtt MainStack.Outputs.ErrorTopic
 
 Resources:
