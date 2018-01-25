@@ -38,11 +38,11 @@ Parameters:
     Type: String
 
   DefaultResponseTopicArn:
-    Description: SNS topic arn where error/success responses will be sent for each product
+    Description: SNS topic arn where error/success responses will be sent for jobs where no response topic is specified
     Type: String
 
   DefaultResponseTopicRegion:
-    Description: AWS region for the topic specified for DefaultResponseTopicArn
+    Description: AWS region of the topic specified for DefaultResponseTopicArn
     Type: String
     Default: us-east-1
     AllowedValues:
