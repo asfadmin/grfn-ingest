@@ -92,6 +92,14 @@ Parameters:
     Type: String
     Default: NotSet
 
+Outputs:
+
+  JobTopic:
+    Value: !Ref JobTopic
+
+  ErrorTopic:
+    Value: !Ref ErrorTopic
+
 Resources:
 
   StepFunctionStack:

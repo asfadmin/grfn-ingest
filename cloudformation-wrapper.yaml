@@ -96,6 +96,16 @@ Parameters:
       - PROD
       - DEV
 
+Outputs:
+
+  JobTopic:
+    Description: Submit ingest jobs to this topic
+    Value: !GetAtt MainStack.Outputs.JobTopic
+
+  ErrorTopic:
+    Description: Subscribe to this topic to receive error notifications
+    Value: !GetAtt MainStack.Outputs.ErrorTopic
+
 Resources:
 
   MainStack:
