@@ -14,9 +14,11 @@ Parameters:
     - DEBUG
 
   VpcId:
+    Description: VPC Id in which to launch EC2 instances for ingest activities
     Type: AWS::EC2::VPC::Id
 
   SubnetId:
+    Description: List of Subnet Ids in which to launch EC2 instances for ingest activities
     Type: List<AWS::EC2::Subnet::Id>
 
   PrivateBucket:
