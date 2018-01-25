@@ -13,30 +13,31 @@ Parameters:
     - INFO
     - DEBUG
 
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+
+  SubnetId:
+    Type: List<AWS::EC2::Subnet::Id>
+
   PrivateBucket:
     Description: Name of S3 bucket in which zipped output products will be archived
     Type: String
-    Default: grfn-private-test
 
   PublicBucket:
     Description: Name of S3 bucket in which browse images will be archived
     Type: String
-    Default: grfn-public-test
 
   DistributionBaseUrl:
     Description: Base URL for product distribution, e.g. http://foo.com will generate download URLs of http://foo.com/<product-file-name>
     Type: String
-    Default: https://grfn-test.asf.alaska.edu/door/download
 
   BrowseBaseUrl:
     Description: Base URL for browse images, e.g. http://foo.com will generate browse image URLs of http://foo.com/<browse-file-name>
     Type: String
-    Default: https://grfn-public-test.asf.alaska.edu
 
   DefaultResponseTopicArn:
     Description: SNS topic arn where error/success responses will be sent for each product
     Type: String
-    Default: arn:aws:sns:us-east-1:406893895021:success-test
 
   DefaultResponseTopicRegion:
     Description: AWS region for the topic specified for DefaultResponseTopicArn
@@ -63,12 +64,10 @@ Parameters:
   OregonTopicArn:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
     Type: String
-    Default: arn:aws:sns:us-west-2:765666652335:grfn-archive-test
 
   CachedCmrTokenBucket:
     Description: Name of S3 bucket where cached CMR authentication token is stored
     Type: String
-    Default: grfn-echo10-test
 
   CachedCmrTokenKey:
     Description: S3 key where cached CMR authentication token is stored
@@ -83,12 +82,10 @@ Parameters:
   CmrGranuleUrl:
     Description: Base URL for the CMR Create/Update granule endpoint
     Type: String
-    Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
 
   IngestContainerImage:
     Description: Full URL path of the docker container image to use for ingest activities
     Type: String
-    Default: 406893895021.dkr.ecr.us-east-1.amazonaws.com/ingest:TEST
 
   IngestEc2Timeout:
     Description: Duration of EC2 autoscaling lifecycle termination hook, in seconds
@@ -134,6 +131,8 @@ Resources:
       Parameters:
         Name: !Ref AWS::StackName
         LogLevel: !Ref LogLevel
+        VpcId: !Ref VpcId
+        SubnetId: !Join [",", !Ref SubnetId]
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl

@@ -23,7 +23,6 @@ Parameters:
 
   CachedCmrTokenBucket:
     Type: String
-    Default: grfn-echo10-test
 
   CachedCmrTokenKey:
     Type: String
@@ -35,7 +34,6 @@ Parameters:
 
   CmrGranuleUrl:
     Type: String
-    Default: https://cmr.uat.earthdata.nasa.gov/ingest/providers/ASF/granules/
 
 Outputs:
 
