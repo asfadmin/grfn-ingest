@@ -1,3 +1,8 @@
+# This build script is designed to run in AWS CodeBuild using the aws/codebuild/docker:17.09.0 image:
+#   ubuntu 14.04.5
+#   docker 17.09.0
+#   python 2.7
+
 version: 0.1
 
 environment_variables:
@@ -12,7 +17,7 @@ environment_variables:
 phases:
   pre_build:
     commands:
-      - $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - aws codepipeline get-pipeline-state --name $PIPELINE_NAME --query 'stageStates[*].actionStates[?actionName==`Source`].currentRevision.revisionId' --output text | cut -c1-7 > sha1.txt
   build:
     commands:
