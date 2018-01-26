@@ -23,6 +23,9 @@ To be documented at a later date
 
 # Build and Deployment Instructions
 
+1. Run steps in buildspec.yaml
+2. Deploy cloudformation-final.yaml
+
 # Top Level Inputs and Outputs
 
 ## Runtime Inputs
