@@ -17,10 +17,36 @@ The Software is provided "as is," without warranty of any kind, express or impli
 
 # Architecture
 
+To be documented at a later date
+
 # Component Descriptions
 
 # Build and Deployment Instructions
 
 # Top Level Inputs and Outputs
+
+## Runtime Inputs
+
+Runtime inputs consist of the following staged files:
+
+* metadata json file conforming to verify/src/metadata_schema.json browse image
+* arbitrary product files (under a common s3 bucket and prefix)
+  Send a message formatted per verify/src/message_schema.json to JobTopic
+
+## Outputs
+
+### Three product files:
+* PrivateBucket/<product-name>.zip
+* PrivateBucket/<product-name>.unw_geo.zip
+* PrivateBucket/<product-name>.full_res.zip
+
+### Browse file:
+* PublicBucket/<browse-file-name>
+
+### Product metadata reported to CmrGranlueUrl with these Collection Ids and Granule URs:
+* Sentinel-1 All Interferometric Products (BETA) <product-name>-All
+* Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA) <product-name>-Unwrapped
+* Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA) <product-name>-Full
+* Success/failure message conforming to ?? sent to DefaultResponseTopicArn
 
 # Credits
