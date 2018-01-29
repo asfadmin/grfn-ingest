@@ -298,9 +298,9 @@ Resources:
         MetricIntervalUpperBound: 800
       - ScalingAdjustment: 100
         MetricIntervalLowerBound: 800
-        MetricIntervalUpperBound: 960
+        MetricIntervalUpperBound: 1000
       - ScalingAdjustment: 125
-        MetricIntervalLowerBound: 960
+        MetricIntervalLowerBound: 1000
 
   ServiceScalingTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
