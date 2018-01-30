@@ -1,9 +1,9 @@
 # About
 
-The Getting Ready for NISAR project (GRFN) is designed to allow project partners the opportunity to work in a commercial cloud environment in order to prepare for the upcoming [NASA-ISRO SAR Mission (NISAR)](https://nisar.jpl.nasa.gov/).  NISAR is expected to produce on the order of 85 Terabytes of data per day, which is a large enough volume of data that possible mission participants need to determine if a commercial cloud environment is an appropriate location in which to process and store this data.  
+The Getting Ready for NISAR (GRFN) project was designed to experiment with the functional architecture of Amazon Web Services cloud computing environment for the processing, distribution and archival of Synthetic Aperture Radar data in preparation for the [NASA-ISRO SAR Mission (NISAR)](https://nisar.jpl.nasa.gov/). The grfn-ingest pipeline is designed to manage large volumes of data at high rates (up to 50 Gbps), to simulate the data volumes anticipated for transfer and archival during the NISAR mission.
 
-This repository contains the code developed and used by the [Alaska Satellite Facility (ASF)](https://www.asf.alaska.edu) to accept data processed by the [Jet Propulsion Laboratory](https://www.jpl.gov)
-from the [European Space Agency's](www.esa.int/) [Sentinel-1a/1b](www.esa.int/Our_Activities/Observing_the_Earth/Copernicus/Sentinel-1) mission into representative level 2 interferogram data products.  These representative products are then used by ASF to simulate [Distributed Active Archive Center (DAAC)](https://earthdata.nasa.gov/about/daacs) operations, including ingesting, archive, repackaging, cataloging, and distributing the data.  
+This repository contains the code developed and used by the [Alaska Satellite Facility (ASF)](https://www.asf.alaska.edu) to accept ingest data processed by the [Jet Propulsion Laboratory (JPL)](https://www.jpl.gov) from the [European Space Agency's (ESA)](www.esa.int/) [Sentinel-1a/1b](www.esa.int/Our_Activities/Observing_the_Earth/Copernicus/Sentinel-1) mission into representative level 2 interferogram data products. These representative products are then used by ASF to simulate [Distributed Active Archive Center (DAAC)](https://earthdata.nasa.gov/about/daacs) operations, including ingesting, archive, repackaging, cataloging, and distributing the
+data.
 
 # COPYRIGHT NOTICE + LICENSE:
 
@@ -56,14 +56,14 @@ Runtime inputs consist of the following staged files:
 
 ## ASF
 
-GRFN-ingest was originally written by the Alaska Satellite Facility.  The Alaska Satellite Facility downlinks, processes, archives, and distributes remote-sensing data to scientific users around the world. ASF's mission is to make remote-sensing data accessible.
+GRFN-ingest was written by the Alaska Satellite Facility.  The Alaska Satellite Facility downlinks, processes, archives, and distributes remote-sensing data to scientific users around the world. ASF's mission is to make remote-sensing data accessible.
 
 ### GRFN Team at ASF
 
 The GRFN team at ASF that directly contributed to this project consists of:
 
   * Jessica Garron, Product Owner
-  * Andrew Johnston, Scrummaster and developer
+  * Andrew Johnston, Scrum Master and developer
   * Ian Dixon, developer
   * David Matz, developer
   * John Mitchell, former GRFN developer
