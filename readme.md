@@ -5,7 +5,7 @@ The Getting Ready for NISAR (GRFN) project was designed to experiment with the f
 This repository contains the code developed and used by the [Alaska Satellite Facility (ASF)](https://www.asf.alaska.edu) to accept ingest data processed by the [Jet Propulsion Laboratory (JPL)](https://www.jpl.gov) from the [European Space Agency's (ESA)](www.esa.int/) [Sentinel-1a/1b](www.esa.int/Our_Activities/Observing_the_Earth/Copernicus/Sentinel-1) mission into representative level 2 interferogram data products. These representative products are then used by ASF to simulate [Distributed Active Archive Center (DAAC)](https://earthdata.nasa.gov/about/daacs) operations, including ingesting, archive, repackaging, cataloging, and distributing the
 data.
 
-# COPYRIGHT NOTICE + LICENSE:
+# Copyright Notice + License:
 
 *Copyright 2017 University of Alaska Fairbanks*
 
@@ -25,7 +25,7 @@ To be documented at a later date
 A step function defining the workflow to ingest a single GRFN product.
 
 ## invoke
-A scheduled Lambda function that starts step function executions for each received message in the holding sqs queue.
+A scheduled Lambda function that starts step function executions for each received message in the holding SQS queue.
 
 ## verify
 A Lambda function that validates the received message as well as the files and metadata in the source S3 bucket.
@@ -63,17 +63,17 @@ Runtime inputs consist of the following staged files:
 ## Outputs
 
 ### Three product files:
-* PrivateBucket/<product-name>.zip
-* PrivateBucket/<product-name>.unw_geo.zip
-* PrivateBucket/<product-name>.full_res.zip
+* PrivateBucket/\<product-name\>.zip
+* PrivateBucket/\<product-name\>.unw_geo.zip
+* PrivateBucket/\<product-name\>.full_res.zip
 
 ### Browse file:
-* PublicBucket/<browse-file-name>
+* PublicBucket/\<browse-file-name\>
 
 ### Product metadata reported to CmrGranlueUrl with these Collection Ids and Granule URs:
-* Sentinel-1 All Interferometric Products (BETA) <product-name>-All
-* Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA) <product-name>-Unwrapped
-* Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA) <product-name>-Full
+* Sentinel-1 All Interferometric Products (BETA) \<product-name\>-All
+* Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA) \<product-name\>-Unwrapped
+* Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA) \<product-name\>-Full
 * Success/failure message conforming to ?? sent to DefaultResponseTopicArn
 
 # Credits
