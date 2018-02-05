@@ -41,9 +41,10 @@ The Software is provided "as is," without warranty of any kind, express or impli
 
 Runtime inputs consist of the following staged files:
 
-* metadata json file conforming to verify/src/metadata_schema.json browse image
-* arbitrary product files (under a common s3 bucket and prefix)
-  Send a message formatted per verify/src/message_schema.json to JobTopic
+* metadata json file conforming to verify/src/metadata_schema.json
+* browse image
+* Arbitrary product files (under a common s3 bucket and prefix)
+* Send a message formatted per verify/src/message_schema.json to JobTopic
 
 ## Outputs
 
@@ -59,7 +60,7 @@ Runtime inputs consist of the following staged files:
 * Sentinel-1 All Interferometric Products (BETA) \<product-name\>-All
 * Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA) \<product-name\>-Unwrapped
 * Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA) \<product-name\>-Full
-* Success/failure message conforming to ?? sent to DefaultResponseTopicArn
+* Success/failure message sent to DefaultResponseTopicArn
 
 # Credits
 
