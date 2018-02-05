@@ -17,33 +17,18 @@ The Software is provided "as is," without warranty of any kind, express or impli
 
 # Architecture
 
-To be documented at a later date
+![Architecture Diagram](/doc/architecture.png)
 
-# Component Descriptions
+# Components
 
-## step-function
-A step function defining the workflow to ingest a single GRFN product.
-
-## invoke
-A scheduled Lambda function that starts step function executions for each received message in the holding SQS queue.
-
-## verify
-A Lambda function that validates the received message as well as the files and metadata in the source S3 bucket.
-
-## ingest
-An EC2/ECS batch application that downloads product files, creates product zip files, and uploads final product artifacts to the output S3 buckets.
-
-## echo10-construction
-A Lambda function that generates an ECHO 10 XML metadata file for a particular product.
-
-## echo10-to-cmr
-A scheduled Lambda function that submits ECHO 10 XML metadata files to CMR.
-
-## notify
-A Lambda function that sends ingest success/failure messages to the response SNS.
-
-## metrics
-A scheduled Lambda function that populates a custom CloudWatch metric with the number of running step function executions.  Used to drive autoscaling for the ingest component.
+* **invoke:** A scheduled Lambda function that starts step function executions for each received message in the SQS job queue.
+* **step-function:** A step function defining the workflow to ingest a single GRFN product.
+* **verify:** A Lambda function that validates the received message as well as the files and metadata in the source S3 bucket.
+* **ingest:** An EC2/ECS batch application that downloads product files, creates product zip files, and uploads final product artifacts to the output S3 buckets.
+* **echo10-construction:** A Lambda function that generates an ECHO 10 XML metadata file for a particular product.
+* **echo10-to-cmr:** A scheduled Lambda function that submits ECHO 10 XML metadata files to CMR.
+* **notify:** A Lambda function that sends ingest success/failure messages to the SNS response topic.
+* **metrics:** A scheduled Lambda function that populates a custom CloudWatch metric with the number of running step function executions.  Used to drive autoscaling for the ingest component.
 
 # Build and Deployment Instructions
 
@@ -56,9 +41,10 @@ A scheduled Lambda function that populates a custom CloudWatch metric with the n
 
 Runtime inputs consist of the following staged files:
 
-* metadata json file conforming to verify/src/metadata_schema.json browse image
-* arbitrary product files (under a common s3 bucket and prefix)
-  Send a message formatted per verify/src/message_schema.json to JobTopic
+* metadata json file conforming to verify/src/metadata_schema.json
+* browse image
+* Arbitrary product files (under a common s3 bucket and prefix)
+* Send a message formatted per verify/src/message_schema.json to JobTopic
 
 ## Outputs
 
@@ -70,11 +56,11 @@ Runtime inputs consist of the following staged files:
 ### Browse file:
 * PublicBucket/\<browse-file-name\>
 
-### Product metadata reported to CmrGranlueUrl with these Collection Ids and Granule URs:
+### Product metadata reported to CmrGranuleUrl with these Collection Ids and Granule URs:
 * Sentinel-1 All Interferometric Products (BETA) \<product-name\>-All
 * Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA) \<product-name\>-Unwrapped
 * Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA) \<product-name\>-Full
-* Success/failure message conforming to ?? sent to DefaultResponseTopicArn
+* Success/failure message sent to DefaultResponseTopicArn
 
 # Credits
 
