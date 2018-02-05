@@ -17,7 +17,7 @@ The Software is provided "as is," without warranty of any kind, express or impli
 
 # Architecture
 
-To be documented at a later date
+![Architecture Diagram](/doc/architecture.png)
 
 # Component Descriptions
 
