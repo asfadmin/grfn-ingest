@@ -19,6 +19,8 @@ The Software is provided "as is," without warranty of any kind, express or impli
 
 ![Architecture Diagram](/doc/architecture.png)
 
+# Components
+
 * **invoke:** A scheduled Lambda function that starts step function executions for each received message in the SQS job queue.
 * **step-function:** A step function defining the workflow to ingest a single GRFN product.
 * **verify:** A Lambda function that validates the received message as well as the files and metadata in the source S3 bucket.
