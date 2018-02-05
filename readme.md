@@ -55,7 +55,7 @@ Runtime inputs consist of the following staged files:
 ### Browse file:
 * PublicBucket/\<browse-file-name\>
 
-### Product metadata reported to CmrGranlueUrl with these Collection Ids and Granule URs:
+### Product metadata reported to CmrGranuleUrl with these Collection Ids and Granule URs:
 * Sentinel-1 All Interferometric Products (BETA) \<product-name\>-All
 * Sentinel-1 Unwrapped Interferogram and Coherence Map (BETA) \<product-name\>-Unwrapped
 * Sentinel-1 Full Resolution Wrapped Interferogram and DEM (BETA) \<product-name\>-Full
