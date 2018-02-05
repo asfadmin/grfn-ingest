@@ -19,31 +19,16 @@ The Software is provided "as is," without warranty of any kind, express or impli
 
 ![Architecture Diagram](/doc/architecture.png)
 
-# Component Descriptions
+# Components
 
-## step-function
-A step function defining the workflow to ingest a single GRFN product.
-
-## invoke
-A scheduled Lambda function that starts step function executions for each received message in the holding SQS queue.
-
-## verify
-A Lambda function that validates the received message as well as the files and metadata in the source S3 bucket.
-
-## ingest
-An EC2/ECS batch application that downloads product files, creates product zip files, and uploads final product artifacts to the output S3 buckets.
-
-## echo10-construction
-A Lambda function that generates an ECHO 10 XML metadata file for a particular product.
-
-## echo10-to-cmr
-A scheduled Lambda function that submits ECHO 10 XML metadata files to CMR.
-
-## notify
-A Lambda function that sends ingest success/failure messages to the response SNS.
-
-## metrics
-A scheduled Lambda function that populates a custom CloudWatch metric with the number of running step function executions.  Used to drive autoscaling for the ingest component.
+* **invoke:** A scheduled Lambda function that starts step function executions for each received message in the SQS job queue.
+* **step-function:** A step function defining the workflow to ingest a single GRFN product.
+* **verify:** A Lambda function that validates the received message as well as the files and metadata in the source S3 bucket.
+* **ingest:** An EC2/ECS batch application that downloads product files, creates product zip files, and uploads final product artifacts to the output S3 buckets.
+* **echo10-construction:** A Lambda function that generates an ECHO 10 XML metadata file for a particular product.
+* **echo10-to-cmr:** A scheduled Lambda function that submits ECHO 10 XML metadata files to CMR.
+* **notify:** A Lambda function that sends ingest success/failure messages to the SNS response topic.
+* **metrics:** A scheduled Lambda function that populates a custom CloudWatch metric with the number of running step function executions.  Used to drive autoscaling for the ingest component.
 
 # Build and Deployment Instructions
 
