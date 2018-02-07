@@ -96,7 +96,7 @@
         },
         "direction": {
           "type": "string",
-          "enum": ["asc", "dsc", "ascending", "descending"]
+          "enum": ["ascending", "descending"]
         },
         "dataset_type": {
           "type": "string"
