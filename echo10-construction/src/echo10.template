@@ -22,10 +22,10 @@
             <Geometry>
                 <GPolygon>
                   <Boundary> 
-                  {% for point in bbox  %}
+                  {% for point in polygon %}
                     <Point>
-                    <PointLongitude>{{ point.1 }}</PointLongitude>
-                    <PointLatitude>{{ point.0 }}</PointLatitude>
+                    <PointLongitude>{{ point.0 }}</PointLongitude>
+                    <PointLatitude>{{ point.1 }}</PointLatitude>
                     </Point>
                   {% endfor %}
                 </Boundary>
@@ -62,7 +62,13 @@
         <AdditionalAttribute>
             <Name>{{ name }}</Name>
             <Values>
-                <Value>{{ value }}</Value>
+                {% if value is iterable and value is not string %}
+                    {% for v in value %}
+                     <Value>{{ v }}</Value>
+                    {% endfor %}
+                {% else %}
+                    <Value>{{ value }}</Value>
+                {% endif %}
             </Values>
         </AdditionalAttribute>
         {% endfor %}
