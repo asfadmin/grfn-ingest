@@ -27,9 +27,13 @@
         },
         "coordinates": {
           "type": "array",
-          "minItems": 3,
+          "minItems": 1,
           "items": {
-            "$ref": "#/definitions/coordinate"
+            "type": "array",
+            "minItems": 4,
+            "items": {
+              "$ref": "#/definitions/coordinate"
+            }
           }
         }
       }
@@ -151,13 +155,13 @@
       "items": [
         {
           "type": "number",
-          "minimum": -90,
-          "maximum": 90
+          "minimum": -180,
+          "maximum": 180
         },
         {
           "type": "number",
-          "minimum": -180,
-          "maximum": 180
+          "minimum": -90,
+          "maximum": 90
         }
       ]
     },
