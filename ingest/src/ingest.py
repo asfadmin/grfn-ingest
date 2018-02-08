@@ -77,6 +77,7 @@ def process_task(task_input, job_config):
     for derived_product in job_config['derived_products']:
         output_zip_name = '{0}.{1}.zip'.format(product_name, derived_product['name'])
         files = [os.path.join(product_name, f) for f in derived_product['files']]
+        files = [f for f in files if f in local_files]
         create_zip_archive(output_zip_name, files)
         upload_to_s3(job_config['product_bucket'], output_zip_name, transfer_config)
         os.remove(output_zip_name)
