@@ -61,8 +61,8 @@ def get_sds_metadata(obj):
     return sds_metadata
 
 
-def get_mission(bbox, missions):
-    granule = Polygon(bbox)
+def get_mission(polygon, missions):
+    granule = Polygon(polygon)
     for mission in missions:
         aoi = Polygon(mission['coords'])
         if granule.intersects(aoi):
@@ -101,7 +101,8 @@ def get_granule_data(inputs, config):
     file_size = get_s3_file_size(inputs['Product'])
     browse_url = config['browse_path'].format(inputs['Browse']['Key'])
     online_access_url = config['download_path'].format(inputs['Product']['Key'])
-    mission = get_mission(granule_metadata['bbox'], config['missions'])
+    polygon = sds_metadata['location']['coordinates'][0][:-1]
+    mission = get_mission(polygon, config['missions'])
 
     input_granules = ['[Master] {0}'.format(g) for g in granule_metadata['master_scenes']]
     input_granules += ['[Slave] {0}'.format(g) for g in granule_metadata['slave_scenes']]
@@ -119,7 +120,7 @@ def get_granule_data(inputs, config):
         'orbits': granule_metadata['orbitNumber'],
         'platforms': [p.upper() for p in set(granule_metadata['platform'])],
         'sensor_short_name': granule_metadata['beamMode'],
-        'polygon': sds_metadata['location']['coordinates'][0][:-1],
+        'polygon': polygon,
         'additional_attributes': {
             'GROUP_ID': sds_metadata['label'].replace('.', '-'),
             'ASCENDING_DESCENDING': translate_asc_desc(granule_metadata['direction']),
@@ -130,14 +131,14 @@ def get_granule_data(inputs, config):
             'LOOK_DIRECTION': granule_metadata['lookDirection'],
             'PATH_NUMBER': granule_metadata['trackNumber'],
             'BYTES': file_size,
-            'NEAR_START_LAT': granule_metadata['bbox'][0][1],
-            'NEAR_START_LON': granule_metadata['bbox'][0][0],
-            'FAR_START_LAT': granule_metadata['bbox'][1][1],
-            'FAR_START_LON': granule_metadata['bbox'][1][0],
-            'FAR_END_LAT': granule_metadata['bbox'][2][1],
-            'FAR_END_LON': granule_metadata['bbox'][2][0],
-            'NEAR_END_LAT': granule_metadata['bbox'][3][1],
-            'NEAR_END_LON': granule_metadata['bbox'][3][0],
+            'NEAR_START_LON': granule_metadata['ogr_bbox'][0][0],
+            'NEAR_START_LAT': granule_metadata['ogr_bbox'][0][1],
+            'FAR_START_LON': granule_metadata['ogr_bbox'][1][0],
+            'FAR_START_LAT': granule_metadata['ogr_bbox'][1][1],
+            'FAR_END_LON': granule_metadata['ogr_bbox'][2][0],
+            'FAR_END_LAT': granule_metadata['ogr_bbox'][2][1],
+            'NEAR_END_LON': granule_metadata['ogr_bbox'][3][0],
+            'NEAR_END_LAT': granule_metadata['ogr_bbox'][3][1],
             'ASF_PLATFORM': 'Sentinel-1 Interferogram (BETA)',
             'PROCESSING_TYPE_DISPLAY': collection['processing_type_display'],
             'PROCESSING_DESCRIPTION': collection['processing_description'],
