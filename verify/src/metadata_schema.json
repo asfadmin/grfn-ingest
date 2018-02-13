@@ -122,11 +122,7 @@
           "maximum": 175
         },
         "perpendicularBaseline": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "number"
-          }
+          "type": "number"
         },
         "swath": {
           "type": "array",
