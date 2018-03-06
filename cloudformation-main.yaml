@@ -54,9 +54,9 @@ Parameters:
     - eu-west-3
     - sa-east-1
 
-  OregonTopicArn:
-    Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
-    Type: String
+  SdsAccountNumber:
+    Description: AWS Account Number for the SDS that will be publishing messages to the ingest job topic
+    Type: Number
 
   CachedCmrTokenBucket:
     Type: String
@@ -237,36 +237,37 @@ Resources:
       - Protocol: sqs
         Endpoint: !GetAtt JobQueue.Arn
 
+  JobTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            AWS: arn:aws:iam::${SdsAccountNumber}:root
+          Action: sns:Publish
+          Resource: !Ref JobTopic
+      Topics:
+      - !Ref JobTopic
+
   JobQueuePolicy:
     Type: AWS::SQS::QueuePolicy
     Properties:
       PolicyDocument: !Sub |-
         {
           "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": "*",
-              "Resource": "${JobQueue.Arn}",
-              "Action": "sqs:SendMessage",
-              "Condition": {
-                "ArnEquals": {
-                  "aws:SourceArn": "${JobTopic}"
-                }
-              }
-            },
-            {
-              "Effect": "Allow",
-              "Principal": "*",
-              "Resource": "${JobQueue.Arn}",
-              "Action": "sqs:SendMessage",
-              "Condition": {
-                "ArnEquals": {
-                  "aws:SourceArn": "${OregonTopicArn}"
-                }
+          "Statement": [{
+            "Effect": "Allow",
+            "Principal": "*",
+            "Resource": "${JobQueue.Arn}",
+            "Action": "sqs:SendMessage",
+            "Condition": {
+              "ArnEquals": {
+                "aws:SourceArn": "${JobTopic}"
               }
             }
-          ]
+          }]
         }
       Queues:
       - !Ref JobQueue
