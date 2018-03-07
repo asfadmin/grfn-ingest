@@ -245,7 +245,7 @@ Resources:
         Statement:
         - Effect: Allow
           Principal:
-            AWS: arn:aws:iam::${SdsAccountNumber}:root
+            AWS: !Sub "arn:aws:iam::${SdsAccountNumber}:root"
           Action: sns:Publish
           Resource: !Ref JobTopic
       Topics:
