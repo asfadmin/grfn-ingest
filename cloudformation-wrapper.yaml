@@ -63,9 +63,9 @@ Parameters:
     - eu-west-3
     - sa-east-1
 
-  SdsAccountNumber:
-    Description: AWS Account Number for the SDS that will be publishing messages to the ingest job topic
-    Type: Number
+  OregonTopicArn:
+    Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
+    Type: String
 
   CachedCmrTokenBucket:
     Description: Name of S3 bucket where cached CMR authentication token is stored
@@ -148,5 +148,5 @@ Resources:
         IngestContainerImage: !Ref IngestContainerImage
         IngestEc2Timeout: !Ref IngestEc2Timeout
         IngestActivityTimeout: !Ref IngestActivityTimeout
-        SdsAccountNumber: !Ref SdsAccountNumber
+        OregonTopicArn: !Ref OregonTopicArn
       TemplateURL: cloudformation-main.yaml
