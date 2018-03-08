@@ -278,13 +278,13 @@ Resources:
   JobTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
-    PolicyDocument:
-    Version: 2012-10-17
-    Statement:
-      - Effect: Allow
-        Principal:
-          AWS: !Sub "arn:aws:iam::${SdsAccountNumber}:root"
-        Action: sns:Publish
-        Resource: !Ref JobTopic
-    Topics:
-      - !Ref JobTopic
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            AWS: !Sub "arn:aws:iam::${SdsAccountNumber}:root"
+          Action: sns:Publish
+          Resource: !Ref JobTopic
+      Topics:
+        - !Ref JobTopic
