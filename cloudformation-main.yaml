@@ -58,6 +58,10 @@ Parameters:
     Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
     Type: String
 
+  SdsAccountNumber:
+    Description: AWS Account Number for the SDS that will be publishing messages to the ingest job topic
+    Type: Number
+
   CachedCmrTokenBucket:
     Type: String
 
@@ -270,3 +274,17 @@ Resources:
         }
       Queues:
       - !Ref JobQueue
+
+  JobTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+    PolicyDocument:
+    Version: 2012-10-17
+    Statement:
+      - Effect: Allow
+        Principal:
+          AWS: !Sub "arn:aws:iam::${SdsAccountNumber}:root"
+        Action: sns:Publish
+        Resource: !Ref JobTopic
+    Topics:
+      - !Ref JobTopic
