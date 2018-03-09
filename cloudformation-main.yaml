@@ -54,10 +54,6 @@ Parameters:
     - eu-west-3
     - sa-east-1
 
-  OregonTopicArn:
-    Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
-    Type: String
-
   SdsAccountNumber:
     Description: AWS Account Number for the SDS that will be publishing messages to the ingest job topic
     Type: Number
@@ -256,17 +252,6 @@ Resources:
               "Condition": {
                 "ArnEquals": {
                   "aws:SourceArn": "${JobTopic}"
-                }
-              }
-            },
-            {
-              "Effect": "Allow",
-              "Principal": "*",
-              "Resource": "${JobQueue.Arn}",
-              "Action": "sqs:SendMessage",
-              "Condition": {
-                "ArnEquals": {
-                  "aws:SourceArn": "${OregonTopicArn}"
                 }
               }
             }
