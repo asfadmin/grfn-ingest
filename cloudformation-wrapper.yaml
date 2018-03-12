@@ -63,10 +63,6 @@ Parameters:
     - eu-west-3
     - sa-east-1
 
-  OregonTopicArn:
-    Description: ARN of ingest topic in us-west-2.  Can be removed when we fix JPL access.
-    Type: String
-
   SdsAccountNumber:
     Description: AWS Account Number for the SDS that will be publishing messages to the ingest job topic
     Type: Number
@@ -152,6 +148,5 @@ Resources:
         IngestContainerImage: !Ref IngestContainerImage
         IngestEc2Timeout: !Ref IngestEc2Timeout
         IngestActivityTimeout: !Ref IngestActivityTimeout
-        OregonTopicArn: !Ref OregonTopicArn
         SdsAccountNumber: !Ref SdsAccountNumber
       TemplateURL: cloudformation-main.yaml
