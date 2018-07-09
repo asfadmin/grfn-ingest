@@ -37,7 +37,7 @@ Resources:
   Topic:
     Type: AWS::SNS::Topic
     Properties:
-      Name: !Sub "${Name}-new-scene"
+      TopicName: !Sub "${Name}-new-scene"
 
   DeadLetterQueue:
     Type: AWS::SQS::Queue
