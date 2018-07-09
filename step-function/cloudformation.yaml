@@ -37,6 +37,9 @@ Outputs:
   CmrActivityArn:
     Value: !Ref CmrActivity
 
+  PublishActivityArn:
+    Value: !Ref PublishActivity
+
 Resources:
 
   IngestActivity:
@@ -48,6 +51,11 @@ Resources:
     Type: AWS::StepFunctions::Activity
     Properties:
       Name: !Sub "${Name}-echo10-to-cmr"
+
+  PublishActivity:
+    Type: AWS::StepFunctions::Activity
+    Properties:
+      Name: !Sub "${Name}-publish"
 
   StepFunction:
     Type: AWS::StepFunctions::StateMachine
@@ -124,6 +132,19 @@ Resources:
                       "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionAllResults",
                       "ResultPath": "$.CmrAllResults",
+                      "Next": "Publish_All",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"],
+                        "MaxAttempts": 6,
+                        "BackoffRate": 5
+                      }]
+                    },
+                    "Publish_All": {
+                      "Type": "Task",
+                      "Resource": "${PublishActivity}",
+                      "TimeoutSeconds": 30,
+                      "InputPath": "$.CmrAllResults",
+                      "ResultPath": "$.PublishAllResults",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
                         "MaxAttempts": 6,
@@ -152,6 +173,19 @@ Resources:
                       "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionUnwGeoResults",
                       "ResultPath": "$.CmrUnwGeoResults",
+                      "Next": "Publish_UnwGeo",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"],
+                        "MaxAttempts": 6,
+                        "BackoffRate": 5
+                      }]
+                    },
+                    "Publish_UnwGeo": {
+                      "Type": "Task",
+                      "Resource": "${PublishActivity}",
+                      "TimeoutSeconds": 30,
+                      "InputPath": "$.CmrUnwGeoResults",
+                      "ResultPath": "$.PublishUnwGeoResults",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
                         "MaxAttempts": 6,
@@ -180,6 +214,19 @@ Resources:
                       "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionFullResResults",
                       "ResultPath": "$.CmrFullResResults",
+                      "Next": "Publish_FullRes",
+                      "Retry": [{
+                        "ErrorEquals": ["States.ALL"],
+                        "MaxAttempts": 6,
+                        "BackoffRate": 5
+                      }]
+                    },
+                    "Publish_FullRes": {
+                      "Type": "Task",
+                      "Resource": "${PublishActivity}",
+                      "TimeoutSeconds": 30,
+                      "InputPath": "$.CmrFullResResults",
+                      "ResultPath": "$.PublishFullResResults",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
                         "MaxAttempts": 6,
