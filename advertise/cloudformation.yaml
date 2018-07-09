@@ -18,7 +18,7 @@ Parameters:
   ActivityArn:
     Type: String
 
-  CmrGranuleSearchUrl:
+  CmrConceptSearchUrl:
     Type: String
 
   CmrClientId:
@@ -106,7 +106,7 @@ Resources:
                 },
                 "cmr_client_id": "${CmrClientId}",
                 "advertise": {
-                  "granule_search_url": "${CmrGranuleSearchUrl}",
+                  "concept_search_url": "${CmrConceptSearchUrl}",
                   "topic_arn": "${Topic}"
                 }
               }

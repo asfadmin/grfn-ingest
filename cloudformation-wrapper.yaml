@@ -85,7 +85,7 @@ Parameters:
     Description: Base URL for the CMR Create/Update granule endpoint
     Type: String
 
-  CmrGranuleSearchUrl:
+  CmrConceptSearchUrl:
     Description: Base URL for the CMR concept search endpoint
     Type: String
 
@@ -155,7 +155,7 @@ Resources:
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
         CmrGranuleUrl: !Ref CmrGranuleUrl
-        CmrGranuleSearchUrl: !Ref CmrGranuleSearchUrl
+        CmrConceptSearchUrl: !Ref CmrConceptSearchUrl
         CmrClientId: !Ref CmrClientId
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion

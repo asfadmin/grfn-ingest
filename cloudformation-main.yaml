@@ -72,7 +72,7 @@ Parameters:
   CmrGranuleUrl:
     Type: String
 
-  CmrGranuleSearchUrl:
+  CmrConceptSearchUrl:
     Type: String
 
   CmrClientId:
@@ -172,7 +172,7 @@ Resources:
         Name: !Sub "${Name}-advertise"
         LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.AdvertiseActivityArn
-        CmrGranuleSearchUrl: !Ref CmrGranuleSearchUrl
+        CmrConceptSearchUrl: !Ref CmrConceptSearchUrl
         CmrClientId: !Ref CmrClientId
       TemplateURL: advertise/cloudformation.yaml
 
