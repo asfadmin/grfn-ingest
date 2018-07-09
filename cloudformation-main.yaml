@@ -72,6 +72,12 @@ Parameters:
   CmrGranuleUrl:
     Type: String
 
+  CmrGranuleSearchUrl:
+    Type: String
+
+  CmrClientId:
+    Type: String
+
   IngestContainerImage:
     Type: String
 
@@ -95,6 +101,9 @@ Outputs:
 
   ErrorTopic:
     Value: !Ref ErrorTopic
+
+  NewSceneTopic:
+    Value: !GetAtt AdvertiseStack.Outputs.TopicArn
 
 Resources:
 
@@ -155,6 +164,17 @@ Resources:
         CmrTokenLambda: !Ref CmrTokenLambda
         CmrGranuleUrl: !Ref CmrGranuleUrl
       TemplateURL: echo10-to-cmr/cloudformation.yaml
+
+  AdvertiseStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${Name}-advertise"
+        LogLevel: !Ref LogLevel
+        ActivityArn: !GetAtt StepFunctionStack.Outputs.AdvertiseActivityArn
+        CmrGranuleSearchUrl: !Ref CmrGranuleSearchUrl
+        CmrClientId: !Ref CmrClientId
+      TemplateURL: advertise/cloudformation.yaml
 
   NotifyStack:
     Type: AWS::CloudFormation::Stack

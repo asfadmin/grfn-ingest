@@ -85,6 +85,14 @@ Parameters:
     Description: Base URL for the CMR Create/Update granule endpoint
     Type: String
 
+  CmrGranuleSearchUrl:
+    Description: Base URL for the CMR concept search endpoint
+    Type: String
+
+  CmrClientId:
+    Description: Value for Client-Id header included with CMR search requests
+    Type: String
+
   IngestContainerImage:
     Description: Full URL path of the docker container image to use for ingest activities
     Type: String
@@ -120,6 +128,10 @@ Outputs:
     Description: Subscribe to this topic to receive a notification when one or more ingest jobs fail
     Value: !GetAtt MainStack.Outputs.ErrorTopic
 
+  NewSceneTopic:
+    Description: Subscribe to this topic to receive a notification when new scenes are ingested
+    Value: !GetAtt MainStack.Outputs.NewSceneTopic
+
 Resources:
 
   MainStack:
@@ -143,6 +155,8 @@ Resources:
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
         CmrGranuleUrl: !Ref CmrGranuleUrl
+        CmrGranuleSearchUrl: !Ref CmrGranuleSearchUrl
+        CmrClientId: !Ref CmrClientId
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
         IngestContainerImage: !Ref IngestContainerImage
