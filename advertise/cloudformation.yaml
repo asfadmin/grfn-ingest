@@ -21,7 +21,7 @@ Parameters:
   CmrSearchUrl:
     Type: String
 
-  CmrApplicationName:
+  CmrClientId:
     Type: String
 
 Outputs:
@@ -104,7 +104,8 @@ Resources:
                   "arn": "${ActivityArn}",
                   "worker_name": "${Name}"
                 },
-                "cmr": {
+                "cmr_client_id": "${CmrClientId}",
+                "advertise": {
                   "granule_search_url": "${CmrGranuleSearchUrl}",
                   "topic_arn": "${Topic}"
                 }
