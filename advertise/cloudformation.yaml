@@ -39,6 +39,27 @@ Resources:
     Properties:
       TopicName: !Sub "${Name}-new-scene"
 
+  TopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Principal:
+            AWS: "*"
+          Condition:
+            StringEquals:
+              "SNS:Protocol":
+              - sqs
+              - lambda
+          Effect: Allow
+          Action:
+          - sns:Subscribe
+          - sns:Receive
+          Resource: !Ref Topic
+      Topics:
+      - !Ref Topic
+
   DeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties:
