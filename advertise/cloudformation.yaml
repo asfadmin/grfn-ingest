@@ -97,7 +97,7 @@ Resources:
             Action: sqs:SendMessage
             Resource: !GetAtt DeadLetterQueue.Arn
           - Effect: Allow
-            Action: sns:SendMessage
+            Action: sns:Publish
             Resource: !Ref Topic
           - Effect: Allow
             Action:
