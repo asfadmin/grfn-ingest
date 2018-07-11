@@ -81,12 +81,16 @@ Parameters:
     Type: String
     Default: cmr-token:TEST
 
-  CmrGranuleUrl:
-    Description: Base URL for the CMR Create/Update granule endpoint
+  CmrBaseUrl:
+    Description: Base URL of the CMR deployment to integrate with
     Type: String
+    Default: https://cmr.uat.earthdata.nasa.gov
+    AllowedValues:
+    - https://cmr.earthdata.nasa.gov
+    - https://cmr.uat.earthdata.nasa.gov
 
-  CmrConceptSearchUrl:
-    Description: Base URL for the CMR concept search endpoint
+  CmrProvider:
+    Description: Provider for ingesting products into CMR
     Type: String
 
   CmrClientId:
@@ -154,8 +158,8 @@ Resources:
         CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
-        CmrGranuleUrl: !Ref CmrGranuleUrl
-        CmrConceptSearchUrl: !Ref CmrConceptSearchUrl
+        CmrBaseUrl: !Ref CmrBaseUrl
+        CmrProvider: !Ref CmrProvider
         CmrClientId: !Ref CmrClientId
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion

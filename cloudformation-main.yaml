@@ -55,7 +55,6 @@ Parameters:
     - sa-east-1
 
   SdsAccountNumber:
-    Description: AWS Account Number for the SDS that will be publishing messages to the ingest job topic
     Type: Number
 
   CachedCmrTokenBucket:
@@ -69,10 +68,14 @@ Parameters:
     Type: String
     Default: cmr-token:TEST
 
-  CmrGranuleUrl:
+  CmrBaseUrl:
     Type: String
+    Default: https://cmr.uat.earthdata.nasa.gov
+    AllowedValues:
+    - https://cmr.earthdata.nasa.gov
+    - https://cmr.uat.earthdata.nasa.gov
 
-  CmrConceptSearchUrl:
+  CmrProvider:
     Type: String
 
   CmrClientId:
@@ -162,7 +165,7 @@ Resources:
         CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
-        CmrGranuleUrl: !Ref CmrGranuleUrl
+        CmrGranuleUrl: !Sub "${CmrBaseUrl}/ingest/providers/${CmrProvider}/granules/"
       TemplateURL: echo10-to-cmr/cloudformation.yaml
 
   AdvertiseStack:
@@ -172,7 +175,7 @@ Resources:
         Name: !Sub "${Name}-advertise"
         LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.AdvertiseActivityArn
-        CmrConceptSearchUrl: !Ref CmrConceptSearchUrl
+        CmrConceptSearchUrl: !Sub "${CmrBaseUrl}/search/concepts/"
         CmrClientId: !Ref CmrClientId
       TemplateURL: advertise/cloudformation.yaml
 
