@@ -60,8 +60,15 @@ def push_echo10_granule_to_cmr(session, echo10_content, config, s3):
     return response
 
 
+def get_granule_concept_id(response_text):
+    root = ElementTree.fromstring(response_text)
+    granule_concept_id = root.find('concept-id').text
+    return granule_concept_id
+
+
 def process_task(task_input, config, session, s3):
     log.info(task_input)
     echo10_content = get_file_content_from_s3(task_input['bucket'], task_input['key'], s3)
     response = push_echo10_granule_to_cmr(session, echo10_content, config, s3)
-    return {'status': response.status_code, 'text': response.text}
+    granule_concept_id = get_granule_concept_id(response.text)
+    return {'granule_concept_id': granule_concept_id}
