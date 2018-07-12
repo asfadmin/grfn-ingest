@@ -81,8 +81,20 @@ Parameters:
     Type: String
     Default: cmr-token:TEST
 
-  CmrGranuleUrl:
-    Description: Base URL for the CMR Create/Update granule endpoint
+  CmrBaseUrl:
+    Description: Base URL of the CMR deployment to integrate with
+    Type: String
+    Default: https://cmr.uat.earthdata.nasa.gov
+    AllowedValues:
+    - https://cmr.earthdata.nasa.gov
+    - https://cmr.uat.earthdata.nasa.gov
+
+  CmrProvider:
+    Description: Provider value to use when ingesting products into CMR
+    Type: String
+
+  CmrClientId:
+    Description: Value for Client-Id header included with CMR search requests
     Type: String
 
   IngestContainerImage:
@@ -120,6 +132,10 @@ Outputs:
     Description: Subscribe to this topic to receive a notification when one or more ingest jobs fail
     Value: !GetAtt MainStack.Outputs.ErrorTopic
 
+  NewSceneTopic:
+    Description: Subscribe to this topic to receive a notification when new scenes are ingested
+    Value: !GetAtt MainStack.Outputs.NewSceneTopic
+
 Resources:
 
   MainStack:
@@ -142,7 +158,9 @@ Resources:
         CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
         CmrTokenLambda: !Ref CmrTokenLambda
-        CmrGranuleUrl: !Ref CmrGranuleUrl
+        CmrBaseUrl: !Ref CmrBaseUrl
+        CmrProvider: !Ref CmrProvider
+        CmrClientId: !Ref CmrClientId
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
         IngestContainerImage: !Ref IngestContainerImage
