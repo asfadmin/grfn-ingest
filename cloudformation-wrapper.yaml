@@ -90,7 +90,7 @@ Parameters:
     - https://cmr.uat.earthdata.nasa.gov
 
   CmrProvider:
-    Description: Provider for ingesting products into CMR
+    Description: Provider value to use when ingesting products into CMR
     Type: String
 
   CmrClientId:
