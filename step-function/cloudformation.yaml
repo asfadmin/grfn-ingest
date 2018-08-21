@@ -135,7 +135,7 @@ Resources:
                       "Next": "Advertise_All",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
+                        "MaxAttempts": 7,
                         "BackoffRate": 5
                       }]
                     },
@@ -176,7 +176,7 @@ Resources:
                       "Next": "Advertise_UnwGeo",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
+                        "MaxAttempts": 7,
                         "BackoffRate": 5
                       }]
                     },
@@ -217,7 +217,7 @@ Resources:
                       "Next": "Advertise_FullRes",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
+                        "MaxAttempts": 7,
                         "BackoffRate": 5
                       }]
                     },
