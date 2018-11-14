@@ -122,40 +122,22 @@ Resources:
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python2.7
-      Timeout: 300
+      Timeout: 600
 
-  ScheduleA:
+  Schedule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub "${Name}-A"
+      Name: !Sub "${Name}"
       ScheduleExpression: "rate(1 minute)"
       State: ENABLED
       Targets:
-        - Arn: !GetAtt Lambda.Arn
-          Id: !Ref Name
+      - Arn: !GetAtt Lambda.Arn
+        Id: !Ref Name
 
-  EventPermissionA:
+  EventPermission:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName: !GetAtt Lambda.Arn
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt ScheduleA.Arn
-
-  ScheduleB:
-    Type: AWS::Events::Rule
-    Properties:
-      Name: !Sub "${Name}-B"
-      ScheduleExpression: "rate(1 minute)"
-      State: ENABLED
-      Targets:
-        - Arn: !GetAtt Lambda.Arn
-          Id: !Ref Name
-
-  EventPermissionB:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt Lambda.Arn
-      Action: lambda:InvokeFunction
-      Principal: events.amazonaws.com
-      SourceArn: !GetAtt ScheduleB.Arn
+      SourceArn: !GetAtt Schedule.Arn

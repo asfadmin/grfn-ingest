@@ -94,11 +94,33 @@ Resources:
       - !Ref GroupScalingPolicy
       - !Ref ServiceScalingPolicy
 
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Name}-instance"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Ref InstanceRole
+      Roles:
+      - !Ref InstanceRole
+
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: true
-      IamInstanceProfile: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/ecsInstanceRole"
+      IamInstanceProfile: !GetAtt InstanceProfile.Arn
       ImageId: !Ref Ami
       InstanceType: i3.2xlarge
       SpotPrice: !Ref MaxSpotPrice
@@ -142,7 +164,7 @@ Resources:
       HeartbeatTimeout: !Ref IngestEc2Timeout
       DefaultResult: CONTINUE
 
-  TaskIamRole:
+  TaskRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Ref Name
@@ -188,7 +210,7 @@ Resources:
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      TaskRoleArn: !Ref TaskIamRole
+      TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
       - Name: !Ref Name
         Image: !Ref ContainerImage
