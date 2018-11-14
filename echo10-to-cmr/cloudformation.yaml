@@ -131,8 +131,8 @@ Resources:
       ScheduleExpression: "rate(1 minute)"
       State: ENABLED
       Targets:
-        - Arn: !GetAtt Lambda.Arn
-          Id: !Ref Name
+      - Arn: !GetAtt Lambda.Arn
+        Id: !Ref Name
 
   EventPermission:
     Type: AWS::Lambda::Permission
