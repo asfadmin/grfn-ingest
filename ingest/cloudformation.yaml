@@ -164,7 +164,7 @@ Resources:
       HeartbeatTimeout: !Ref IngestEc2Timeout
       DefaultResult: CONTINUE
 
-  TaskRole:
+  TaskIamRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Ref Name
@@ -210,7 +210,7 @@ Resources:
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      TaskRoleArn: !Ref TaskRole
+      TaskRoleArn: !Ref TaskIamRole
       ContainerDefinitions:
       - Name: !Ref Name
         Image: !Ref ContainerImage
