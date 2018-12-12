@@ -38,6 +38,12 @@ Resources:
       QueueName: !Sub "${Name}-dlq"
       MessageRetentionPeriod: 1209600
 
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Name}"
+      RetentionInDays: 30
+
   Role:
     Type: AWS::IAM::Role
     Properties:
@@ -56,10 +62,9 @@ Resources:
           Statement:
           - Effect: Allow
             Action:
-            - logs:CreateLogGroup
             - logs:CreateLogStream
             - logs:PutLogEvents
-            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${Name}*"
+            Resource: !GetAtt LogGroup.Arn
           - Effect: Allow
             Action: sqs:SendMessage
             Resource: !GetAtt DeadLetterQueue.Arn
