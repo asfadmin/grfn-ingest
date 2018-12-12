@@ -57,16 +57,9 @@ Parameters:
   SdsAccountNumber:
     Type: Number
 
-  CachedCmrTokenBucket:
-    Type: String
-
   CachedCmrTokenKey:
     Type: String
-    Default: cached-cmr-auth-token-test
-
-  CmrTokenLambda:
-    Type: String
-    Default: cmr-token:TEST
+    Default: cached-cmr-auth-token
 
   CmrBaseUrl:
     Type: String
@@ -74,6 +67,13 @@ Parameters:
     AllowedValues:
     - https://cmr.earthdata.nasa.gov
     - https://cmr.uat.earthdata.nasa.gov
+
+  CmrUsername:
+    Type: String
+
+  CmrPassword:
+    Type: String
+    NoEcho: true
 
   CmrProvider:
     Type: String
@@ -154,6 +154,20 @@ Resources:
         BrowseBaseUrl: !Ref BrowseBaseUrl
       TemplateURL: echo10-construction/cloudformation.yaml
 
+  CmrTokenStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Name: !Sub "${Name}-cmr-token"
+        TokenBucket: !Ref AuxBucket
+        TokenKey: !Ref CachedCmrTokenKey
+        TokenUrl: !Sub "${CmrBaseUrl}/legacy-services/rest/tokens"
+        Username: !Ref CmrUsername
+        Password: !Ref CmrPassword
+        Provider: !Ref CmrProvider
+        ClientId: !Ref CmrClientId
+      TemplateURL: cmr-token/cloudformation.yaml
+
   Echo10ToCmrStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -162,9 +176,8 @@ Resources:
         LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
         AuxBucket: !Ref AuxBucket
-        CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
-        CmrTokenLambda: !Ref CmrTokenLambda
+        CmrTokenLambda: !GetAtt CmrTokenStack.Outputs.LambdaName
         CmrGranuleUrl: !Sub "${CmrBaseUrl}/ingest/providers/${CmrProvider}/granules/"
       TemplateURL: echo10-to-cmr/cloudformation.yaml
 
