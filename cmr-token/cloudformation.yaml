@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  Name:
+    Type: String
+
+  TokenBucket:
+    Type: String
+
+  TokenKey:
+    Type: String
+
+  TokenUrl:
+    Type: String
+    Default: https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens
+    AllowedValues:
+    - https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens
+    - https://cmr.uat.earthdata.nasa.gov/legacy-services/rest/tokens
+
+  Username:
+    Type: String
+
+  Password:
+    Type: String
+    NoEcho: true
+
+  Provider:
+    Type: String
+
+  ClientId:
+    Type: String
+
+Outputs:
+
+  LambdaName:
+    Value: !Ref Lambda
+
+Resources:
+
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${Name}-dlq"
+      MessageRetentionPeriod: 1209600
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Name}"
+      RetentionInDays: 30
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref Name
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          Action: sts:AssumeRole
+          Principal:
+            Service: lambda.amazonaws.com
+          Effect: Allow
+      Policies:
+      - PolicyName: policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: !GetAtt LogGroup.Arn
+          - Effect: Allow
+            Action: sqs:SendMessage
+            Resource: !GetAtt DeadLetterQueue.Arn
+          - Effect: Allow
+            Action: s3:PutObject
+            Resource: !Sub "arn:aws:s3:::${TokenBucket}/${TokenKey}"
+
+  Lambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref Name
+      Code: src/
+      DeadLetterConfig:
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Environment:
+        Variables:
+          CONFIG: !Sub |-
+            {
+              "new_token": {
+                "username": "${Username}",
+                "password": "${Password}",
+                "url": "${TokenUrl}",
+                "provider": "${Provider}",
+                "client_id": "${ClientId}",
+                "user_ip_address": "0.0.0.0"
+              },
+              "cached_token": {
+                "bucket": "${TokenBucket}",
+                "key": "${TokenKey}"
+              }
+            }
+      Handler: main.lambda_handler
+      MemorySize: 128
+      Role: !GetAtt Role.Arn
+      Runtime: python2.7
+      Timeout: 60

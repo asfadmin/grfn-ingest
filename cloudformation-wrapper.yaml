@@ -67,20 +67,6 @@ Parameters:
     Description: AWS Account Number for the SDS that will be publishing messages to the ingest job topic
     Type: Number
 
-  CachedCmrTokenBucket:
-    Description: Name of S3 bucket where cached CMR authentication token is stored
-    Type: String
-
-  CachedCmrTokenKey:
-    Description: S3 key where cached CMR authentication token is stored
-    Type: String
-    Default: cached-cmr-auth-token-test
-
-  CmrTokenLambda:
-    Description: Name of lambda function for fetching new CMR authentication tokens
-    Type: String
-    Default: cmr-token:TEST
-
   CmrBaseUrl:
     Description: Base URL of the CMR deployment to integrate with
     Type: String
@@ -88,6 +74,13 @@ Parameters:
     AllowedValues:
     - https://cmr.earthdata.nasa.gov
     - https://cmr.uat.earthdata.nasa.gov
+
+  CmrUsername:
+    Type: String
+
+  CmrPassword:
+    Type: String
+    NoEcho: true
 
   CmrProvider:
     Description: Provider value to use when ingesting products into CMR
@@ -118,9 +111,9 @@ Parameters:
     Type: String
     Default: DEV
     AllowedValues:
-      - TEST
-      - PROD
-      - DEV
+    - PROD
+    - TEST
+    - DEV
 
 Outputs:
 
@@ -142,10 +135,10 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Tags:
-        - Key: MATURITY
-          Value: !Ref Maturity
-        - Key: APPLICATION
-          Value: GRFN-INGEST
+      - Key: MATURITY
+        Value: !Ref Maturity
+      - Key: APPLICATION
+        Value: GRFN-INGEST
       Parameters:
         Name: !Ref AWS::StackName
         LogLevel: !Ref LogLevel
@@ -155,16 +148,15 @@ Resources:
         PublicBucket: !Ref PublicBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
-        CachedCmrTokenBucket: !Ref CachedCmrTokenBucket
-        CachedCmrTokenKey: !Ref CachedCmrTokenKey
-        CmrTokenLambda: !Ref CmrTokenLambda
-        CmrBaseUrl: !Ref CmrBaseUrl
-        CmrProvider: !Ref CmrProvider
-        CmrClientId: !Ref CmrClientId
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
+        SdsAccountNumber: !Ref SdsAccountNumber
+        CmrBaseUrl: !Ref CmrBaseUrl
+        CmrUsername: !Ref CmrUsername
+        CmrPassword: !Ref CmrPassword
+        CmrProvider: !Ref CmrProvider
+        CmrClientId: !Ref CmrClientId
         IngestContainerImage: !Ref IngestContainerImage
         IngestEc2Timeout: !Ref IngestEc2Timeout
         IngestActivityTimeout: !Ref IngestActivityTimeout
-        SdsAccountNumber: !Ref SdsAccountNumber
       TemplateURL: cloudformation-main.yaml
