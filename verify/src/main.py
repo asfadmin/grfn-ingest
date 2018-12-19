@@ -7,6 +7,7 @@ from logging import getLogger
 
 
 log = getLogger()
+log.setLevel('INFO')
 
 
 class INVALID_MESSAGE(Exception):
@@ -28,13 +29,6 @@ def get_file_content_from_s3(bucket, key):
     response = obj.get()
     contents = response['Body'].read()
     return contents
-
-
-def setup():
-    config = json.loads(os.environ['CONFIG'])
-    log.setLevel(config['log_level'])
-    log.debug('Config: {0}'.format(config))
-    return config
 
 
 def get_json_from_file(filename):
@@ -115,5 +109,4 @@ def verify(message):
 
 
 def lambda_handler(event, context):
-    config = setup()
     verify(event)

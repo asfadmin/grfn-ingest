@@ -134,7 +134,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-verify"
-        LogLevel: !Ref LogLevel
       TemplateURL: verify/cloudformation.yaml
 
   Echo10ConstructionStack:
