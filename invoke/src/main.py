@@ -1,17 +1,12 @@
 import boto3
 import json
-from os import environ
+from os import getenv
 from logging import getLogger
 
 
 log = getLogger()
-
-
-def setup():
-    config = json.loads(environ['CONFIG'])
-    log.setLevel(config['log_level'])
-    log.debug('Config: %s', config)
-    return config
+log.setLevel('INFO')
+config = json.loads(getenv('CONFIG'))
 
 
 def validate_message(message, message_error_key):
@@ -55,5 +50,4 @@ def invoke_ingest(config):
 
 
 def lambda_handler(event, context):
-    config = setup()
-    invoke_ingest(config['invoke'])
+    invoke_ingest(config)

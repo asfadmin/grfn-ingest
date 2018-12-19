@@ -124,7 +124,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-invoke"
-        LogLevel: !Ref LogLevel
         QueueUrl: !Ref JobQueue
         QueueArn: !GetAtt JobQueue.Arn
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
@@ -135,7 +134,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-verify"
-        LogLevel: !Ref LogLevel
       TemplateURL: verify/cloudformation.yaml
 
   Echo10ConstructionStack:
@@ -143,7 +141,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-echo10-construction"
-        LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         AuxBucket: !Ref AuxBucket
