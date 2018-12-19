@@ -188,7 +188,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-metrics"
-        LogLevel: !Ref LogLevel
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       TemplateURL: metrics/cloudformation.yaml
 

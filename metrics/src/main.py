@@ -5,13 +5,8 @@ from logging import getLogger
 
 
 log = getLogger()
-
-
-def setup():
-    config = json.loads(environ['CONFIG'])
-    log.setLevel(config['log_level'])
-    log.debug('Config: {0}'.format(config))
-    return config
+log.setLevel('INFO')
+config = json.loads(getenv('CONFIG'))
 
 
 def get_IngestsRunning(step_function_arn):
@@ -48,5 +43,4 @@ def publish_custom_metrics(config):
 
 
 def lambda_handler(event, context):
-    config = setup()
-    publish_custom_metrics(config['custom_metrics'])
+    publish_custom_metrics(config)
