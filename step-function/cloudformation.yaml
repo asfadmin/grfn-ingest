@@ -37,9 +37,6 @@ Outputs:
   CmrActivityArn:
     Value: !Ref CmrActivity
 
-  AdvertiseActivityArn:
-    Value: !Ref AdvertiseActivity
-
 Resources:
 
   IngestActivity:
@@ -51,11 +48,6 @@ Resources:
     Type: AWS::StepFunctions::Activity
     Properties:
       Name: !Sub "${Name}-echo10-to-cmr"
-
-  AdvertiseActivity:
-    Type: AWS::StepFunctions::Activity
-    Properties:
-      Name: !Sub "${Name}-advertise"
 
   StepFunction:
     Type: AWS::StepFunctions::StateMachine
@@ -132,22 +124,9 @@ Resources:
                       "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionAllResults",
                       "ResultPath": "$.CmrAllResults",
-                      "Next": "Advertise_All",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
                         "MaxAttempts": 7,
-                        "BackoffRate": 5
-                      }]
-                    },
-                    "Advertise_All": {
-                      "Type": "Task",
-                      "Resource": "${AdvertiseActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.CmrAllResults",
-                      "ResultPath": "$.AdvertiseAllResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
                         "BackoffRate": 5
                       }],
                       "End": true
@@ -173,22 +152,9 @@ Resources:
                       "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionUnwGeoResults",
                       "ResultPath": "$.CmrUnwGeoResults",
-                      "Next": "Advertise_UnwGeo",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
                         "MaxAttempts": 7,
-                        "BackoffRate": 5
-                      }]
-                    },
-                    "Advertise_UnwGeo": {
-                      "Type": "Task",
-                      "Resource": "${AdvertiseActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.CmrUnwGeoResults",
-                      "ResultPath": "$.AdvertiseUnwGeoResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
                         "BackoffRate": 5
                       }],
                       "End": true
@@ -214,22 +180,9 @@ Resources:
                       "TimeoutSeconds": 30,
                       "InputPath": "$.ConstructionFullResResults",
                       "ResultPath": "$.CmrFullResResults",
-                      "Next": "Advertise_FullRes",
                       "Retry": [{
                         "ErrorEquals": ["States.ALL"],
                         "MaxAttempts": 7,
-                        "BackoffRate": 5
-                      }]
-                    },
-                    "Advertise_FullRes": {
-                      "Type": "Task",
-                      "Resource": "${AdvertiseActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.CmrFullResResults",
-                      "ResultPath": "$.AdvertiseFullResResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 6,
                         "BackoffRate": 5
                       }],
                       "End": true

@@ -125,10 +125,6 @@ Outputs:
     Description: Subscribe to this topic to receive a notification when one or more ingest jobs fail
     Value: !GetAtt MainStack.Outputs.ErrorTopic
 
-  NewSceneTopic:
-    Description: Subscribe to this topic to receive a notification when new scenes are ingested
-    Value: !GetAtt MainStack.Outputs.NewSceneTopic
-
 Resources:
 
   MainStack:

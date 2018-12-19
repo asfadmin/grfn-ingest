@@ -105,9 +105,6 @@ Outputs:
   ErrorTopic:
     Value: !Ref ErrorTopic
 
-  NewSceneTopic:
-    Value: !GetAtt AdvertiseStack.Outputs.TopicArn
-
 Resources:
 
   StepFunctionStack:
@@ -180,17 +177,6 @@ Resources:
         CmrTokenLambda: !GetAtt CmrTokenStack.Outputs.LambdaName
         CmrGranuleUrl: !Sub "${CmrBaseUrl}/ingest/providers/${CmrProvider}/granules/"
       TemplateURL: echo10-to-cmr/cloudformation.yaml
-
-  AdvertiseStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        Name: !Sub "${Name}-advertise"
-        LogLevel: !Ref LogLevel
-        ActivityArn: !GetAtt StepFunctionStack.Outputs.AdvertiseActivityArn
-        CmrConceptSearchUrl: !Sub "${CmrBaseUrl}/search/concepts/"
-        CmrClientId: !Ref CmrClientId
-      TemplateURL: advertise/cloudformation.yaml
 
   NotifyStack:
     Type: AWS::CloudFormation::Stack
