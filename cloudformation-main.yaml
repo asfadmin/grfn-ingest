@@ -167,7 +167,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-echo10-to-cmr"
-        LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
         AuxBucket: !Ref AuxBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
