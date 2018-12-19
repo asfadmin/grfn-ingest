@@ -70,14 +70,6 @@ def get_mission(polygon, missions):
     return None
 
 
-def translate_asc_desc(value):
-    if value == 'asc':
-        return 'Ascending'
-    if value == 'dsc':
-        return 'Descending'
-    return value
-
-
 def get_config_value(config, key):
     if key in config:
         return config[key]
@@ -123,11 +115,11 @@ def get_granule_data(inputs, config):
         'polygon': polygon,
         'additional_attributes': {
             'GROUP_ID': sds_metadata['label'].replace('.', '-'),
-            'ASCENDING_DESCENDING': translate_asc_desc(granule_metadata['direction']),
+            'ASCENDING_DESCENDING': granule_metadata['direction'],
             'BEAM_MODE_TYPE': granule_metadata['dataset_type'],
             'BEAM_MODE': granule_metadata['beamMode'],
             'BEAM_MODE_DESC': granule_metadata['product_type'],
-            'POLARIZATION': granule_metadata['polarization'] if 'polarization' in granule_metadata else 'UNSPECIFIED',
+            'POLARIZATION': granule_metadata['polarization'],
             'LOOK_DIRECTION': granule_metadata['lookDirection'],
             'PATH_NUMBER': granule_metadata['trackNumber'],
             'BYTES': file_size,
