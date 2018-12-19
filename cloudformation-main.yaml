@@ -2,16 +2,6 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
-  LogLevel:
-    Type: String
-    Default: INFO
-    AllowedValues:
-    - CRITICAL
-    - ERROR
-    - WARNING
-    - INFO
-    - DEBUG
-
   VpcId:
     Type: AWS::EC2::VPC::Id
 
