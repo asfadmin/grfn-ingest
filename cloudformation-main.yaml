@@ -124,7 +124,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-invoke"
-        LogLevel: !Ref LogLevel
         QueueUrl: !Ref JobQueue
         QueueArn: !GetAtt JobQueue.Arn
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
