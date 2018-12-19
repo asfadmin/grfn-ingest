@@ -196,7 +196,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-ingest"
-        LogLevel: !Ref LogLevel
         VpcId: !Ref VpcId
         SubnetId: !Join [",", !Ref SubnetId]
         ContainerImage: !Ref IngestContainerImage
