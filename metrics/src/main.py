@@ -1,6 +1,6 @@
 import boto3
 import json
-from os import environ
+from os import getenv
 from logging import getLogger
 
 
