@@ -8,7 +8,7 @@ from cmr import process_task, get_session
 
 
 log = getLogger()
-log.setlevel('INFO')
+log.setLevel('INFO')
 config = json.loads(getenv('CONFIG'))
 
 
