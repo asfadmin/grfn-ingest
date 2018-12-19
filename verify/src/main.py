@@ -49,7 +49,6 @@ def validate_s3_object(obj, s3=None):
 
 
 def validate_message(message):
-    log.debug(message)
     if 'MessageError' in message:
         raise INVALID_MESSAGE(message['MessageError'])
     message_schema = get_json_from_file('message_schema.json')
@@ -72,7 +71,6 @@ def validate_s3_object_collection(collection):
 
 def validate_metadata(obj):
     metadata = get_file_content_from_s3(obj['Bucket'], obj['Key'])
-    log.debug(metadata)
     metadata_schema = get_json_from_file('metadata_schema.json')
     try:
         metadata = json.loads(metadata)
