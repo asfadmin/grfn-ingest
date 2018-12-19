@@ -2,16 +2,6 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
-  LogLevel:
-    Type: String
-    Default: INFO
-    AllowedValues:
-    - CRITICAL
-    - ERROR
-    - WARNING
-    - INFO
-    - DEBUG
-
   VpcId:
     Type: AWS::EC2::VPC::Id
 
@@ -167,7 +157,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-echo10-to-cmr"
-        LogLevel: !Ref LogLevel
         ActivityArn: !GetAtt StepFunctionStack.Outputs.CmrActivityArn
         AuxBucket: !Ref AuxBucket
         CachedCmrTokenKey: !Ref CachedCmrTokenKey
@@ -189,7 +178,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-metrics"
-        LogLevel: !Ref LogLevel
         StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       TemplateURL: metrics/cloudformation.yaml
 
@@ -198,7 +186,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-ingest"
-        LogLevel: !Ref LogLevel
         VpcId: !Ref VpcId
         SubnetId: !Join [",", !Ref SubnetId]
         ContainerImage: !Ref IngestContainerImage
