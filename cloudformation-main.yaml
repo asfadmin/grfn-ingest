@@ -141,7 +141,6 @@ Resources:
     Properties:
       Parameters:
         Name: !Sub "${Name}-echo10-construction"
-        LogLevel: !Ref LogLevel
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         AuxBucket: !Ref AuxBucket

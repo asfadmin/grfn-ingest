@@ -9,16 +9,10 @@ from shapely.geometry import Polygon
 
 
 log = getLogger()
-
+log.setLevel('INFO')
+config = json.loads(os.getenv('CONFIG'))
 
 TEMPLATE_FILE = 'echo10.template'
-
-
-def setup():
-    config = json.loads(os.environ['CONFIG'])
-    log.setLevel(config['log_level'])
-    log.debug('Config: {0}'.format(config))
-    return config
 
 
 def now():
@@ -168,7 +162,5 @@ def create_granule_echo10_in_s3(inputs, config):
 
 
 def lambda_handler(event, context):
-    config = setup()
-    log.debug('Payload: {0}'.format(str(event)))
-    output = create_granule_echo10_in_s3(event, config['echo10_construction'])
+    output = create_granule_echo10_in_s3(event, config)
     return output
