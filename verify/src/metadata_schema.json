@@ -52,6 +52,7 @@
         "direction",
         "dataset_type",
         "product_type",
+        "polarization",
         "lookDirection",
         "trackNumber",
         "perpendicularBaseline",

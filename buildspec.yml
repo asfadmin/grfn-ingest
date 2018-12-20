@@ -12,7 +12,7 @@ environment_variables:
     IMAGE_NAME: "ingest"
     IMAGE_HOST: "406893895021.dkr.ecr.us-east-1.amazonaws.com"
     MATURITY: "PROD"
-    SHA1: "c12c2ba"
+    SHA1: "d24a00d"
 
 phases:
   pre_build:
@@ -28,7 +28,6 @@ phases:
       - pip install -r metrics/requirements.txt -t metrics/src/
       - pip install -r cmr-token/requirements.txt -t cmr-token/src/
       - pip install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
-      - pip install -r advertise/requirements.txt -t advertise/src/
       - apt-get update
       - apt-get install -y libgeos-dev
       - mkdir echo10-construction/src/lib

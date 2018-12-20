@@ -2,17 +2,6 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
-  LogLevel:
-    Description: Application logging level
-    Type: String
-    Default: INFO
-    AllowedValues:
-    - CRITICAL
-    - ERROR
-    - WARNING
-    - INFO
-    - DEBUG
-
   VpcId:
     Description: VPC Id in which to launch EC2 instances for ingest activities
     Type: AWS::EC2::VPC::Id
@@ -125,10 +114,6 @@ Outputs:
     Description: Subscribe to this topic to receive a notification when one or more ingest jobs fail
     Value: !GetAtt MainStack.Outputs.ErrorTopic
 
-  NewSceneTopic:
-    Description: Subscribe to this topic to receive a notification when new scenes are ingested
-    Value: !GetAtt MainStack.Outputs.NewSceneTopic
-
 Resources:
 
   MainStack:
@@ -141,7 +126,6 @@ Resources:
         Value: GRFN-INGEST
       Parameters:
         Name: !Ref AWS::StackName
-        LogLevel: !Ref LogLevel
         VpcId: !Ref VpcId
         SubnetId: !Join [",", !Ref SubnetId]
         PrivateBucket: !Ref PrivateBucket

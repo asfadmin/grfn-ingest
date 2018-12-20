@@ -1,18 +1,13 @@
 import boto3
 import json
-from os import environ
+from os import getenv
 from datetime import datetime
 from logging import getLogger
 
 
 log = getLogger()
-
-
-def setup():
-    config = json.loads(environ['CONFIG'])
-    log.setLevel(config['log_level'])
-    log.debug('Config: {0}'.format(config))
-    return config
+log.setLevel('INFO')
+config = json.loads(getenv('CONFIG'))
 
 
 def create_response(event, error_config):
@@ -36,7 +31,6 @@ def create_response(event, error_config):
 
 
 def send_message(message, topic):
-    log.debug('SNS Message: %s', message)
     client = boto3.client('sns', region_name=topic['Region'])
     response = client.publish(
         TopicArn=topic['Arn'],
@@ -62,6 +56,5 @@ def notify(event, config):
 
 
 def lambda_handler(event, context):
-    config = setup()
     response = notify(event, config)
     return response

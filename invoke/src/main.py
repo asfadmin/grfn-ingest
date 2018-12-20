@@ -1,21 +1,18 @@
 import boto3
 import json
-from os import environ
+from os import getenv
 from logging import getLogger
 
 
 log = getLogger()
+log.setLevel('INFO')
+config = json.loads(getenv('CONFIG'))
 
-
-def setup():
-    config = json.loads(environ['CONFIG'])
-    log.setLevel(config['log_level'])
-    log.debug('Config: %s', config)
-    return config
+sqs = boto3.resource('sqs')
+sfn = boto3.client('stepfunctions')
 
 
 def validate_message(message, message_error_key):
-    log.debug(message)
     try:
         json.loads(message)
     except ValueError as e:
@@ -33,9 +30,7 @@ def process_sqs_message(sfn_client, config, sqs_message):
 
 
 def invoke_ingest(config):
-    sqs = boto3.resource('sqs')
     queue = sqs.Queue(config['queue_url'])
-    sfn = boto3.client('stepfunctions')
     messages_processed = 0
 
     while True:
@@ -55,5 +50,4 @@ def invoke_ingest(config):
 
 
 def lambda_handler(event, context):
-    config = setup()
-    invoke_ingest(config['invoke'])
+    invoke_ingest(config)

@@ -5,16 +5,6 @@ Parameters:
   Name:
     Type: String
 
-  LogLevel:
-    Type: String
-    Default: INFO
-    AllowedValues:
-    - CRITICAL
-    - ERROR
-    - WARNING
-    - INFO
-    - DEBUG
-
   ActivityArn:
     Type: String
 
@@ -98,22 +88,19 @@ Resources:
         Variables:
           CONFIG: !Sub |-
             {
-              "log_level": "${LogLevel}",
-              "daemon": {
-                "max_task_time_in_millis": 65000,
-                "sfn_connect_timeout": 65,
-                "activity": {
-                  "arn": "${ActivityArn}",
-                  "worker_name": "${Name}"
+              "max_task_time_in_millis": 65000,
+              "sfn_connect_timeout": 65,
+              "activity": {
+                "arn": "${ActivityArn}",
+                "worker_name": "${Name}"
+              },
+              "cmr": {
+                "granule_url": "${CmrGranuleUrl}",
+                "cached_token": {
+                  "bucket": "${AuxBucket}",
+                  "key": "${CachedCmrTokenKey}"
                 },
-                "cmr": {
-                  "granule_url": "${CmrGranuleUrl}",
-                  "cached_token": {
-                    "bucket": "${AuxBucket}",
-                    "key": "${CachedCmrTokenKey}"
-                  },
-                  "cmr_token_lambda": "${CmrTokenLambda}"
-                }
+                "cmr_token_lambda": "${CmrTokenLambda}"
               }
             }
       Handler: daemon.lambda_handler
