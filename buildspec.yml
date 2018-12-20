@@ -28,7 +28,6 @@ phases:
       - pip install -r metrics/requirements.txt -t metrics/src/
       - pip install -r cmr-token/requirements.txt -t cmr-token/src/
       - pip install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
-      - pip install -r advertise/requirements.txt -t advertise/src/
       - apt-get update
       - apt-get install -y libgeos-dev
       - mkdir echo10-construction/src/lib

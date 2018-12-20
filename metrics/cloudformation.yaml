@@ -5,16 +5,6 @@ Parameters:
   Name:
     Type: String
 
-  LogLevel:
-    Type: String
-    Default: INFO
-    AllowedValues:
-    - CRITICAL
-    - ERROR
-    - WARNING
-    - INFO
-    - DEBUG
-
   MetricName:
     Type: String
     Default: IngestsRunning
@@ -86,19 +76,16 @@ Resources:
         Variables:
           CONFIG: !Sub |-
             {
-              "log_level": "${LogLevel}",
-              "custom_metrics": {
-                "step_function_arn": "${StepFunctionArn}",
-                "cloudwatch_metrics": {
-                  "Namespace": "${Name}",
-                  "MetricData": [
-                    {
-                      "MetricName": "${MetricName}",
-                      "Unit": "Count",
-                      "Value": 0
-                    }
-                  ]
-                }
+              "step_function_arn": "${StepFunctionArn}",
+              "cloudwatch_metrics": {
+                "Namespace": "${Name}",
+                "MetricData": [
+                  {
+                    "MetricName": "${MetricName}",
+                    "Unit": "Count",
+                    "Value": 0
+                  }
+                ]
               }
             }
       Handler: main.lambda_handler

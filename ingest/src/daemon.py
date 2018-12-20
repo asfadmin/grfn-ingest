@@ -68,13 +68,8 @@ def get_logger():
     formatter = logging.Formatter('%(levelname)s: %(message)s (%(filename)s line %(lineno)d)')
     stdout_handler.setFormatter(formatter)
     log.addHandler(stdout_handler)
+    log.setLevel('INFO')
     return log
-
-
-def adjust_log_levels(log_config):
-    log.setLevel(log_config['base_level'])
-    logging.getLogger('botocore').setLevel(log_config['boto_level'])
-    logging.getLogger('boto3').setLevel(log_config['boto_level'])
 
 
 def send_task_response(token, output=None, exception=None):
@@ -132,7 +127,6 @@ def setup():
             config = get_config(options.config_file)
     else:
         config = json.loads(options.config_json)
-    adjust_log_levels(config['log'])
     boto3.setup_default_session(region_name=config['aws_region'])
     if config['daemon']['activity']['worker_name'] == '$INSTANCE_ID':
         config['daemon']['activity']['worker_name'] = get_instance_id()
