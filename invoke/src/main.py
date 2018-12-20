@@ -8,9 +8,11 @@ log = getLogger()
 log.setLevel('INFO')
 config = json.loads(getenv('CONFIG'))
 
+sqs = boto3.resource('sqs')
+sfn = boto3.client('stepfunctions')
+
 
 def validate_message(message, message_error_key):
-    log.debug(message)
     try:
         json.loads(message)
     except ValueError as e:
@@ -28,9 +30,7 @@ def process_sqs_message(sfn_client, config, sqs_message):
 
 
 def invoke_ingest(config):
-    sqs = boto3.resource('sqs')
     queue = sqs.Queue(config['queue_url'])
-    sfn = boto3.client('stepfunctions')
     messages_processed = 0
 
     while True:
