@@ -7,8 +7,6 @@ version: 0.1
 
 environment_variables:
   plaintext:
-    BUCKET: "grfn-software"
-    PREFIX: "lambda"
     PIPELINE_NAME: "ingest-test"
     IMAGE_NAME: "ingest"
     IMAGE_HOST: "406893895021.dkr.ecr.us-east-1.amazonaws.com"
