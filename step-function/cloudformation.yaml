@@ -5,20 +5,13 @@ Parameters:
   Name:
     Type: String
 
-  StepFunctionRoleArn:
-    Description: IAM execution role to attach to step function
-    Type: String
-
   VerifyLambdaArn:
-    Description: ARN of verify lambda
     Type: String
 
   NotifyLambdaArn:
-    Description: ARN of notify lambda
     Type: String
 
   Echo10ConstructionLambdaArn:
-    Description: ARN of echo10-construction lambda
     Type: String
 
   IngestActivityTimeout:
@@ -49,11 +42,34 @@ Resources:
     Properties:
       Name: !Sub "${Name}-echo10-to-cmr"
 
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Name}-step-function"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          Action: sts:AssumeRole
+          Principal:
+            Service: states.amazonaws.com
+          Effect: Allow
+      Policies:
+      - PolicyName: policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action: lambda:InvokeFunction
+            Resource:
+            - !Ref VerifyLambdaArn
+            - !Ref NotifyLambdaArn
+            - !Ref Echo10ConstructionLambdaArn
+
   StepFunction:
     Type: AWS::StepFunctions::StateMachine
     Properties:
       StateMachineName: !Ref Name
-      RoleArn: !Ref StepFunctionRoleArn
+      RoleArn: !GetAtt Role.Arn
       DefinitionString: !Sub |-
         {
           "Comment": "A step function to control lambdas for GRFN Ingest",
