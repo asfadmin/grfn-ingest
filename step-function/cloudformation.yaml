@@ -52,6 +52,7 @@ Resources:
             Action: lambda:InvokeFunction
             Resource:
             - !Ref VerifyLambdaArn
+            - !Ref IngestLambdaArn
             - !Ref NotifyLambdaArn
             - !Ref Echo10ConstructionLambdaArn
 
