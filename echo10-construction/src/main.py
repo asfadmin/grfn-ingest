@@ -64,26 +64,12 @@ def get_mission(polygon, missions):
     return None
 
 
-def get_config_value(config, key):
-    if key in config:
-        return config[key]
-    else:
-        return config['default']
-
-
-def get_collection(config, zip_file_name):
-    regex = re.compile('.*?\.?(unw_geo|full_res)?\.zip')
-    file_type = regex.match(zip_file_name).group(1)
-    collection = get_config_value(config, file_type)
-    return collection
-
-
 def get_granule_data(inputs, config):
     sds_metadata = get_sds_metadata(inputs['Metadata'])
     granule_metadata = sds_metadata['metadata']
 
-    collection = get_collection(config['collections'], inputs['Product']['Key'])
-    granule_ur = sds_metadata['label'] + '-' + collection['processing_type']
+    collection = config['collection']
+    granule_ur = sds_metadata['label']
     file_size = get_s3_file_size(inputs['Product'])
     browse_url = config['browse_path'].format(inputs['Browse']['Key'])
     online_access_url = config['download_path'].format(inputs['Product']['Key'])

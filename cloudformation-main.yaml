@@ -2,12 +2,6 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
-  VpcId:
-    Type: AWS::EC2::VPC::Id
-
-  SubnetId:
-    Type: List<AWS::EC2::Subnet::Id>
-
   PrivateBucket:
     Type: String
 
@@ -71,19 +65,6 @@ Parameters:
   CmrClientId:
     Type: String
 
-  IngestContainerImage:
-    Type: String
-
-  IngestEc2Timeout:
-    Type: Number
-    MinValue: 0
-    Default: 300
-
-  IngestActivityTimeout:
-    Type: Number
-    MinValue: 0
-    Default: 600
-
   Name:
     Type: String
 
@@ -104,8 +85,8 @@ Resources:
         Name: !Ref Name
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: !GetAtt NotifyStack.Outputs.LambdaArn
+        IngestLambdaArn: !GetAtt IngestStack.Outputs.LambdaArn
         Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
-        IngestActivityTimeout: !Ref IngestActivityTimeout
       TemplateURL: step-function/cloudformation.yaml
 
   InvokeStack:
@@ -172,29 +153,14 @@ Resources:
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
       TemplateURL: notify/cloudformation.yaml
 
-  MetricsStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        Name: !Sub "${Name}-metrics"
-        StepFunctionArn: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
-      TemplateURL: metrics/cloudformation.yaml
-
   IngestStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
         Name: !Sub "${Name}-ingest"
-        VpcId: !Ref VpcId
-        SubnetId: !Join [",", !Ref SubnetId]
-        ContainerImage: !Ref IngestContainerImage
-        MetricName: !GetAtt MetricsStack.Outputs.MetricName
-        MetricNamespace: !GetAtt MetricsStack.Outputs.Namespace
-        ActivityArn: !GetAtt StepFunctionStack.Outputs.IngestActivityArn
         PublicBucket: !Ref PublicBucket
         PrivateBucket: !Ref PrivateBucket
         AuxBucket: !Ref AuxBucket
-        IngestEc2Timeout: !Ref IngestEc2Timeout
       TemplateURL: ingest/cloudformation.yaml
 
   AuxBucket:
@@ -213,10 +179,10 @@ Resources:
       AlarmName: !Sub "${Name}-errors"
       AlarmDescription: Ingest failure alarm
       AlarmActions:
-        - !Ref ErrorTopic
+      - !Ref ErrorTopic
       Dimensions:
-        - Name: StateMachineArn
-          Value: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
+      - Name: StateMachineArn
+        Value: !GetAtt StepFunctionStack.Outputs.StepFunctionArn
       MetricName: ExecutionsFailed
       Namespace: AWS/States
       ComparisonOperator: GreaterThanOrEqualToThreshold
@@ -277,4 +243,4 @@ Resources:
           Action: sns:Publish
           Resource: !Ref JobTopic
       Topics:
-        - !Ref JobTopic
+      - !Ref JobTopic
