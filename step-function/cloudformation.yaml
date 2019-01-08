@@ -120,24 +120,6 @@ Resources:
               "TimeoutSeconds": 30,
               "InputPath": "$.ConstructionResults",
               "ResultPath": "$.CmrResults",
-              "Next": "Advertise",
-              "Retry": [{
-                "ErrorEquals": ["States.ALL"],
-                "MaxAttempts": 7,
-                "BackoffRate": 5
-              }],
-              "Catch": [{
-                "ErrorEquals": ["States.ALL"],
-                "Next": "Notify",
-                "ResultPath": "$.Error"
-              }]
-            },
-            "Advertise": {
-              "Type": "Task",
-              "Resource": "${AdvertiseActivity}",
-              "TimeoutSeconds": 30,
-              "InputPath": "$.CmrResults",
-              "ResultPath": "$.AdvertiseResults",
               "Next": "Notify",
               "Retry": [{
                 "ErrorEquals": ["States.ALL"],
