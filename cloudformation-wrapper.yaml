@@ -2,14 +2,6 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
 
-  VpcId:
-    Description: VPC Id in which to launch EC2 instances for ingest activities
-    Type: AWS::EC2::VPC::Id
-
-  SubnetId:
-    Description: List of Subnet Ids in which to launch EC2 instances for ingest activities
-    Type: List<AWS::EC2::Subnet::Id>
-
   PrivateBucket:
     Description: Name of S3 bucket in which zipped output products will be archived
     Type: String
@@ -79,22 +71,6 @@ Parameters:
     Description: Value for Client-Id header included with CMR search requests
     Type: String
 
-  IngestContainerImage:
-    Description: Full URL path of the docker container image to use for ingest activities
-    Type: String
-
-  IngestEc2Timeout:
-    Description: Duration of EC2 autoscaling lifecycle termination hook, in seconds
-    Type: Number
-    MinValue: 0
-    Default: 300
-
-  IngestActivityTimeout:
-    Description: Timeout for step function ingest activity, in seconds
-    Type: Number
-    MinValue: 0
-    Default: 600
-
   Maturity:
     Description: Value for MATURITY tag to be applied to all taggable resources
     Type: String
@@ -126,8 +102,6 @@ Resources:
         Value: GRFN-INGEST
       Parameters:
         Name: !Ref AWS::StackName
-        VpcId: !Ref VpcId
-        SubnetId: !Join [",", !Ref SubnetId]
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
@@ -140,7 +114,4 @@ Resources:
         CmrPassword: !Ref CmrPassword
         CmrProvider: !Ref CmrProvider
         CmrClientId: !Ref CmrClientId
-        IngestContainerImage: !Ref IngestContainerImage
-        IngestEc2Timeout: !Ref IngestEc2Timeout
-        IngestActivityTimeout: !Ref IngestActivityTimeout
       TemplateURL: cloudformation-main.yaml

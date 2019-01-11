@@ -8,34 +8,24 @@ Parameters:
   VerifyLambdaArn:
     Type: String
 
+  IngestLambdaArn:
+    Type: String
+
   NotifyLambdaArn:
     Type: String
 
   Echo10ConstructionLambdaArn:
     Type: String
 
-  IngestActivityTimeout:
-    Type: Number
-    MinValue: 0
-    Default: 600
-
 Outputs:
 
   StepFunctionArn:
     Value: !Ref StepFunction
 
-  IngestActivityArn:
-    Value: !Ref IngestActivity
-
   CmrActivityArn:
     Value: !Ref CmrActivity
 
 Resources:
-
-  IngestActivity:
-    Type: AWS::StepFunctions::Activity
-    Properties:
-      Name: !Sub "${Name}-ingest"
 
   CmrActivity:
     Type: AWS::StepFunctions::Activity
@@ -62,6 +52,7 @@ Resources:
             Action: lambda:InvokeFunction
             Resource:
             - !Ref VerifyLambdaArn
+            - !Ref IngestLambdaArn
             - !Ref NotifyLambdaArn
             - !Ref Echo10ConstructionLambdaArn
 
@@ -97,10 +88,9 @@ Resources:
             },
             "Ingest": {
               "Type": "Task",
-              "Resource": "${IngestActivity}",
-              "TimeoutSeconds": ${IngestActivityTimeout},
+              "Resource": "${IngestLambdaArn}",
               "ResultPath": "$.IngestResults",
-              "Next": "Parallel",
+              "Next": "Echo10Construction",
               "Retry": [{
                 "ErrorEquals": ["States.ALL"]
               }],
@@ -110,102 +100,38 @@ Resources:
                 "ResultPath": "$.Error"
               }]
             },
-            "Parallel": {
-              "Type": "Parallel",
+            "Echo10Construction": {
+              "Type": "Task",
+              "Resource": "${Echo10ConstructionLambdaArn}",
               "InputPath": "$.IngestResults",
-              "ResultPath": "$.ParallelResults",
-              "Next": "Notify",
+              "ResultPath": "$.ConstructionResults",
+              "Next": "Echo10ToCMR",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"]
+              }],
               "Catch": [{
                 "ErrorEquals": ["States.ALL"],
                 "Next": "Notify",
                 "ResultPath": "$.Error"
+              }]
+            },
+            "Echo10ToCMR": {
+              "Type": "Task",
+              "Resource": "${CmrActivity}",
+              "TimeoutSeconds": 30,
+              "InputPath": "$.ConstructionResults",
+              "ResultPath": "$.CmrResults",
+              "Next": "Notify",
+              "Retry": [{
+                "ErrorEquals": ["States.ALL"],
+                "MaxAttempts": 7,
+                "BackoffRate": 5
               }],
-              "Branches": [
-                {
-                  "StartAt": "Echo_10_Construction_All",
-                  "States": {
-                    "Echo_10_Construction_All": {
-                      "Type": "Task",
-                      "Resource": "${Echo10ConstructionLambdaArn}",
-                      "InputPath": "$.all",
-                      "ResultPath": "$.ConstructionAllResults",
-                      "Next": "Echo_10_to_CMR_All",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"]
-                      }]
-                    },
-                    "Echo_10_to_CMR_All": {
-                      "Type": "Task",
-                      "Resource": "${CmrActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.ConstructionAllResults",
-                      "ResultPath": "$.CmrAllResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 7,
-                        "BackoffRate": 5
-                      }],
-                      "End": true
-                    }
-                  }
-                },
-                {
-                  "StartAt": "Echo_10_Construction_UnwGeo",
-                  "States": {
-                    "Echo_10_Construction_UnwGeo": {
-                      "Type": "Task",
-                      "Resource": "${Echo10ConstructionLambdaArn}",
-                      "InputPath": "$.unw_geo",
-                      "ResultPath": "$.ConstructionUnwGeoResults",
-                      "Next": "Echo_10_to_CMR_UnwGeo",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"]
-                      }]
-                    },
-                    "Echo_10_to_CMR_UnwGeo": {
-                      "Type": "Task",
-                      "Resource": "${CmrActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.ConstructionUnwGeoResults",
-                      "ResultPath": "$.CmrUnwGeoResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 7,
-                        "BackoffRate": 5
-                      }],
-                      "End": true
-                    }
-                  }
-                },
-                {
-                  "StartAt": "Echo_10_Construction_FullRes",
-                  "States": {
-                    "Echo_10_Construction_FullRes": {
-                      "Type": "Task",
-                      "Resource": "${Echo10ConstructionLambdaArn}",
-                      "InputPath": "$.full_res",
-                      "ResultPath": "$.ConstructionFullResResults",
-                      "Next": "Echo_10_to_CMR_FullRes",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"]
-                      }]
-                    },
-                    "Echo_10_to_CMR_FullRes": {
-                      "Type": "Task",
-                      "Resource": "${CmrActivity}",
-                      "TimeoutSeconds": 30,
-                      "InputPath": "$.ConstructionFullResResults",
-                      "ResultPath": "$.CmrFullResResults",
-                      "Retry": [{
-                        "ErrorEquals": ["States.ALL"],
-                        "MaxAttempts": 7,
-                        "BackoffRate": 5
-                      }],
-                      "End": true
-                    }
-                  }
-                }
-              ]
+              "Catch": [{
+                "ErrorEquals": ["States.ALL"],
+                "Next": "Notify",
+                "ResultPath": "$.Error"
+              }]
             },
             "Notify": {
               "Type": "Task",
