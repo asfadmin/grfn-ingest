@@ -7,32 +7,36 @@ import boto3
 from boto3.s3.transfer import TransferConfig
 
 
-def copy_s3_object(copy_source, dest_bucket, dest_key):
+def copy_s3_object(copy_source, dest_bucket, dest_key, transfer_config):
     log.info('Copying %s', dest_key)
     content_type = guess_type(dest_key)[0]
     if not content_type:
         content_type = 'application/octet-stream'
-    s3.copy_object(CopySource=copy_source, Bucket=dest_bucket, Key=dest_key, ContentType=content_type, MetadataDirective='REPLACE') #TODO deal with transfer config
+    extra_args = {
+        'ContentType': content_type,
+        'MetadataDirective': 'REPLACE',
+    }
+    s3.Bucket(dest_bucket).copy(CopySource=copy_source, Key=dest_key, ExtraArgs=extra_args, Config=transfer_config)
 
 
 log = getLogger()
 log.setLevel('INFO')
-s3 = boto3.client('s3')
+s3 = boto3.resource('s3')
 config = json.loads(os.getenv('CONFIG'))
-transfer_config = TransferConfig(**config['transfer_config'])
 
 
 def lambda_handler(event, context):
     log.info('Processing %s', event['ProductName'])
+    transfer_config = TransferConfig(**config['transfer_config'])
 
     metadata_output_key = event['ProductName'] + os.path.splitext(event['Metadata']['Key'])[1]
-    copy_s3_object(event['Metadata'], config['metadata_bucket'], metadata_output_key)
+    copy_s3_object(event['Metadata'], config['metadata_bucket'], metadata_output_key, transfer_config)
 
     browse_output_key = event['ProductName'] + os.path.splitext(event['Browse']['Key'])[1]
-    copy_s3_object(event['Browse'], config['browse_bucket'], browse_output_key)
+    copy_s3_object(event['Browse'], config['browse_bucket'], browse_output_key, transfer_config)
 
     product_output_key = event['ProductName'] + os.path.splitext(event['Product']['Key'])[1]
-    copy_s3_object(event['Product'], config['product_bucket'], product_output_key)
+    copy_s3_object(event['Product'], config['product_bucket'], product_output_key, transfer_config)
 
     output = {
         'Product': {
