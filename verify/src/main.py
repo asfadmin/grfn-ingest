@@ -58,17 +58,6 @@ def validate_message(message):
         raise INVALID_MESSAGE(e.message)
 
 
-def validate_s3_object_collection(collection):
-    prefix = collection.get('Prefix', '')
-    s3 = boto3.resource('s3')
-    for key in collection['Keys']:
-        obj = {
-            'Bucket': collection['Bucket'],
-            'Key': os.path.join(prefix, key),
-        }
-        validate_s3_object(obj, s3)
-
-
 def validate_metadata(obj):
     metadata = get_file_content_from_s3(obj['Bucket'], obj['Key'])
     metadata_schema = get_json_from_file('metadata_schema.json')
@@ -101,7 +90,7 @@ def verify(message):
 
     validate_s3_object(message['Metadata'])
     validate_s3_object(message['Browse'])
-    validate_s3_object_collection(message['ProductFiles'])
+    validate_s3_object(message['Product'])
 
     validate_metadata(message['Metadata'])
 
