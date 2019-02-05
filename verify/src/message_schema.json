@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "required": ["ProductName", "DeliveryTime", "Metadata", "Browse", "ProductFiles"],
+  "required": ["ProductName", "DeliveryTime", "Metadata", "Browse", "Product"],
   "additionalProperties": false,
   "properties": {
     "ProductName": {
@@ -15,8 +15,8 @@
     "Browse": {
       "$ref": "#/definitions/s3_object"
     },
-    "ProductFiles": {
-      "$ref": "#/definitions/s3_object_collection"
+    "Product": {
+      "$ref": "#/definitions/s3_object"
     },
     "ResponseTopic": {
       "$ref": "#/definitions/topic"
@@ -33,27 +33,6 @@
         },
         "Key": {
           "$ref": "#/definitions/non_empty_string"
-        }
-      }
-    },
-    "s3_object_collection": {
-      "type": "object",
-      "required": ["Bucket", "Keys"],
-      "additionalProperties": false,
-      "properties": {
-        "Bucket": {
-          "$ref": "#/definitions/non_empty_string"
-        },
-        "Prefix": {
-          "$ref": "#/definitions/non_empty_string"
-        },
-        "Keys": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "$ref": "#/definitions/non_empty_string"
-          }
         }
       }
     },

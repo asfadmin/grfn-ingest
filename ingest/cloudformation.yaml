@@ -5,40 +5,6 @@ Parameters:
   Name:
     Type: String
 
-  VpcId:
-    Type: AWS::EC2::VPC::Id
-    Description: Select a VPC that allows instances to access the Internet.
-
-  SubnetId:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: Select at least two subnets in your selected VPC.
-
-  Ami:
-    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
-    Description: Runtime AMI
-    Default: /aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id
-
-  ContainerImage:
-    Type: String
-    Description: URL for runtime docker container (repository-url/image:tag)
-
-  MetricName:
-    Type: String
-    Default: IngestsRunning
-
-  MetricNamespace:
-    Type: String
-    Description: Namespace of CloudWatch metric to drive scaling alarm
-    Default: GRFN
-
-  MaxSpotPrice:
-    Type: String
-    Description: Maximum price to pay on the spot market
-    Default: '0.32'
-
-  ActivityArn:
-    Type: String
-
   PublicBucket:
     Type: String
 
@@ -48,124 +14,35 @@ Parameters:
   AuxBucket:
     Type: String
 
-  IngestEc2Timeout:
-    Type: Number
-    MinValue: 0
-    Default: 300
+Outputs:
+
+  LambdaArn:
+    Value: !GetAtt Lambda.Arn
 
 Resources:
 
-  Cluster:
-    Type: AWS::ECS::Cluster
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
     Properties:
-      ClusterName: !Ref Name
+      QueueName: !Sub "${Name}-dlq"
+      MessageRetentionPeriod: 1209600
 
-  SecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+  LogGroup:
+    Type: AWS::Logs::LogGroup
     Properties:
-      GroupName: !Ref Name
-      GroupDescription: !Sub "Security group for ${Name} machines"
-      VpcId: !Ref VpcId
+      LogGroupName: !Sub "/aws/lambda/${Name}"
+      RetentionInDays: 30
 
-  Alarm:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmName: !Ref Name
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      EvaluationPeriods: 1
-      MetricName: !Ref MetricName
-      Namespace: !Ref MetricNamespace
-      Period: 60
-      Statistic: Maximum
-      Threshold: 0
-      TreatMissingData: ignore
-      Unit: Count
-      AlarmActions:
-      - !Ref GroupScalingPolicy
-      - !Ref ServiceScalingPolicy
-
-  InstanceRole:
+  Role:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub "${Name}-instance"
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - ec2.amazonaws.com
-          Action: sts:AssumeRole
-      ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
-
-  InstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      InstanceProfileName: !Ref InstanceRole
-      Roles:
-      - !Ref InstanceRole
-
-  LaunchConfiguration:
-    Type: AWS::AutoScaling::LaunchConfiguration
-    Properties:
-      AssociatePublicIpAddress: true
-      IamInstanceProfile: !GetAtt InstanceProfile.Arn
-      ImageId: !Ref Ami
-      InstanceType: i3.2xlarge
-      SpotPrice: !Ref MaxSpotPrice
-      SecurityGroups:
-      - !Ref SecurityGroup
-      UserData:
-        Fn::Base64: !Sub |-
-          Content-Type: multipart/mixed; boundary="==BOUNDARY=="
-          MIME-Version: 1.0
-          --==BOUNDARY==
-          Content-Type: text/cloud-boothook; charset="us-ascii"
-          cloud-init-per once docker_options echo 'OPTIONS="$''OPTIONS --storage-opt dm.basesize=80G"' >> /etc/sysconfig/docker
-          --==BOUNDARY==
-          Content-Type: text/x-shellscript; charset="us-ascii"
-          #!/bin/bash -xe
-          pvcreate /dev/nvme0n1
-          vgextend docker /dev/nvme0n1
-          lvextend -l 100%FREE /dev/docker/docker-pool
-          echo ECS_CLUSTER="${Cluster}" >> /etc/ecs/ecs.config
-          echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=1m >> /etc/ecs/ecs.config
-          --==BOUNDARY==--
-      InstanceMonitoring: false
-
-  AutoScalingGroup:
-    Type: AWS::AutoScaling::AutoScalingGroup
-    Properties:
-      VPCZoneIdentifier: !Ref SubnetId
-      LaunchConfigurationName: !Ref LaunchConfiguration
-      MinSize: 0
-      MaxSize: 125
-      Tags:
-      - Key: Name
-        Value: !Ref Name
-        PropagateAtLaunch: true
-
-  LifecycleHook:
-    Type: AWS::AutoScaling::LifecycleHook
-    Properties:
-      AutoScalingGroupName: !Ref AutoScalingGroup
-      LifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
-      HeartbeatTimeout: !Ref IngestEc2Timeout
-      DefaultResult: CONTINUE
-
-  TaskIamRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Ref Name
+      RoleName: !Sub "${Name}-new"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
           Action: sts:AssumeRole
           Principal:
-            Service:
-            - ec2.amazonaws.com
-            - ecs-tasks.amazonaws.com
+            Service: lambda.amazonaws.com
           Effect: Allow
       Policies:
       - PolicyName: policy
@@ -174,178 +51,43 @@ Resources:
           Statement:
           - Effect: Allow
             Action:
-            - states:GetActivityTask
-            - states:SendTaskSuccess
-            - states:SendTaskFailure
-            Resource: !Ref ActivityArn
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: !GetAtt LogGroup.Arn
+          - Effect: Allow
+            Action: sqs:SendMessage
+            Resource: !GetAtt DeadLetterQueue.Arn
           - Effect: Allow
             Action: s3:GetObject
-            Resource: arn:aws:s3:::*
+            Resource: arn:aws:s3:::*/*
           - Effect: Allow
             Action: s3:PutObject
             Resource:
-            - !Sub "arn:aws:s3:::${PublicBucket}/*"
             - !Sub "arn:aws:s3:::${PrivateBucket}/*"
+            - !Sub "arn:aws:s3:::${PublicBucket}/*"
             - !Sub "arn:aws:s3:::${AuxBucket}/*"
-          - Effect: Allow
-            Action: autoscaling:DescribeAutoScalingInstances
-            Resource: "*"
 
-  LogGroup:
-    Type: AWS::Logs::LogGroup
+  Lambda:
+    Type: AWS::Lambda::Function
     Properties:
-      LogGroupName: !Ref Name
-      RetentionInDays: 30
-
-  TaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    Properties:
-      TaskRoleArn: !Ref TaskIamRole
-      ContainerDefinitions:
-      - Name: !Ref Name
-        Image: !Ref ContainerImage
-        MemoryReservation: 256
-        Cpu: 1024
-        Command:
-        - "-j"
-        - !Sub |-
-          {
-            "aws_region": "${AWS::Region}",
-            "termination_wait_in_seconds": ${IngestEc2Timeout},
-            "daemon": {
-              "activity": {
-                "arn": "${ActivityArn}",
-                "timeout": 65,
-                "worker_name": "$INSTANCE_ID"
-              },
-              "ingest": {
-                "browse_bucket": "${PublicBucket}",
-                "metadata_bucket": "${AuxBucket}",
-                "product_bucket": "${PrivateBucket}",
-                "transfer_config": {
-                  "multipart_threshold": 61644800,
-                  "multipart_chunksize": 61644800
-                },
-                "derived_products": [
-                  {
-                    "name": "unw_geo",
-                    "files": [
-                      "fine_interferogram.xml",
-                      "filt_topophase.unw.geo.browse_small.png",
-                      "filt_topophase.unw.geo.browse.png",
-                      "merged/filt_topophase.unw.geo",
-                      "merged/filt_topophase.unw.geo.hdr",
-                      "merged/filt_topophase.unw.geo.vrt",
-                      "merged/filt_topophase.unw.geo.xml",
-                      "merged/phsig.cor.geo",
-                      "merged/phsig.cor.geo.hdr",
-                      "merged/phsig.cor.geo.vrt",
-                      "merged/phsig.cor.geo.xml",
-                      "filt_topophase.unw.geo",
-                      "filt_topophase.unw.geo.vrt",
-                      "filt_topophase.unw.geo.xml",
-                      "phsig.cor.geo",
-                      "phsig.cor.geo.vrt",
-                      "phsig.cor.geo.xml"
-                    ]
-                  },
-                  {
-                    "name": "full_res",
-                    "files": [
-                      "fine_interferogram.xml",
-                      "amplitude.geo.browse_small.png",
-                      "amplitude.geo.browse.png",
-                      "merged/filt_topophase.flat",
-                      "merged/filt_topophase.flat.hdr",
-                      "merged/filt_topophase.flat.vrt",
-                      "merged/filt_topophase.flat.xml",
-                      "merged/dem.crop",
-                      "merged/dem.crop.hdr",
-                      "merged/dem.crop.vrt",
-                      "merged/dem.crop.xml"
-                    ]
-                  }
-                ]
+      FunctionName: !Ref Name
+      Code: src/
+      DeadLetterConfig:
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Environment:
+        Variables:
+          CONFIG: !Sub |-
+            {
+              "browse_bucket": "${PublicBucket}",
+              "metadata_bucket": "${AuxBucket}",
+              "product_bucket": "${PrivateBucket}",
+              "transfer_config": {
+                "multipart_threshold": 61644800,
+                "multipart_chunksize": 61644800
               }
             }
-          }
-        LogConfiguration:
-          LogDriver: awslogs
-          Options:
-            awslogs-group: !Ref LogGroup
-            awslogs-region: !Ref AWS::Region
-
-  GroupScalingPolicy:
-    Type: AWS::AutoScaling::ScalingPolicy
-    Properties:
-      AutoScalingGroupName: !Ref AutoScalingGroup
-      PolicyType: StepScaling
-      EstimatedInstanceWarmup: 30
-      AdjustmentType: ExactCapacity
-      StepAdjustments:
-      - ScalingAdjustment: 0
-        MetricIntervalLowerBound: 0
-        MetricIntervalUpperBound: 1
-      - ScalingAdjustment: 1
-        MetricIntervalLowerBound: 1
-        MetricIntervalUpperBound: 16
-      - ScalingAdjustment: 2
-        MetricIntervalLowerBound: 16
-        MetricIntervalUpperBound: 40
-      - ScalingAdjustment: 5
-        MetricIntervalLowerBound: 40
-        MetricIntervalUpperBound: 80
-      - ScalingAdjustment: 10
-        MetricIntervalLowerBound: 80
-        MetricIntervalUpperBound: 160
-      - ScalingAdjustment: 20
-        MetricIntervalLowerBound: 160
-        MetricIntervalUpperBound: 320
-      - ScalingAdjustment: 40
-        MetricIntervalLowerBound: 320
-        MetricIntervalUpperBound: 480
-      - ScalingAdjustment: 60
-        MetricIntervalLowerBound: 480
-        MetricIntervalUpperBound: 640
-      - ScalingAdjustment: 80
-        MetricIntervalLowerBound: 640
-        MetricIntervalUpperBound: 800
-      - ScalingAdjustment: 100
-        MetricIntervalLowerBound: 800
-        MetricIntervalUpperBound: 1000
-      - ScalingAdjustment: 125
-        MetricIntervalLowerBound: 1000
-
-  ServiceScalingTarget:
-    Type: AWS::ApplicationAutoScaling::ScalableTarget
-    Properties:
-      MinCapacity: 0
-      MaxCapacity: 1000
-      ResourceId: !Sub "service/${Cluster}/${Service.Name}"
-      RoleARN: !Sub "arn:aws:iam::${AWS::AccountId}:role/ecsAutoscaleRole"
-      ScalableDimension: ecs:service:DesiredCount
-      ServiceNamespace: ecs
-
-  ServiceScalingPolicy:
-    Type: AWS::ApplicationAutoScaling::ScalingPolicy
-    Properties:
-      PolicyName: !Ref Name
-      PolicyType: StepScaling
-      ScalingTargetId: !Ref ServiceScalingTarget
-      StepScalingPolicyConfiguration:
-        Cooldown: 180
-        AdjustmentType: ExactCapacity
-        StepAdjustments:
-        - ScalingAdjustment: 0
-          MetricIntervalLowerBound: 0
-          MetricIntervalUpperBound: 1
-        - ScalingAdjustment: 1000
-          MetricIntervalLowerBound: 1
-
-  Service:
-    Type: AWS::ECS::Service
-    Properties:
-      ServiceName: !Ref Name
-      Cluster: !Ref Cluster
-      DesiredCount: 0
-      TaskDefinition: !Ref TaskDefinition
+      Handler: main.lambda_handler
+      MemorySize: 128
+      Role: !GetAtt Role.Arn
+      Runtime: python2.7
+      Timeout: 180

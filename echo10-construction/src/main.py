@@ -64,26 +64,12 @@ def get_mission(polygon, missions):
     return None
 
 
-def get_config_value(config, key):
-    if key in config:
-        return config[key]
-    else:
-        return config['default']
-
-
-def get_collection(config, zip_file_name):
-    regex = re.compile('.*?\.?(unw_geo|full_res)?\.zip')
-    file_type = regex.match(zip_file_name).group(1)
-    collection = get_config_value(config, file_type)
-    return collection
-
-
 def get_granule_data(inputs, config):
     sds_metadata = get_sds_metadata(inputs['Metadata'])
     granule_metadata = sds_metadata['metadata']
 
-    collection = get_collection(config['collections'], inputs['Product']['Key'])
-    granule_ur = sds_metadata['label'] + '-' + collection['processing_type']
+    collection = config['collection']
+    granule_ur = sds_metadata['label']
     file_size = get_s3_file_size(inputs['Product'])
     browse_url = config['browse_path'].format(inputs['Browse']['Key'])
     online_access_url = config['download_path'].format(inputs['Product']['Key'])
@@ -101,21 +87,21 @@ def get_granule_data(inputs, config):
         'size_mb_data_granule': float(file_size) / 1024 / 1024,
         'producer_granule_id': sds_metadata['label'],
         'production_date_time': sds_metadata['creation_timestamp'],
-        'beginning_date_time': granule_metadata['sensingStart'],
-        'ending_date_time': granule_metadata['sensingStop'],
-        'orbits': granule_metadata['orbitNumber'],
+        'beginning_date_time': granule_metadata['sensing_start'],
+        'ending_date_time': granule_metadata['sensing_stop'],
+        'orbits': granule_metadata['orbit_number'],
         'platforms': [p.upper() for p in set(granule_metadata['platform'])],
-        'sensor_short_name': granule_metadata['beamMode'],
+        'sensor_short_name': granule_metadata['beam_mode'],
         'polygon': polygon,
         'additional_attributes': {
             'GROUP_ID': sds_metadata['label'].replace('.', '-'),
-            'ASCENDING_DESCENDING': granule_metadata['direction'],
+            'ASCENDING_DESCENDING': granule_metadata['orbit_direction'],
             'BEAM_MODE_TYPE': granule_metadata['dataset_type'],
-            'BEAM_MODE': granule_metadata['beamMode'],
+            'BEAM_MODE': granule_metadata['beam_mode'],
             'BEAM_MODE_DESC': granule_metadata['product_type'],
             'POLARIZATION': granule_metadata['polarization'],
-            'LOOK_DIRECTION': granule_metadata['lookDirection'],
-            'PATH_NUMBER': granule_metadata['trackNumber'],
+            'LOOK_DIRECTION': granule_metadata['look_direction'],
+            'PATH_NUMBER': granule_metadata['track_number'],
             'BYTES': file_size,
             'NEAR_START_LON': granule_metadata['ogr_bbox'][0][0],
             'NEAR_START_LAT': granule_metadata['ogr_bbox'][0][1],
@@ -129,8 +115,7 @@ def get_granule_data(inputs, config):
             'PROCESSING_TYPE_DISPLAY': collection['processing_type_display'],
             'PROCESSING_DESCRIPTION': collection['processing_description'],
             'THUMBNAIL_URL': browse_url,
-            'PERPENDICULAR_BASELINE': granule_metadata['perpendicularBaseline'],
-            'SUB_SWATH': granule_metadata['swath'],
+            'PERPENDICULAR_BASELINE': granule_metadata['perpendicular_baseline'],
             'MISSION_NAME': mission,
         },
         'input_granules': input_granules,
