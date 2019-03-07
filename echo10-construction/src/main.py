@@ -140,6 +140,8 @@ def create_granule_echo10_in_s3(inputs, config):
         echo10_s3_object = {}
         log.info('Creating echo10 file for %s', inputs['Product']['Key'] + product['label'])
         granule_data = get_granule_data(inputs, config['granule_data'])
+        granule_data['size_mb_data_granule'] = None
+        del granule_data['additional_attributes']['BYTES']
         granule_data['collection'] = 'Sentinel-1 Interferograms - ' + product['label']
         granule_data['granule_ur'] = granule_data['granule_ur'] + '-' + product['label']
         granule_data['additional_attributes']['PROCESSING_TYPE_DISPLAY'] = product['processing_type_display']

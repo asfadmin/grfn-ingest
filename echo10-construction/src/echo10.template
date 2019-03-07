@@ -6,7 +6,9 @@
         <DataSetId>{{ collection }}</DataSetId>
     </Collection>
     <DataGranule>
+        {% if size_mb_data_granule != "None" %}
         <SizeMBDataGranule>{{ size_mb_data_granule }}</SizeMBDataGranule>
+        {% endif %}
         <ProducerGranuleId>{{ producer_granule_id }}</ProducerGranuleId>
         <DayNightFlag>UNSPECIFIED</DayNightFlag>
         <ProductionDateTime>{{ production_date_time }}</ProductionDateTime>
