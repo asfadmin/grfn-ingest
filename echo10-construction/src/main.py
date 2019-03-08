@@ -1,5 +1,6 @@
 import boto3
 import os
+import copy
 import re
 import json
 from jinja2 import Template
@@ -151,7 +152,7 @@ def create_granule_echo10_in_s3(inputs, config):
     del granule_data['additional_attributes']['BYTES']  
 
     for product in config['derived_products']:
-        virtual_granule_data = granule_data
+        virtual_granule_data = copy.deepcopy(granule_data)
         log.info('Creating echo10 file for %s', inputs['Product']['Key'] + product['label'])
         virtual_granule_data['collection'] = product['dataset_id']
         virtual_granule_data['granule_ur'] = granule_data['granule_ur'] + '-' + product['label']
