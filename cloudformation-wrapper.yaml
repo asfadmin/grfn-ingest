@@ -18,6 +18,10 @@ Parameters:
     Description: Base URL for browse images, e.g. http://foo.com will generate browse image URLs of http://foo.com/<browse-file-name>
     Type: String
 
+  ReformatApiUrl:
+    Description: Url endpoint for downloading geotiff versions of products, e.g. https://services.asf.alaska.edu/geospatial/reformat
+    Type: String
+
   DefaultResponseTopicArn:
     Description: SNS topic arn where error/success responses will be sent for jobs where no response topic is specified
     Type: String
