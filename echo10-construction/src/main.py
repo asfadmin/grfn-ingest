@@ -142,9 +142,9 @@ def create_granule_echo10_in_s3(inputs, config):
     log.info('Creating echo10 file for %s', inputs['Product']['Key'])
     granule_data = get_granule_data(inputs, config['granule_data'])
     echo10_content = render_granule_data_as_echo10(granule_data) 
-    echo10_s3_object['bucket'] = config['output_bucket']
-    echo10_s3_object['key'] = granule_data['granule_ur'] + product['label'] + '.echo10'
-    upload_content_to_s3(echo10_s3_objects, echo10_content)
+    echo10_s3_object = {'bucket': config['output_bucket'],'key': granule_data['granule_ur'] + '.echo10'}
+    echo10_s3_objects.append(echo10_s3_object)        
+    upload_content_to_s3(echo10_s3_object, echo10_content)
     
     # remove size data from our virtual datasets
     del granule_data['size_mb_data_granule']
