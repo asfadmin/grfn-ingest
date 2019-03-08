@@ -32,6 +32,7 @@ def write_to_file(file_name, content):
         f.write(content)
 
 
+
 def upload_file_to_s3(local_file, bucket, key, content_type='application/xml'):
     s3 = boto3.client('s3')
     s3.upload_file(local_file, bucket, key, ExtraArgs={'ContentType': content_type})
