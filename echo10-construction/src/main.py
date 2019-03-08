@@ -145,7 +145,7 @@ def create_granule_echo10_in_s3(inputs, config):
     upload_content_to_s3(echo10_s3_objects, echo10_content)
     
     # remove size data from our virtual datasets
-    granule_data['size_mb_data_granule'] = None
+    del granule_data['size_mb_data_granule']
     del granule_data['additional_attributes']['BYTES']  
 
     for product in config['derived_products']:

@@ -6,7 +6,7 @@
         <DataSetId>{{ collection }}</DataSetId>
     </Collection>
     <DataGranule>
-        {% if size_mb_data_granule != "None" %}
+        {% if size_mb_data_granule %}
         <SizeMBDataGranule>{{ size_mb_data_granule }}</SizeMBDataGranule>
         {% endif %}
         <ProducerGranuleId>{{ producer_granule_id }}</ProducerGranuleId>
