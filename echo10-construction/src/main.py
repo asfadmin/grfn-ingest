@@ -149,14 +149,16 @@ def create_granule_echo10_in_s3(inputs, config):
     del granule_data['additional_attributes']['BYTES']  
 
     for product in config['derived_products']:
+        virtual_granule_data = granule_data
         log.info('Creating echo10 file for %s', inputs['Product']['Key'] + product['label'])
-        granule_data['collection'] = 'Sentinel-1 Interferograms - ' + product['label']
-        granule_data['granule_ur'] = granule_data['granule_ur'] + '-' + product['label']
-        granule_data['additional_attributes']['PROCESSING_TYPE_DISPLAY'] = product['processing_type_display']
-        granule_data['online_access_url'] = '{0}?product={1}&layer={2}'.format(condig['api_url'],inputs['Product']['Key'],product['layer'])
-        echo10_content = render_granule_data_as_echo10(granule_data)
-        echo10_s3_objects.append({'bucket': config['output_bucket'],'key': granule_data['granule_ur'] + '-' + product['label'] + '.echo10'})        
+        virtual_granule_data['collection'] = product['dataset_id']
+        virtual_granule_data['granule_ur'] = granule_data['granule_ur'] + '-' + product['label']
+        virtual_granule_data['additional_attributes']['PROCESSING_TYPE_DISPLAY'] = product['processing_type_display']
+        virtual_granule_data['online_access_url'] = '{0}?product={1}&layer={2}'.format(condig['api_url'],inputs['Product']['Key'],product['layer'])
+        echo10_content = render_granule_data_as_echo10(virtual_granule_data)
         echo10_s3_object = {'bucket': config['output_bucket'],'key': granule_data['granule_ur'] + '-' + product['label'] + '.echo10'}
+        echo10_s3_objects.append(echo10_s3_object)        
+
         upload_content_to_s3(echo10_s3_object, echo10_content)
 
     return echo10_s3_objects

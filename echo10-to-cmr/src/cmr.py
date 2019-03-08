@@ -66,12 +66,15 @@ def get_granule_concept_id(response_text):
     return granule_concept_id
 
 def create_virtual_granule:
-    
+
 
 
 def process_task(task_input, config, session, s3):
     log.info(task_input)
-    echo10_content = get_file_content_from_s3(task_input['bucket'], task_input['key'], s3)
-    response = push_echo10_granule_to_cmr(session, echo10_content, config, s3)
-    granule_concept_id = get_granule_concept_id(response.text)
-    return {'granule_concept_id': granule_concept_id}
+    granule_concept_id = []
+    for echo10_object in task_input
+        echo10_content = get_file_content_from_s3(echo10_object['bucket'], echo10_object['key'], s3)
+        response = push_echo10_granule_to_cmr(session, echo10_content, config, s3)
+        granule_concept_id.append(get_granule_concept_id(response.text))
+
+    return {'granule_concept_id': str(granule_concept_id)}
