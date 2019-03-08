@@ -65,9 +65,6 @@ def get_granule_concept_id(response_text):
     granule_concept_id = root.find('concept-id').text
     return granule_concept_id
 
-def create_virtual_granule:
-
-
 
 def process_task(task_input, config, session, s3):
     log.info(task_input)
