@@ -8,7 +8,6 @@ from datetime import datetime
 from logging import getLogger
 from shapely.geometry import Polygon
 
-#dummy comment
 
 log = getLogger()
 log.setLevel('INFO')
@@ -32,7 +31,6 @@ def get_file_content_from_s3(bucket, key):
 def write_to_file(file_name, content):
     with open(file_name, 'w') as f:
         f.write(content)
-
 
 
 def upload_file_to_s3(local_file, bucket, key, content_type='application/xml'):
@@ -138,16 +136,17 @@ def render_granule_data_as_echo10(data):
 
 
 def create_granule_echo10_in_s3(inputs, config):
-    # create the metadata for our real granule
     echo10_s3_objects = []
     log.info('Creating echo10 file for %s', inputs['Product']['Key'])
     granule_data = get_granule_data(inputs, config['granule_data'])
     echo10_content = render_granule_data_as_echo10(granule_data) 
-    echo10_s3_object = {'bucket': config['output_bucket'],'key': granule_data['granule_ur'] + '.echo10'}
+    echo10_s3_object = {
+        'bucket': config['output_bucket'],
+        'key': granule_data['granule_ur'] + '.echo10',
+    }
     echo10_s3_objects.append(echo10_s3_object)        
     upload_content_to_s3(echo10_s3_object, echo10_content)
     
-    # remove size data from our virtual datasets
     del granule_data['size_mb_data_granule']
     del granule_data['additional_attributes']['BYTES']  
 
@@ -159,7 +158,10 @@ def create_granule_echo10_in_s3(inputs, config):
         virtual_granule_data['additional_attributes']['PROCESSING_TYPE_DISPLAY'] = product['processing_type_display']
         virtual_granule_data['online_access_url'] = '{0}?product={1}&amp;layer={2}'.format(config['api_url'],inputs['Product']['Key'],product['layer'])
         echo10_content = render_granule_data_as_echo10(virtual_granule_data)
-        echo10_s3_object = {'bucket': config['output_bucket'],'key': virtual_granule_data['granule_ur'] + '.echo10'}
+        echo10_s3_object = {
+            'bucket': config['output_bucket'],
+            'key': virtual_granule_data['granule_ur'] + '.echo10',
+        }
         echo10_s3_objects.append(echo10_s3_object)        
 
         upload_content_to_s3(echo10_s3_object, echo10_content)
