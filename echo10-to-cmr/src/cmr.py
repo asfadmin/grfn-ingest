@@ -68,10 +68,10 @@ def get_granule_concept_id(response_text):
 
 def process_task(task_input, config, session, s3):
     log.info(task_input)
-    granule_concept_id = []
+    granule_concept_ids = []
     for echo10_object in task_input:
         echo10_content = get_file_content_from_s3(echo10_object['bucket'], echo10_object['key'], s3)
         response = push_echo10_granule_to_cmr(session, echo10_content, config, s3)
-        granule_concept_id.append(get_granule_concept_id(response.text))
+        granule_concept_ids.append(get_granule_concept_id(response.text))
 
-    return {'granule_concept_id': str(granule_concept_id)}
+    return granule_concept_ids
