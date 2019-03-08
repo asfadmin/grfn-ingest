@@ -110,6 +110,7 @@ Resources:
         PublicBucket: !Ref PublicBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
+        ReformatApiUrl: !Ref ReformatApiUrl
         DefaultResponseTopicArn: !Ref DefaultResponseTopicArn
         DefaultResponseTopicRegion: !Ref DefaultResponseTopicRegion
         SdsAccountNumber: !Ref SdsAccountNumber
