@@ -88,9 +88,9 @@ Resources:
           CONFIG: !Sub |-
             {
               "output_bucket": "${AuxBucket}",
+              "api_url": "${ReformatApiUrl}",
               "granule_data": {
                 "download_path": "${DistributionBaseUrl}/{0}",
-                "api_url": "${ReformatApiUrl}",
                 "browse_path": "${BrowseBaseUrl}/{0}",
                 "missions": [
                   {"name": "S1 I-grams (BETA) - Kilauea Volcano, HI", "coords": [[-159,16],[-150,16],[-150,23],[-159,23]]},
