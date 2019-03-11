@@ -69,8 +69,11 @@ def validate_metadata(obj):
 
 
 def json_error(error):
-    json_message = 'Invalid parameter: Message Structure - JSON message body failed to parse'
-    return error['Code'] == 'InvalidParameter' and error['Message'] == json_message
+    json_messages = [
+        'Invalid parameter: Message Structure - JSON message body failed to parse',
+        'Invalid parameter: Message Structure - No default entry in JSON message body',
+    ]
+    return error['Code'] == 'InvalidParameter' and error['Message'] in json_messages
 
 
 def validate_topic(topic):
