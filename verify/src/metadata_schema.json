@@ -42,8 +42,8 @@
       "type": "object",
       "required": [
         "ogr_bbox",
-        "master_scenes",
-        "slave_scenes",
+        "reference_scenes",
+        "secondary_scenes",
         "sensing_start",
         "sensing_stop",
         "orbit_number",
@@ -66,10 +66,10 @@
             "#ref": "#/definitions/coordinate"
           }
         },
-        "master_scenes": {
+        "reference_scenes": {
           "$ref": "#/definitions/granule_list"
         },
-        "slave_scenes": {
+        "secondary_scenes": {
           "$ref": "#/definitions/granule_list"
         },
         "sensing_start": {
