@@ -1,2 +1,2 @@
-jinja2==2.10
+jinja2==2.10.1
 shapely==1.5.17
