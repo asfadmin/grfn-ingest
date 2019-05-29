@@ -77,8 +77,8 @@ def get_granule_data(inputs, config):
     polygon = sds_metadata['location']['coordinates'][0][:-1]
     mission = get_mission(polygon, config['missions'])
 
-    input_granules = ['[Master] {0}'.format(g) for g in granule_metadata['master_scenes']]
-    input_granules += ['[Slave] {0}'.format(g) for g in granule_metadata['slave_scenes']]
+    input_granules = ['[Reference] {0}'.format(g) for g in granule_metadata['reference_scenes']]
+    input_granules += ['[Secondary] {0}'.format(g) for g in granule_metadata['secondary_scenes']]
 
     data = {
         'granule_ur': granule_ur,
