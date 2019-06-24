@@ -113,6 +113,7 @@ def get_granule_data(inputs, config):
             'NEAR_END_LON': granule_metadata['ogr_bbox'][3][0],
             'NEAR_END_LAT': granule_metadata['ogr_bbox'][3][1],
             'ASF_PLATFORM': 'Sentinel-1 Interferogram (BETA)',
+            'PROCESSING_TYPE': collection['processing_type'],
             'PROCESSING_TYPE_DISPLAY': collection['processing_type_display'],
             'PROCESSING_DESCRIPTION': collection['processing_description'],
             'THUMBNAIL_URL': browse_url,
