@@ -113,6 +113,7 @@ def get_granule_data(inputs, config):
             'NEAR_END_LON': granule_metadata['ogr_bbox'][3][0],
             'NEAR_END_LAT': granule_metadata['ogr_bbox'][3][1],
             'ASF_PLATFORM': 'Sentinel-1 Interferogram (BETA)',
+            'PROCESSING_TYPE': collection['processing_type'],
             'PROCESSING_TYPE_DISPLAY': collection['processing_type_display'],
             'PROCESSING_DESCRIPTION': collection['processing_description'],
             'THUMBNAIL_URL': browse_url,
@@ -155,6 +156,7 @@ def create_granule_echo10_in_s3(inputs, config):
         log.info('Creating echo10 file for %s', inputs['Product']['Key'] + product['label'])
         virtual_granule_data['collection'] = product['dataset_id']
         virtual_granule_data['granule_ur'] = granule_data['granule_ur'] + '-' + product['label']
+        virtual_granule_data['additional_attributes']['PROCESSING_TYPE'] = product['processing_type']
         virtual_granule_data['additional_attributes']['PROCESSING_TYPE_DISPLAY'] = product['processing_type_display']
         virtual_granule_data['online_access_url'] = '{0}?product={1}&amp;layer={2}'.format(config['api_url'],inputs['Product']['Key'],product['layer'])
         echo10_content = render_granule_data_as_echo10(virtual_granule_data)
