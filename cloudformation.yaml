@@ -205,9 +205,13 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: !Sub "${AWS::StackName}-jobs"
-      Subscription:
-      - Protocol: sqs
-        Endpoint: !GetAtt JobQueue.Arn
+
+  JobTopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref JobTopic
+      Protocol: sqs
+      Endpoint: !GetAtt JobQueue.Arn
 
   JobQueuePolicy:
     Type: AWS::SQS::QueuePolicy
