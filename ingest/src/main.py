@@ -7,6 +7,12 @@ import boto3
 from boto3.s3.transfer import TransferConfig
 
 
+log = getLogger()
+log.setLevel('INFO')
+s3 = boto3.resource('s3')
+config = json.loads(os.getenv('CONFIG'))
+
+
 def copy_s3_object(copy_source, dest_bucket, dest_key, transfer_config):
     log.info('Copying %s', dest_key)
     content_type = guess_type(dest_key)[0]
@@ -17,12 +23,6 @@ def copy_s3_object(copy_source, dest_bucket, dest_key, transfer_config):
         'MetadataDirective': 'REPLACE',
     }
     s3.Bucket(dest_bucket).copy(CopySource=copy_source, Key=dest_key, ExtraArgs=extra_args, Config=transfer_config)
-
-
-log = getLogger()
-log.setLevel('INFO')
-s3 = boto3.resource('s3')
-config = json.loads(os.getenv('CONFIG'))
 
 
 def lambda_handler(event, context):

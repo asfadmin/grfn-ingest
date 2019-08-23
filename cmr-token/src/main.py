@@ -1,19 +1,15 @@
-import boto3
-import requests
 import json
 from os import getenv
 from logging import getLogger
 from tempfile import NamedTemporaryFile
 
+import requests
+import boto3
 
 log = getLogger()
+log.setLevel('INFO')
 s3 = boto3.client('s3')
-
-
-def setup():
-    log.setLevel('INFO')
-    config = json.loads(getenv('CONFIG'))
-    return config
+CONFIG = json.loads(getenv('CONFIG'))
 
 
 def get_new_token(config):
@@ -22,7 +18,7 @@ def get_new_token(config):
         config['username'], config['password'], config['client_id'], config['user_ip_address'], config['provider']
     )
     response = requests.post(config['url'], headers=headers, data=content)
-    log.info('Response text: {0}'.format(response.text))
+    log.info('Response text: %s', response.text)
     response.raise_for_status()
     json_response = json.loads(response.text)
     return json_response['token']['id']
@@ -36,6 +32,5 @@ def cache_token(token, config):
 
 
 def lambda_handler(event, context):
-    config = setup()
-    token = get_new_token(config['new_token'])
-    cache_token(token, config['cached_token'])
+    token = get_new_token(CONFIG['new_token'])
+    cache_token(token, CONFIG['cached_token'])
