@@ -1,30 +1,29 @@
-import boto3
-import os
 import json
-import botocore
-import jsonschema
 from logging import getLogger
+import botocore
+import boto3
+import jsonschema
 
 
 log = getLogger()
 log.setLevel('INFO')
+s3 = boto3.resource('s3')
 
 
-class INVALID_MESSAGE(Exception):
+class InvalidMessage(Exception):
     pass
 
-class MISSING_FILE(Exception):
+class MissingFile(Exception):
     pass
 
-class INVALID_METADATA(Exception):
+class InvalidMetadata(Exception):
     pass
 
-class INVALID_TOPIC(Exception):
+class InvalidTopic(Exception):
     pass
 
 
 def get_file_content_from_s3(bucket, key):
-    s3 = boto3.resource('s3')
     obj = s3.Object(bucket, key)
     response = obj.get()
     contents = response['Body'].read()
@@ -37,25 +36,23 @@ def get_json_from_file(filename):
     return json.loads(content)
 
 
-def validate_s3_object(obj, s3=None):
-    if not s3:
-        s3 = boto3.resource('s3')
+def validate_s3_object(obj):
     try:
         s3.Object(obj['Bucket'], obj['Key']).load()
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] in ['403', '404']:
-            raise MISSING_FILE(str(obj) + ' ' + e.message)
+            raise MissingFile(str(obj) + ' ' + str(e))
         raise
 
 
 def validate_message(message):
     if 'MessageError' in message:
-        raise INVALID_MESSAGE(message['MessageError'])
+        raise InvalidMessage(message['MessageError'])
     message_schema = get_json_from_file('message_schema.json')
     try:
         jsonschema.validate(message, message_schema)
     except jsonschema.exceptions.ValidationError as e:
-        raise INVALID_MESSAGE(e.message)
+        raise InvalidMessage(str(e))
 
 
 def validate_metadata(obj):
@@ -65,7 +62,7 @@ def validate_metadata(obj):
         metadata = json.loads(metadata)
         jsonschema.validate(metadata, metadata_schema)
     except (ValueError, jsonschema.exceptions.ValidationError) as e:
-        raise INVALID_METADATA(e.message)
+        raise InvalidMetadata(str(e))
 
 
 def json_error(error):
@@ -82,7 +79,7 @@ def validate_topic(topic):
         sns.publish(TopicArn=topic['Arn'], Message='invalidMessage', MessageStructure='json')
     except botocore.exceptions.ClientError as e:
         if not json_error(e.response['Error']):
-            raise INVALID_TOPIC(e.message)
+            raise InvalidTopic(str(e))
 
 
 def verify(message):
