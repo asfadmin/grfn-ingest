@@ -1,2 +1,4 @@
-jinja2==2.10.1
-shapely==1.5.17
+Jinja2==2.10.1
+Shapely==1.6.4.post2
+
+MarkupSafe==1.1.1
