@@ -6,8 +6,7 @@ phases:
       python: 3.7
     commands:
       - apt-get update
-      - apt-get install -y python3-pip
-      - apt-get install -y libgeos-dev
+      - apt-get install -y python3-pip libgeos-dev
   build:
     commands:
       - pip3 install -r invoke/requirements.txt -t invoke/src/

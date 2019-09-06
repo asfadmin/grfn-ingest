@@ -4,7 +4,7 @@
 
 from logging import getLogger
 from xml.etree import ElementTree
-from urlparse import urljoin  #TODO python3
+from urllib.parse import urljoin
 
 import requests
 import boto3
