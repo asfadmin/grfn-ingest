@@ -21,11 +21,14 @@ def create_response(event, error_config):
     error = event.get(error_config['key'])
     if error:
         response['Status'] = 'failure'
+
         if error['Error'] in error_config['codes']:
             response['ErrorCode'] = error['Error']
         else:
             response['ErrorCode'] = error_config['default_code']
-        response['ErrorMessage'] = error['Cause']
+
+        cause = json.loads(error['Cause'])
+        response['ErrorMessage'] = cause['errorMessage']
 
     return response
 
