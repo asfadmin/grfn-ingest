@@ -4,6 +4,10 @@ phases:
   install:
     runtime-versions:
       python: 3.7
+    commands:
+      - apt-get update
+      - apt-get install -y python3-pip
+      - apt-get install -y libgeos-dev
   build:
     commands:
       - pip3 install -r invoke/requirements.txt -t invoke/src/
@@ -12,8 +16,6 @@ phases:
       - pip3 install -r notify/requirements.txt -t notify/src/
       - pip3 install -r cmr-token/requirements.txt -t cmr-token/src/
       - pip3 install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
-      - apt-get update
-      - apt-get install -y libgeos-dev
       - mkdir echo10-construction/src/lib
       - cp -L /usr/lib/libgeos*.so* echo10-construction/src/lib/
       - pip3 install -r echo10-construction/requirements.txt -t echo10-construction/src/
