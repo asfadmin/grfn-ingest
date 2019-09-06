@@ -41,7 +41,7 @@ def validate_s3_object(obj):
         s3.Object(obj['Bucket'], obj['Key']).load()
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] in ['403', '404']:
-            raise MISSING_FILE(str(obj) + ' ' + str(e))
+            raise MISSING_FILE(str(obj) + ' ' + e.message)
         raise
 
 
@@ -52,7 +52,7 @@ def validate_message(message):
     try:
         jsonschema.validate(message, message_schema)
     except jsonschema.exceptions.ValidationError as e:
-        raise INVALID_MESSAGE(str(e))
+        raise INVALID_MESSAGE(e.message)
 
 
 def validate_metadata(obj):
@@ -62,7 +62,7 @@ def validate_metadata(obj):
         metadata = json.loads(metadata)
         jsonschema.validate(metadata, metadata_schema)
     except (ValueError, jsonschema.exceptions.ValidationError) as e:
-        raise INVALID_METADATA(str(e))
+        raise INVALID_METADATA(e.message)
 
 
 def json_error(error):
@@ -79,7 +79,7 @@ def validate_topic(topic):
         sns.publish(TopicArn=topic['Arn'], Message='invalidMessage', MessageStructure='json')
     except botocore.exceptions.ClientError as e:
         if not json_error(e.response['Error']):
-            raise INVALID_TOPIC(str(e))
+            raise INVALID_TOPIC(e.message)
 
 
 def verify(message):
