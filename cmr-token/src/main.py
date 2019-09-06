@@ -25,7 +25,7 @@ def get_new_token(config):
 
 
 def cache_token(token, config):
-    with NamedTemporaryFile() as temp:
+    with NamedTemporaryFile('w') as temp:
         temp.write(token)
         temp.flush()
         s3.upload_file(temp.name, config['bucket'], config['key'])
