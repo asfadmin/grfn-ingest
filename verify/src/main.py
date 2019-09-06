@@ -10,16 +10,16 @@ log.setLevel('INFO')
 s3 = boto3.resource('s3')
 
 
-class InvalidMessage(Exception):
+class INVALID_MESSAGE(Exception):
     pass
 
-class MissingFile(Exception):
+class MISSING_FILE(Exception):
     pass
 
-class InvalidMetadata(Exception):
+class INVALID_METADATA(Exception):
     pass
 
-class InvalidTopic(Exception):
+class INVALID_TOPIC(Exception):
     pass
 
 
@@ -41,18 +41,18 @@ def validate_s3_object(obj):
         s3.Object(obj['Bucket'], obj['Key']).load()
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] in ['403', '404']:
-            raise MissingFile(str(obj) + ' ' + str(e))
+            raise MISSING_FILE(str(obj) + ' ' + str(e))
         raise
 
 
 def validate_message(message):
     if 'MessageError' in message:
-        raise InvalidMessage(message['MessageError'])
+        raise INVALID_MESSAGE(message['MessageError'])
     message_schema = get_json_from_file('message_schema.json')
     try:
         jsonschema.validate(message, message_schema)
     except jsonschema.exceptions.ValidationError as e:
-        raise InvalidMessage(str(e))
+        raise INVALID_MESSAGE(str(e))
 
 
 def validate_metadata(obj):
@@ -62,7 +62,7 @@ def validate_metadata(obj):
         metadata = json.loads(metadata)
         jsonschema.validate(metadata, metadata_schema)
     except (ValueError, jsonschema.exceptions.ValidationError) as e:
-        raise InvalidMetadata(str(e))
+        raise INVALID_METADATA(str(e))
 
 
 def json_error(error):
@@ -79,7 +79,7 @@ def validate_topic(topic):
         sns.publish(TopicArn=topic['Arn'], Message='invalidMessage', MessageStructure='json')
     except botocore.exceptions.ClientError as e:
         if not json_error(e.response['Error']):
-            raise InvalidTopic(str(e))
+            raise INVALID_TOPIC(str(e))
 
 
 def verify(message):
