@@ -1,15 +1,15 @@
 import json
-import boto3
 from os import getenv
 from logging import getLogger
 from botocore.client import Config
 from botocore.exceptions import ClientError
+import boto3
 from cmr import process_task, get_session
 
 
 log = getLogger()
 log.setLevel('INFO')
-config = json.loads(getenv('CONFIG'))
+CONFIG = json.loads(getenv('CONFIG'))
 
 
 def get_sfn_client(connect_timeout):
@@ -61,4 +61,4 @@ def daemon_loop(config, get_remaining_time_in_millis_fcn):
 
 
 def lambda_handler(event, context):
-    daemon_loop(config, context.get_remaining_time_in_millis)
+    daemon_loop(CONFIG, context.get_remaining_time_in_millis)

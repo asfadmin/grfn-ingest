@@ -2,12 +2,12 @@
 # https://wiki.earthdata.nasa.gov/display/CMR/CMR+Data+Partner+User+Guide
 # https://cmr.earthdata.nasa.gov/ingest/site/ingest_api_docs.html#create-update-granule
 
-import boto3
-import requests
 from logging import getLogger
 from xml.etree import ElementTree
-from urlparse import urljoin
+from urllib.parse import urljoin
 
+import requests
+import boto3
 
 log = getLogger()
 
@@ -16,7 +16,7 @@ def send_request(session, base_url, echo10_content):
     granule_native_id = get_granule_native_id(echo10_content)
     url = urljoin(base_url, granule_native_id)
     response = session.put(url, data=echo10_content)
-    log.info('Response text: {0}'.format(response.text))
+    log.info('Response text: %s', response.text)
     return response
 
 
@@ -38,7 +38,7 @@ def get_file_content_from_s3(bucket, key, s3):
 def get_cached_token(config, s3):
     try:
         return get_file_content_from_s3(config['bucket'], config['key'], s3)
-    except Exception as e:
+    except Exception:
         return None
 
 

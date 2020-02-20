@@ -1,24 +1,23 @@
-# This build script is designed to run in AWS CodeBuild using the aws/codebuild/docker:17.09.0 image:
-#   ubuntu 14.04.5
-#   docker 17.09.0
-#   python 2.7
-
-version: 0.1
+version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - apt update
+      - apt install -y libgeos-dev
   build:
     commands:
-      - pip install -r invoke/requirements.txt -t invoke/src/
-      - pip install -r verify/requirements.txt -t verify/src/
-      - pip install -r ingest/requirements.txt -t ingest/src/
-      - pip install -r notify/requirements.txt -t notify/src/
-      - pip install -r cmr-token/requirements.txt -t cmr-token/src/
-      - pip install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
-      - apt-get update
-      - apt-get install -y libgeos-dev
+      - pip3 install -r invoke/requirements.txt -t invoke/src/
+      - pip3 install -r verify/requirements.txt -t verify/src/
+      - pip3 install -r ingest/requirements.txt -t ingest/src/
+      - pip3 install -r notify/requirements.txt -t notify/src/
+      - pip3 install -r cmr-token/requirements.txt -t cmr-token/src/
+      - pip3 install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
       - mkdir echo10-construction/src/lib
       - cp -L /usr/lib/libgeos*.so* echo10-construction/src/lib/
-      - pip install -r echo10-construction/requirements.txt -t echo10-construction/src/
+      - pip3 install -r echo10-construction/requirements.txt -t echo10-construction/src/
       - aws cloudformation package --template-file cloudformation.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
 artifacts:
   type: zip
