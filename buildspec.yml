@@ -5,8 +5,8 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-      - apt-get update
-      - apt-get install -y python3-pip libgeos-dev
+      - apt update
+      - apt install -y libgeos-dev
   build:
     commands:
       - pip3 install -r invoke/requirements.txt -t invoke/src/
