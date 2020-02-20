@@ -16,7 +16,8 @@ phases:
       - pip3 install -r cmr-token/requirements.txt -t cmr-token/src/
       - pip3 install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
       - mkdir echo10-construction/src/lib
-      - cp -L /usr/lib/libgeos*.so* echo10-construction/src/lib/
+      - find / -name "libgeos*.so*"
+      - cp -L /usr/lib/x86_64-linux-gnu/libgeos*.so* echo10-construction/src/lib/
       - pip3 install -r echo10-construction/requirements.txt -t echo10-construction/src/
       - aws cloudformation package --template-file cloudformation.yaml --s3-bucket $BUCKET --s3-prefix $PREFIX --output-template-file cloudformation-final.yaml
 artifacts:
