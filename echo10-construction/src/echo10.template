@@ -60,7 +60,7 @@
         {% endfor %}
     </Platforms>
     <AdditionalAttributes>
-        {% for name, value in additional_attributes.iteritems() %}
+        {% for name, value in additional_attributes.items() %}
         <AdditionalAttribute>
             <Name>{{ name }}</Name>
             <Values>
