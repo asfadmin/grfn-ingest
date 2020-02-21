@@ -106,7 +106,7 @@ Resources:
       Handler: daemon.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
-      Runtime: python2.7
+      Runtime: python3.8
       Timeout: 900
 
   Schedule:
