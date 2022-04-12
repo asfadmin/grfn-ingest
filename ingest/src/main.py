@@ -21,6 +21,7 @@ def copy_s3_object(copy_source, dest_bucket, dest_key, transfer_config):
     extra_args = {
         'ContentType': content_type,
         'MetadataDirective': 'REPLACE',
+        'TaggingDirective': 'REPLACE',
     }
     s3.Bucket(dest_bucket).copy(CopySource=copy_source, Key=dest_key, ExtraArgs=extra_args, Config=transfer_config)
 
