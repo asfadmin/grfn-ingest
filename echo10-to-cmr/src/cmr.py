@@ -3,11 +3,11 @@
 # https://cmr.earthdata.nasa.gov/ingest/site/ingest_api_docs.html#create-update-granule
 
 from logging import getLogger
-from xml.etree import ElementTree
 from urllib.parse import urljoin
+from xml.etree import ElementTree
 
-import requests
 import boto3
+import requests
 
 log = getLogger()
 

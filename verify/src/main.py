@@ -1,7 +1,8 @@
 import json
 from logging import getLogger
-import botocore
+
 import boto3
+import botocore
 import jsonschema
 
 
@@ -13,11 +14,14 @@ s3 = boto3.resource('s3')
 class INVALID_MESSAGE(Exception):
     pass
 
+
 class MISSING_FILE(Exception):
     pass
 
+
 class INVALID_METADATA(Exception):
     pass
+
 
 class INVALID_TOPIC(Exception):
     pass
