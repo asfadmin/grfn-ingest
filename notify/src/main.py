@@ -51,7 +51,7 @@ def notify(event, config):
         try:
             send_message(json.dumps(response), event['ResponseTopic'])
             return response
-        except Exception:  # noqa
+        except Exception:
             log.exception('Failed to send message to response topic')
 
     log.info('Sending message to default topic %s', str(config['default_topic']))

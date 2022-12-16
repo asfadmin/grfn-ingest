@@ -38,7 +38,7 @@ def get_file_content_from_s3(bucket, key, s3):
 def get_cached_token(config, s3):
     try:
         return get_file_content_from_s3(config['bucket'], config['key'], s3)
-    except Exception:  # noqa
+    except Exception:
         return None
 
 

@@ -57,7 +57,7 @@ def daemon_loop(config, get_remaining_time_in_millis_fcn):
             task_input = json.loads(task['input'])
             output = process_task(task_input, config['cmr'], session, s3)
             send_task_response(sfn_client, task['taskToken'], output)
-        except Exception as e:  # noqa
+        except Exception as e:
             log.exception('Failed to process task.')
             send_task_response(sfn_client, task['taskToken'], exception=e)
 
