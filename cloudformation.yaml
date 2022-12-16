@@ -226,7 +226,7 @@ Resources:
           Action: sqs:SendMessage
           Condition:
             ArnEquals:
-              aws:SourceArn: !Ref JobTopic
+              "aws:SourceArn": !Ref JobTopic
       Queues:
       - !Ref JobQueue
 
