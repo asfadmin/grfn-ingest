@@ -89,7 +89,7 @@
             "States.ALL"
           ],
           "MaxAttempts": 7,
-          "BackoffRate": 5
+          "BackoffRate": 5.0
         }
       ],
       "Catch": [
