@@ -63,7 +63,6 @@ Resources:
     Properties:
       FunctionName: !Ref Name
       Code: src/
-
       Environment:
         Variables:
           CONFIG: !Sub |-
