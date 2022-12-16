@@ -38,12 +38,6 @@ Outputs:
 
 Resources:
 
-  DeadLetterQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub "${Name}-dlq"
-      MessageRetentionPeriod: 1209600
-
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -72,9 +66,6 @@ Resources:
             - logs:PutLogEvents
             Resource: !GetAtt LogGroup.Arn
           - Effect: Allow
-            Action: sqs:SendMessage
-            Resource: !GetAtt DeadLetterQueue.Arn
-          - Effect: Allow
             Action: s3:PutObject
             Resource: !Sub "arn:aws:s3:::${TokenBucket}/${TokenKey}"
 
@@ -83,8 +74,6 @@ Resources:
     Properties:
       FunctionName: !Ref Name
       Code: src/
-      DeadLetterConfig:
-        TargetArn: !GetAtt DeadLetterQueue.Arn
       Environment:
         Variables:
           CONFIG: !Sub |-
