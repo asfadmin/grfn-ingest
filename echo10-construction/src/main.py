@@ -1,8 +1,9 @@
-import os
 import copy
 import json
+import os
 from datetime import datetime
 from logging import getLogger
+
 import boto3
 from jinja2 import Template
 from shapely.geometry import Polygon
@@ -157,7 +158,9 @@ def create_granule_echo10_in_s3(inputs, config):
         virtual_granule_data['granule_ur'] = granule_data['granule_ur'] + '-' + product['label']
         virtual_granule_data['additional_attributes']['PROCESSING_TYPE'] = product['processing_type']
         virtual_granule_data['additional_attributes']['PROCESSING_TYPE_DISPLAY'] = product['processing_type_display']
-        virtual_granule_data['online_access_url'] = '{0}?product={1}&amp;layer={2}'.format(config['api_url'], inputs['Product']['Key'], product['layer'])
+        virtual_granule_data['online_access_url'] = '{0}?product={1}&amp;layer={2}'.format(
+            config['api_url'], inputs['Product']['Key'], product['layer']
+        )
         echo10_content = render_granule_data_as_echo10(virtual_granule_data)
         echo10_s3_object = {
             'bucket': config['output_bucket'],

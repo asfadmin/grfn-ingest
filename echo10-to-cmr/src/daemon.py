@@ -1,10 +1,11 @@
 import json
-from os import getenv
 from logging import getLogger
+from os import getenv
+
+import boto3
 from botocore.client import Config
 from botocore.exceptions import ClientError
-import boto3
-from cmr import process_task, get_session
+from cmr import get_session, process_task
 
 
 log = getLogger()
@@ -43,7 +44,8 @@ def daemon_loop(config, get_remaining_time_in_millis_fcn):
     sfn_client = get_sfn_client(config['sfn_connect_timeout'])
     while True:
         if get_remaining_time_in_millis_fcn() < config['max_task_time_in_millis']:
-            log.info('Remaining time %s less than max task time %s.  Exiting.', get_remaining_time_in_millis_fcn(), config['max_task_time_in_millis'])
+            log.info('Remaining time %s less than max task time %s.  Exiting.', get_remaining_time_in_millis_fcn(),
+                     config['max_task_time_in_millis'])
             break
 
         task = get_task(sfn_client, config['activity'])
