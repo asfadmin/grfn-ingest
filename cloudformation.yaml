@@ -216,23 +216,17 @@ Resources:
   JobQueuePolicy:
     Type: AWS::SQS::QueuePolicy
     Properties:
-      PolicyDocument: !Sub |-
-        {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": "*",
-              "Resource": "${JobQueue.Arn}",
-              "Action": "sqs:SendMessage",
-              "Condition": {
-                "ArnEquals": {
-                  "aws:SourceArn": "${JobTopic}"
-                }
-              }
-            }
-          ]
-        }
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Resource: !GetAtt JobQueue.Arn
+          Action: sqs:SendMessage
+          Condition:
+            ArnEquals:
+              aws:SourceArn: !Ref JobTopic
       Queues:
       - !Ref JobQueue
 
