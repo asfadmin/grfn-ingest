@@ -38,5 +38,6 @@ jobs:
           ruby-version: 2.7
       - run: gem install statelint
       - run: |
+          # replace DefinitionSubstitution placeholders with dummy URIs to suppress linter errors
           sed -i 's/"Resource": "${.*}"/"Resource": "foo:bar"/' step-function/step-function.json
           statelint step-function/step-function.json
