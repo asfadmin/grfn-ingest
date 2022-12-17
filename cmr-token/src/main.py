@@ -17,7 +17,7 @@ def get_secret_value(secret_arn: str):
     return response['SecretString']
 
 
-def get_new_token(certificate, passphrase):
+def get_new_token(certificate: bytes, passphrase: str):
     response = requests_pkcs12.get(
         'https://api.launchpad.nasa.gov/icam/api/sm/v1/gettoken',
         pkcs12_data=certificate,
