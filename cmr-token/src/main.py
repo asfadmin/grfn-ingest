@@ -1,38 +1,35 @@
-import json
+import os
 from logging import getLogger
-from os import getenv
-from tempfile import NamedTemporaryFile
 
 import boto3
-import requests
+import requests_pkcs12
 
 log = getLogger()
 log.setLevel('INFO')
 s3 = boto3.client('s3')
-CONFIG = json.loads(getenv('CONFIG'))
+secrets_manager = boto3.client('secretsmanager')
 
 
-def get_new_token(config):
-    headers = {'Content-Type': 'application/xml', 'Accept': 'application/json'}
-    content = '<token><username>{0}</username><password>{1}</password><client_id>{2}</client_id>' \
-              '<user_ip_address>{3}</user_ip_address><provider>{4}</provider></token>'
-    content = content.format(
-        config['username'], config['password'], config['client_id'], config['user_ip_address'], config['provider']
+def get_secret_value(secret_arn: str):
+    response = secrets_manager.get_secret_value(SecretId=secret_arn)
+    if 'SecretBinary' in response:
+        return response['SecretBinary']
+    return response['SecretString']
+
+
+def get_new_token(certificate, passphrase):
+    response = requests_pkcs12.get(
+        'https://api.launchpad.nasa.gov/icam/api/sm/v1/gettoken',
+        pkcs12_data=certificate,
+        pkcs12_password=passphrase,
     )
-    response = requests.post(config['url'], headers=headers, data=content)
     log.info('Response text: %s', response.text)
     response.raise_for_status()
-    json_response = json.loads(response.text)
-    return json_response['token']['id']
-
-
-def cache_token(token, config):
-    with NamedTemporaryFile('w') as temp:
-        temp.write(token)
-        temp.flush()
-        s3.upload_file(temp.name, config['bucket'], config['key'])
+    return response.json()['sm_token']
 
 
 def lambda_handler(event, context):
-    token = get_new_token(CONFIG['new_token'])
-    cache_token(token, CONFIG['cached_token'])
+    certificate = get_secret_value(os.environ['CERTIFICATE_SECRET_ARN'])
+    passphrase = get_secret_value(os.environ['PASSPHRASE_SECRET_ARN'])
+    token = get_new_token(certificate, passphrase)
+    s3.put_object(Bucket=os.environ['BUCKET'], Key=os.environ['KEY'], Body=token)

@@ -11,24 +11,10 @@ Parameters:
   TokenKey:
     Type: String
 
-  TokenUrl:
-    Type: String
-    Default: https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens
-    AllowedValues:
-    - https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens
-    - https://cmr.uat.earthdata.nasa.gov/legacy-services/rest/tokens
-
-  Username:
+  CertificateSecretArn:
     Type: String
 
-  Password:
-    Type: String
-    NoEcho: true
-
-  Provider:
-    Type: String
-
-  ClientId:
+  PassphraseSecretArn:
     Type: String
 
 Outputs:
@@ -66,6 +52,11 @@ Resources:
             - logs:PutLogEvents
             Resource: !GetAtt LogGroup.Arn
           - Effect: Allow
+            Action: secretsmanager:GetSecretValue
+            Resource:
+            - !Ref CertificateSecretArn
+            - !Ref PassphraseSecretArn
+          - Effect: Allow
             Action: s3:PutObject
             Resource: !Sub "arn:aws:s3:::${TokenBucket}/${TokenKey}"
 
@@ -76,21 +67,10 @@ Resources:
       Code: src/
       Environment:
         Variables:
-          CONFIG: !Sub |-
-            {
-              "new_token": {
-                "username": "${Username}",
-                "password": "${Password}",
-                "url": "${TokenUrl}",
-                "provider": "${Provider}",
-                "client_id": "${ClientId}",
-                "user_ip_address": "0.0.0.0"
-              },
-              "cached_token": {
-                "bucket": "${TokenBucket}",
-                "key": "${TokenKey}"
-              }
-            }
+          CERTIFICATE_SECRET_ARN: !Ref CertificateSecretArn
+          PASSPHRASE_SECRET_ARN: !Ref PassphraseSecretArn
+          BUCKET: !Ref TokenBucket
+          KEY: !Ref TokenKey
       Handler: main.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
