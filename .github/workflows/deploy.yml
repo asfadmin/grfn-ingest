@@ -85,5 +85,4 @@ jobs:
                 SdsAccountNumber='${{ secrets.SDS_ACCOUNT_NUMBER }}' \
                 CmrBaseUrl='${{ matrix.cmr_base_url }}' \
                 LaunchpadCertificateSecretArn='${{ secrets.LAUNCHPAD_CERTIFICATE_SECRET_ARN }}' \
-                LaunchpadPassphraseSecretArn='${{ secrets.LAUNCHPAD_PASSPHRASE_SECRET_ARN }}' \
                 CmrProvider='${{ matrix.cmr_provider }}'

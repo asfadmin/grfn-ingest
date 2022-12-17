@@ -14,9 +14,6 @@ Parameters:
   CertificateSecretArn:
     Type: String
 
-  PassphraseSecretArn:
-    Type: String
-
 Outputs:
 
   LambdaName:
@@ -53,9 +50,7 @@ Resources:
             Resource: !GetAtt LogGroup.Arn
           - Effect: Allow
             Action: secretsmanager:GetSecretValue
-            Resource:
-            - !Ref CertificateSecretArn
-            - !Ref PassphraseSecretArn
+            Resource: !Ref CertificateSecretArn
           - Effect: Allow
             Action: s3:PutObject
             Resource: !Sub "arn:aws:s3:::${TokenBucket}/${TokenKey}"
@@ -68,7 +63,6 @@ Resources:
       Environment:
         Variables:
           CERTIFICATE_SECRET_ARN: !Ref CertificateSecretArn
-          PASSPHRASE_SECRET_ARN: !Ref PassphraseSecretArn
           BUCKET: !Ref TokenBucket
           KEY: !Ref TokenKey
       Handler: main.lambda_handler

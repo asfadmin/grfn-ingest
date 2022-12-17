@@ -58,9 +58,6 @@ Parameters:
   LaunchpadCertificateSecretArn:
     Type: String
 
-  LaunchpadPassphraseSecretArn:
-    Type: String
-
   CmrProvider:
     Type: String
 
@@ -123,7 +120,6 @@ Resources:
         TokenBucket: !Ref AuxBucket
         TokenKey: !Ref CachedCmrTokenKey
         CertificateSecretArn: !Ref LaunchpadCertificateSecretArn
-        PassphraseSecretArn: !Ref LaunchpadPassphraseSecretArn
       TemplateURL: cmr-token/cloudformation.yaml
 
   Echo10ToCmrStack:
