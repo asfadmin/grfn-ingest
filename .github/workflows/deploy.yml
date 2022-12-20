@@ -20,7 +20,6 @@ jobs:
             reformat_api_url: https://services.asf.alaska.edu/geospatial/reformat
             cmr_base_url: https://cmr.earthdata.nasa.gov
             cmr_provider: ASF
-            cmr_client_id: asf-grfn-prod
             deploy_ref: refs/heads/prod
 
           - environment: ingest-test
@@ -31,7 +30,6 @@ jobs:
             reformat_api_url: https://services-test.asf.alaska.edu/geospatial/reformat
             cmr_base_url: https://cmr.uat.earthdata.nasa.gov
             cmr_provider: ASF
-            cmr_client_id: asf-grfn-test
             deploy_ref: refs/heads/test
 
     environment:
@@ -86,7 +84,5 @@ jobs:
                 DefaultResponseTopicRegion='${{ secrets.DEFAULT_RESPONSE_TOPIC_REGION }}' \
                 SdsAccountNumber='${{ secrets.SDS_ACCOUNT_NUMBER }}' \
                 CmrBaseUrl='${{ matrix.cmr_base_url }}' \
-                CmrUsername='${{ secrets.CMR_USERNAME }}' \
-                CmrPassword='${{ secrets.CMR_PASSWORD }}' \
-                CmrProvider='${{ matrix.cmr_provider }}' \
-                CmrClientId='${{ matrix.cmr_client_id }}'
+                LaunchpadCertificateSecretArn='${{ secrets.LAUNCHPAD_CERTIFICATE_SECRET_ARN }}' \
+                CmrProvider='${{ matrix.cmr_provider }}'
