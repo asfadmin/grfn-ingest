@@ -1,10 +1,10 @@
 import json
-from os import getenv
 from logging import getLogger
+from os import getenv
 from tempfile import NamedTemporaryFile
 
-import requests
 import boto3
+import requests
 
 log = getLogger()
 log.setLevel('INFO')
@@ -14,7 +14,9 @@ CONFIG = json.loads(getenv('CONFIG'))
 
 def get_new_token(config):
     headers = {'Content-Type': 'application/xml', 'Accept': 'application/json'}
-    content = '<token><username>{0}</username><password>{1}</password><client_id>{2}</client_id><user_ip_address>{3}</user_ip_address><provider>{4}</provider></token>'.format(
+    content = '<token><username>{0}</username><password>{1}</password><client_id>{2}</client_id>' \
+              '<user_ip_address>{3}</user_ip_address><provider>{4}</provider></token>'
+    content = content.format(
         config['username'], config['password'], config['client_id'], config['user_ip_address'], config['provider']
     )
     response = requests.post(config['url'], headers=headers, data=content)

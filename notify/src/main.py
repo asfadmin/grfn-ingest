@@ -1,7 +1,8 @@
 import json
-from os import getenv
 from datetime import datetime
 from logging import getLogger
+from os import getenv
+
 import boto3
 
 
