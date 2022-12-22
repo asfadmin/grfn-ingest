@@ -23,7 +23,7 @@ def send_request(session, base_url, echo10_content):
 def get_session(config, s3):
     token = get_cached_token(config, s3)
     session = requests.Session()
-    headers = {'Content-Type': 'application/echo10+xml', 'Echo-Token': token}
+    headers = {'Content-Type': 'application/echo10+xml', 'Authorization': token}
     session.headers.update(headers)
     return session
 
@@ -54,7 +54,7 @@ def push_echo10_granule_to_cmr(session, echo10_content, config, s3):
         lamb = boto3.client('lambda')
         lamb.invoke(FunctionName=config['cmr_token_lambda'])
         token = get_cached_token(config['cached_token'], s3)
-        session.headers.update({'Echo-Token': token})
+        session.headers.update({'Authorization': token})
         response = send_request(session, config['granule_url'], echo10_content)
     response.raise_for_status()
     return response
