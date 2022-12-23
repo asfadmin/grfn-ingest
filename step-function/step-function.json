@@ -10,8 +10,8 @@
       "Retry": [
         {
           "ErrorEquals": [
-            "INVALID_MESSAGE",
-            "INVALID_METADATA"
+            "InvalidMessage",
+            "InvalidMetadata"
           ],
           "MaxAttempts": 0
         },
@@ -19,15 +19,6 @@
           "ErrorEquals": [
             "States.ALL"
           ]
-        }
-      ],
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "Next": "Notify",
-          "ResultPath": "$.Error"
         }
       ]
     },
@@ -41,15 +32,6 @@
           "ErrorEquals": [
             "States.ALL"
           ]
-        }
-      ],
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "Next": "Notify",
-          "ResultPath": "$.Error"
         }
       ]
     },
@@ -65,15 +47,6 @@
             "States.ALL"
           ]
         }
-      ],
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "Next": "Notify",
-          "ResultPath": "$.Error"
-        }
       ]
     },
     "Echo10ToCMR": {
@@ -82,7 +55,7 @@
       "TimeoutSeconds": 30,
       "InputPath": "$.ConstructionResults",
       "ResultPath": "$.CmrResults",
-      "Next": "Notify",
+      "End": true,
       "Retry": [
         {
           "ErrorEquals": [
@@ -91,49 +64,7 @@
           "MaxAttempts": 7,
           "BackoffRate": 5.0
         }
-      ],
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "Next": "Notify",
-          "ResultPath": "$.Error"
-        }
       ]
-    },
-    "Notify": {
-      "Type": "Task",
-      "Resource": "${NotifyLambdaArn}",
-      "ResultPath": "$.NotifyResults",
-      "Retry": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ]
-        }
-      ],
-      "Next": "Check_Status"
-    },
-    "Check_Status": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.NotifyResults.Status",
-          "StringEquals": "success",
-          "Next": "Success"
-        }
-      ],
-      "Default": "Failure"
-    },
-    "Failure": {
-      "Type": "Fail",
-      "Error": "Ingest failed.",
-      "Cause": "Ingest failed.  Inspect the 'Error' field of the Failure task's input for details."
-    },
-    "Success": {
-      "Type": "Pass",
-      "End": true
     }
   }
 }

@@ -56,7 +56,6 @@ jobs:
           python -m pip install -r invoke/requirements.txt -t invoke/src/
           python -m pip install -r verify/requirements.txt -t verify/src/
           python -m pip install -r ingest/requirements.txt -t ingest/src/
-          python -m pip install -r notify/requirements.txt -t notify/src/
           python -m pip install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
           python -m pip install -r echo10-construction/requirements.txt -t echo10-construction/src/
           # crytography on AWS Lambda requires manylinux2014 per https://github.com/ASFHyP3/hyp3/issues/1190
@@ -81,8 +80,6 @@ jobs:
                 DistributionBaseUrl='${{ matrix.distribution_base_url }}' \
                 BrowseBaseUrl='${{ matrix.browse_base_url }}' \
                 ReformatApiUrl='${{ matrix.reformat_api_url }}' \
-                DefaultResponseTopicArn='${{ secrets.DEFAULT_RESPONSE_TOPIC_ARN }}' \
-                DefaultResponseTopicRegion='${{ secrets.DEFAULT_RESPONSE_TOPIC_REGION }}' \
                 SdsAccountNumber='${{ secrets.SDS_ACCOUNT_NUMBER }}' \
                 CmrBaseUrl='${{ matrix.cmr_base_url }}' \
                 LaunchpadCertificateSecretArn='${{ secrets.LAUNCHPAD_CERTIFICATE_SECRET_ARN }}' \

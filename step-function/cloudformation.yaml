@@ -11,9 +11,6 @@ Parameters:
   IngestLambdaArn:
     Type: String
 
-  NotifyLambdaArn:
-    Type: String
-
   Echo10ConstructionLambdaArn:
     Type: String
 
@@ -53,7 +50,6 @@ Resources:
             Resource:
             - !Ref VerifyLambdaArn
             - !Ref IngestLambdaArn
-            - !Ref NotifyLambdaArn
             - !Ref Echo10ConstructionLambdaArn
 
   StepFunction:
@@ -67,4 +63,3 @@ Resources:
         IngestLambdaArn: !Ref IngestLambdaArn
         Echo10ConstructionLambdaArn: !Ref Echo10ConstructionLambdaArn
         CmrActivity: !Ref CmrActivity
-        NotifyLambdaArn: !Ref NotifyLambdaArn
