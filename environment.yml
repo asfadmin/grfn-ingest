@@ -1,0 +1,10 @@
+name: grfn-ingest
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - pytest
+    - boto3
+    - -r echo10-construction/requirements.txt

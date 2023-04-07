@@ -1,0 +1,16 @@
+name: Test with pytest
+
+on: push
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: mamba-org/provision-with-micromamba@v15
+
+      - shell: bash -l {0}
+        run: |
+          make test
