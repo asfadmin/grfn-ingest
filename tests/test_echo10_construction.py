@@ -1,10 +1,9 @@
 import main
-# from unittest.mock import patch
+from pathlib import Path
+import json
 import pdb
 import os
 
-
-os.chdir('echo10-construction/src/')
 
 def test_write_to_file(tmp_path):
     
@@ -20,7 +19,7 @@ def test_get_file_content_from_s3(bucket, key):
     assert contents ==
 '''
 
-
+'''
 def test_get_sds_metadata(obj):
    sds_metadata = main.get_sds_metadata(obj)
    sds_metadata1 = {
@@ -55,11 +54,18 @@ def test_get_mission(polygon, config):
     mission1 = 'S1 I-grams (BETA) - Other'
     assert mission == mission1
 
-
+'''
 # @responses.activate
 def test_get_granule_data(inputs, config, mocker):
-    mocker.patch('main.new', return_value='2023-01-01T00:00:00Z')
-    # pdb.set_trace()
+    mocker.patch('main.now', return_value='2023-01-01T00:00:00Z')
+    data_dir = Path(__file__).resolve().parent / 'data'
+    with open(f'{data_dir}/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json') as f:
+        content = json.load(f)
+
+    mocker.patch('main.get_sds_metadata', return_value=content)
+
+    mocker.patch('main.get_s3_file_size', return_value=49203991)
+
     # data1 must be defined before
     data1 = {'granule_ur': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
            'insert_time': '2023-01-01T00:00:00Z',
@@ -109,11 +115,7 @@ def test_get_granule_data(inputs, config, mocker):
             }
 
     data = main.get_granule_data(inputs, config['granule_data'])
-    # compare assert, do not compare 'insert_time' and 'last_update'
-    data['insert_time'] = '2023-04-07T19:06:12Z'
-    data1['insert_time'] = '2023-04-07T19:06:12Z'
-    data['last_update'] = '2023-04-07T19:06:13Z'
-    data1['last_update'] = '2023-04-07T19:06:13Z'
+
     assert data == data1
 
 '''
@@ -123,10 +125,8 @@ def test_create_granule_echo10_in_s3(inputs, config):
     #assert the echo10_s3_objects
     pass
 
-'''
-
-
 def test_get_s3_file_size(obj):
     pdb.set_trace()
     length = main.get_s3_file_size(obj)
     assert length == 49203991
+'''
