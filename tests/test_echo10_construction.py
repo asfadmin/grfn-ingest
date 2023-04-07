@@ -46,15 +46,20 @@ def test_get_sds_metadata(obj):
    }
 
    assert sds_metadata == sds_metadata1
+'''
 
 
 def test_get_mission(polygon, config):
+    polygon = [[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788],
+            [-178.851135, 52.739079], [-175.19286980698257, 52.345011494426714]]
 
-    mission = main.get_mission(polygon, config['missions'])
+    mission = main.get_mission(polygon, config['granule_data']['missions'])
     mission1 = 'S1 I-grams (BETA) - Other'
     assert mission == mission1
 
-'''
+
+
+
 # @responses.activate
 def test_get_granule_data(inputs, config, mocker):
     mocker.patch('main.now', return_value='2023-01-01T00:00:00Z')
