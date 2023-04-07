@@ -1,0 +1,14 @@
+{
+  "Product": {
+    "Bucket": "grfn-content-prod",
+    "Key": "S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc"
+  },
+  "Metadata": {
+    "Bucket": "ingest-prod-aux",
+    "Key": "S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json"
+  },
+  "Browse": {
+    "Bucket": "grfn-public-prod",
+    "Key": "S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png"
+  }
+}
