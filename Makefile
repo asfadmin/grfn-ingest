@@ -3,5 +3,5 @@ export PYTHONPATH = ${ECHO10_CONSTRUCTION}
 export CONFIG = "{}"
 
 test_file ?= tests/
-test:
+pytest:
 	pytest $(test_file)
