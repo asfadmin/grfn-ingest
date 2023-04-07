@@ -7,4 +7,4 @@ dependencies:
   - pip:
     - pytest
     - boto3
-    - -r echo10-to-cmr/requirements.txt
+    - -r echo10-construction/requirements.txt

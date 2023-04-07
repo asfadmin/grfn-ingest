@@ -13,4 +13,4 @@ jobs:
 
       - shell: bash -l {0}
         run: |
-          pytest tests/
+          make test
