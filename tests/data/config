@@ -1,9 +1,9 @@
 {
-	"output_bucket": "ingest-prod-aux",
-	"api_url": "https://services.asf.alaska.edu/geospatial/reformat",
+	"output_bucket": "ingest-test-aux",
+	"api_url": "https://services-test.asf.alaska.edu/geospatial/reformat",
 	"granule_data": {
-		"download_path": "https://grfn.asf.alaska.edu/door/download/{0}",
-		"browse_path": "https://grfn-public-prod.asf.alaska.edu/{0}",
+		"download_path": "https://grfn-test.asf.alaska.edu/door/download/{0}",
+		"browse_path": "https://grfn-public-test.asf.alaska.edu/{0}",
 		"missions": [{
 			"name": "S1 I-grams (BETA) - Kilauea Volcano, HI",
 			"coords": [
