@@ -6,47 +6,40 @@ import os
 
 
 def test_write_to_file(tmp_path):
-    
-    # pdb.set_trace()
     target = tmp_path / 'foo.txt'
     main.write_to_file(str(target), 'hello world')
     assert target.exists()
     assert target.read_text() == 'hello world'
 
-'''
-def test_get_file_content_from_s3(bucket, key):
-    contents = main.get_file_content_from_s3(bucket, key)
-    assert contents ==
-'''
 
-'''
 def test_get_sds_metadata(obj):
-   sds_metadata = main.get_sds_metadata(obj)
-   sds_metadata1 = {
-       'label': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
-       'location': {'type': 'Polygon',
-                    'coordinates': [[[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788], [-178.851135, 52.739079], [-175.19286980698257, 52.345011494426714], [-175.564331, 51.22303]]]},
-       'creation_timestamp': '2023-03-23T00:34:17.970611Z',
-       'version': '2.0.6',
-       'metadata': {'ogr_bbox': [[-179.13033705784176, 51.22303], [-175.19286980698257, 51.22303], [-175.19286980698257, 52.739079], [-179.13033705784176, 52.739079]],
-                    'reference_scenes': ['S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A'],
-                    'secondary_scenes': ['S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884'],
-                    'sensing_start': '2020-11-18T18:02:43.000000Z',
-                    'sensing_stop': '2020-11-18T18:03:02.000000Z',
-                    'orbit_number': [35306, 34781],
-                    'platform': ['Sentinel-1A', 'Sentinel-1A'],
-                    'beam_mode': 'IW',
-                    'orbit_direction': 'descending',
-                    'dataset_type': 'slc',
-                    'product_type': 'interferogram',
-                    'polarization': 'HH',
-                    'look_direction': 'right',
-                    'track_number': 59,
-                    'perpendicular_baseline': 13.7661}
-   }
-
-   assert sds_metadata == sds_metadata1
-'''
+    obj = {'Bucket': 'ingest-test-aux', 'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json'}
+    sds_metadata1 = {
+        'label': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
+        'location': {'type': 'Polygon',
+                     'coordinates': [[[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788],
+                                      [-178.851135, 52.739079], [-175.19286980698257, 52.345011494426714],
+                                      [-175.564331, 51.22303]]]},
+        'creation_timestamp': '2023-03-23T00:34:17.970611Z',
+        'version': '2.0.6',
+        'metadata': {'ogr_bbox': [[-179.13033705784176, 51.22303], [-175.19286980698257, 51.22303],
+                                  [-175.19286980698257, 52.739079], [-179.13033705784176, 52.739079]],
+                     'reference_scenes': ['S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A'],
+                     'secondary_scenes': ['S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884'],
+                     'sensing_start': '2020-11-18T18:02:43.000000Z',
+                     'sensing_stop': '2020-11-18T18:03:02.000000Z',
+                     'orbit_number': [35306, 34781],
+                     'platform': ['Sentinel-1A', 'Sentinel-1A'],
+                     'beam_mode': 'IW',
+                     'orbit_direction': 'descending',
+                     'dataset_type': 'slc',
+                     'product_type': 'interferogram',
+                     'polarization': 'HH',
+                     'look_direction': 'right',
+                     'track_number': 59,
+                     'perpendicular_baseline': 13.7661}}
+    sds_metadata = main.get_sds_metadata(obj)
+    assert sds_metadata == sds_metadata1
 
 
 def test_get_mission(polygon, config):
@@ -58,10 +51,8 @@ def test_get_mission(polygon, config):
     assert mission == mission1
 
 
-
-
-# @responses.activate
 def test_get_granule_data(inputs, config, mocker):
+
     mocker.patch('main.now', return_value='2023-01-01T00:00:00Z')
     data_dir = Path(__file__).resolve().parent / 'data'
     with open(f'{data_dir}/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json') as f:
@@ -118,9 +109,7 @@ def test_get_granule_data(inputs, config, mocker):
              'online_access_url': 'https://grfn-test.asf.alaska.edu/door/download/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc',
              'browse_url': 'https://grfn-public-test.asf.alaska.edu/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png'
             }
-
     data = main.get_granule_data(inputs, config['granule_data'])
-
     assert data == data1
 
 '''
@@ -131,6 +120,8 @@ def test_create_granule_echo10_in_s3(inputs, config):
     pass
 
 def test_get_s3_file_size(obj):
+    obj = {'Bucket': 'grfn-content-test',
+     'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'}
     pdb.set_trace()
     length = main.get_s3_file_size(obj)
     assert length == 49203991
