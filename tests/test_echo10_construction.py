@@ -118,11 +118,12 @@ def test_create_granule_echo10_in_s3(inputs, config):
     echo10_s3_objects = main.create_granule_echo10_in_s3(inputs, config)
     #assert the echo10_s3_objects
     pass
+'''
+
 
 def test_get_s3_file_size(obj):
     obj = {'Bucket': 'grfn-content-test',
      'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'}
-    pdb.set_trace()
+
     length = main.get_s3_file_size(obj)
     assert length == 49203991
-'''
