@@ -2,11 +2,10 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
-
-import pytest
 import json
 
-import pdb
+import pytest
+
 
 @pytest.fixture(autouse=True)
 def get_mock_job():
@@ -63,6 +62,7 @@ def product_zip(tmp_path_factory, test_data_dir):
     shutil.copy(test_data_dir / 'product.zip', product_file)
 
     return product_file
+
 
 @pytest.fixture
 def inputs():
