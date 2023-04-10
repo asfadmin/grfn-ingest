@@ -247,7 +247,6 @@ def test_create_granule_echo10_in_s3(inputs, config, mocker):
                            'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png'
              }
     mocker.patch('main.get_granule_data', return_value=data1)
-    # mocker.patch('main.TEMPLATE_FILE', return_value='./echo10-construction/src/echo10.template')
     mocker.patch('main.upload_content_to_s3', return_value=None)
     echo10_s3_objects1 =\
         [{'bucket': 'ingest-test-aux', 'key':
