@@ -285,6 +285,7 @@ def test_render_granule_data_as_echo10():
     content = main.render_granule_data_as_echo10(data)
     assert content == content1
 
+
 def test_create_granule_echo10_in_s3(inputs, config, mocker):
 
     data1 = {'granule_ur': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
