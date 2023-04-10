@@ -85,7 +85,7 @@ def test_get_sds_metadata(obj):
 
 def test_get_mission(polygon, config):
     polygon = [[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788],
-            [-178.851135, 52.739079], [-175.19286980698257, 52.345011494426714]]
+               [-178.851135, 52.739079], [-175.19286980698257, 52.345011494426714]]
 
     mission = main.get_mission(polygon, config['granule_data']['missions'])
     mission1 = 'S1 I-grams (BETA) - Other'
@@ -105,20 +105,20 @@ def test_get_granule_data(inputs, config, mocker):
 
     # data1 must be defined before
     data1 = {'granule_ur': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
-           'insert_time': '2023-01-01T00:00:00Z',
-           'last_update': '2023-01-01T00:00:00Z',
-           'collection': 'Sentinel-1 Interferograms (BETA)',
-           'size_mb_data_granule': 46.92458248138428,
-           'producer_granule_id': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
-           'production_date_time': '2023-03-23T00:34:17.970611Z',
-           'beginning_date_time': '2020-11-18T18:02:43.000000Z',
-           'ending_date_time': '2020-11-18T18:03:02.000000Z',
-           'orbits': [35306, 34781],
-           'platforms': ['SENTINEL-1A'],
-           'sensor_short_name': 'IW',
-           'polygon': [[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788], [-178.851135, 52.739079],
-                       [-175.19286980698257, 52.345011494426714]],
-           'additional_attributes': {
+             'insert_time': '2023-01-01T00:00:00Z',
+             'last_update': '2023-01-01T00:00:00Z',
+             'collection': 'Sentinel-1 Interferograms (BETA)',
+             'size_mb_data_granule': 46.92458248138428,
+             'producer_granule_id': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
+             'production_date_time': '2023-03-23T00:34:17.970611Z',
+             'beginning_date_time': '2020-11-18T18:02:43.000000Z',
+             'ending_date_time': '2020-11-18T18:03:02.000000Z',
+             'orbits': [35306, 34781],
+             'platforms': ['SENTINEL-1A'],
+             'sensor_short_name': 'IW',
+             'polygon': [[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788], [-178.851135, 52.739079],
+                         [-175.19286980698257, 52.345011494426714]],
+             'additional_attributes': {
                'GROUP_ID': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
                'ASCENDING_DESCENDING': 'descending',
                'BEAM_MODE_TYPE': 'slc',
@@ -155,7 +155,7 @@ def test_get_granule_data(inputs, config, mocker):
                                   'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc',
              'browse_url': 'https://grfn-public-test.asf.alaska.edu/'
                            'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png'
-            }
+             }
     data = main.get_granule_data(inputs, config['granule_data'])
     assert data == data1
 
@@ -293,20 +293,20 @@ def test_render_granule_data_as_echo10():
                '        </ProviderBrowseUrl>\n    </AssociatedBrowseImageUrls>\n</Granule>\n'
 
     data = {'granule_ur': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
-           'insert_time': '2023-01-01T00:00:00Z',
-           'last_update': '2023-01-01T00:00:00Z',
-           'collection': 'Sentinel-1 Interferograms (BETA)',
-           'size_mb_data_granule': 46.92458248138428,
-           'producer_granule_id': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
-           'production_date_time': '2023-03-23T00:34:17.970611Z',
-           'beginning_date_time': '2020-11-18T18:02:43.000000Z',
-           'ending_date_time': '2020-11-18T18:03:02.000000Z',
-           'orbits': [35306, 34781],
-           'platforms': ['SENTINEL-1A'],
-           'sensor_short_name': 'IW',
-           'polygon': [[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788], [-178.851135, 52.739079],
+            'insert_time': '2023-01-01T00:00:00Z',
+            'last_update': '2023-01-01T00:00:00Z',
+            'collection': 'Sentinel-1 Interferograms (BETA)',
+            'size_mb_data_granule': 46.92458248138428,
+            'producer_granule_id': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
+            'production_date_time': '2023-03-23T00:34:17.970611Z',
+            'beginning_date_time': '2020-11-18T18:02:43.000000Z',
+            'ending_date_time': '2020-11-18T18:03:02.000000Z',
+            'orbits': [35306, 34781],
+            'platforms': ['SENTINEL-1A'],
+            'sensor_short_name': 'IW',
+            'polygon': [[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788], [-178.851135, 52.739079],
                        [-175.19286980698257, 52.345011494426714]],
-           'additional_attributes': {
+            'additional_attributes': {
                'GROUP_ID': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
                'ASCENDING_DESCENDING': 'descending',
                'BEAM_MODE_TYPE': 'slc',
@@ -334,15 +334,15 @@ def test_render_granule_data_as_echo10():
                    'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png',
                'PERPENDICULAR_BASELINE': 13.7661,
                'MISSION_NAME': 'S1 I-grams (BETA) - Other'},
-             'input_granules': [
+            'input_granules': [
                  '[Reference] S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A',
                  '[Secondary] S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884'],
-             'visible': 'true',
-             'orderable': 'true',
-             'online_access_url': 'https://grfn-test.asf.alaska.edu/door/download/'
-                                  'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc',
-             'browse_url': 'https://grfn-public-test.asf.alaska.edu/'
-                           'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png'
+            'visible': 'true',
+            'orderable': 'true',
+            'online_access_url': 'https://grfn-test.asf.alaska.edu/door/download/'
+                                 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc',
+            'browse_url': 'https://grfn-public-test.asf.alaska.edu/'
+                          'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png'
             }
     content = main.render_granule_data_as_echo10(data)
     assert content == content1
