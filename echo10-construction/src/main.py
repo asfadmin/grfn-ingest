@@ -1,6 +1,7 @@
 import copy
 import json
 import os
+import pathlib
 from datetime import datetime
 from logging import getLogger
 
@@ -13,7 +14,7 @@ log = getLogger()
 log.setLevel('INFO')
 CONFIG = json.loads(os.getenv('CONFIG'))
 
-TEMPLATE_FILE = 'echo10.template'
+TEMPLATE_FILE = pathlib.Path(__file__).resolve().parent / 'echo10.template'
 
 
 def now():
