@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 
 import main
 
@@ -31,7 +30,6 @@ def test_get_file_content_from_s3(inputs):
                b'    "look_direction": "right",\n    "track_number": 59,\n    "perpendicular_baseline": 13.7661\n  }\n}'
     obj = inputs['Metadata']
 
-    # with boto3_mocking.patching:
     content = main.get_file_content_from_s3(obj['Bucket'], obj['Key'])
 
     assert content == content1
@@ -44,7 +42,7 @@ def test_write_to_file(tmp_path):
     assert target.read_text() == 'hello world'
 
 
-def test_get_s3_file_size(obj):
+def test_get_s3_file_size():
     obj = {'Bucket': 'grfn-content-test',
            'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'}
 
@@ -52,7 +50,7 @@ def test_get_s3_file_size(obj):
     assert length == 49203991
 
 
-def test_get_sds_metadata(obj):
+def test_get_sds_metadata():
     obj = {'Bucket': 'ingest-test-aux',
            'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json'}
     sds_metadata1 = {
@@ -83,7 +81,7 @@ def test_get_sds_metadata(obj):
     assert sds_metadata == sds_metadata1
 
 
-def test_get_mission(polygon, config):
+def test_get_mission(config):
     polygon = [[-175.564331, 51.22303], [-179.13033705784176, 51.61511015273788],
                [-178.851135, 52.739079], [-175.19286980698257, 52.345011494426714]]
 
@@ -92,11 +90,10 @@ def test_get_mission(polygon, config):
     assert mission == mission1
 
 
-def test_get_granule_data(inputs, config, mocker):
+def test_get_granule_data(test_data_dir, inputs, config, mocker):
 
     mocker.patch('main.now', return_value='2023-01-01T00:00:00Z')
-    data_dir = Path(__file__).resolve().parent / 'data'
-    with open(f'{data_dir}/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json') as f:
+    with open(f'{test_data_dir}/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json') as f:
         content = json.load(f)
 
     mocker.patch('main.get_sds_metadata', return_value=content)
