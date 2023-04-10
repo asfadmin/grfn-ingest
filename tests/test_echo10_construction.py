@@ -3,31 +3,9 @@ import json
 import main
 
 
-def test_get_file_content_from_s3(inputs):
-    content1 = b'{\n  "label": "S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6",\n' \
-               b'  "location": {\n' \
-               b'    "type": "Polygon",\n' \
-               b'    "coordinates": [\n      [\n        [\n          -175.564331,\n          51.22303\n        ],\n' \
-               b'        [\n          -179.13033705784176,\n          51.61511015273788\n        ],\n' \
-               b'        [\n          -178.851135,\n          52.739079\n        ],\n' \
-               b'        [\n          -175.19286980698257,\n          52.345011494426714\n        ],\n' \
-               b'        [\n          -175.564331,\n          51.22303\n        ]\n      ]\n    ]\n  },\n' \
-               b'  "creation_timestamp": "2023-03-23T00:34:17.970611Z",\n' \
-               b'  "version": "2.0.6",\n  "metadata": {\n' \
-               b'    "ogr_bbox": [\n      [\n        -179.13033705784176,\n        51.22303\n      ],\n' \
-               b'      [\n        -175.19286980698257,\n        51.22303\n      ],\n' \
-               b'      [\n        -175.19286980698257,\n        52.739079\n      ],\n' \
-               b'      [\n        -179.13033705784176,\n        52.739079\n      ]\n    ],\n' \
-               b'    "reference_scenes": [\n' \
-               b'      "S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A"\n    ],\n' \
-               b'    "secondary_scenes": [\n' \
-               b'      "S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884"\n    ],\n' \
-               b'    "sensing_start":' \
-               b' "2020-11-18T18:02:43.000000Z",\n    "sensing_stop": "2020-11-18T18:03:02.000000Z",\n' \
-               b'    "orbit_number": [\n      35306,\n      34781\n    ],\n    "platform": [\n      "Sentinel-1A",\n' \
-               b'      "Sentinel-1A"\n    ],\n    "beam_mode": "IW",\n    "orbit_direction": "descending",\n' \
-               b'    "dataset_type": "slc",\n    "product_type": "interferogram",\n    "polarization": "HH",\n' \
-               b'    "look_direction": "right",\n    "track_number": 59,\n    "perpendicular_baseline": 13.7661\n  }\n}'
+def test_get_file_content_from_s3(inputs, test_data_dir):
+    test_file = test_data_dir / 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json'
+    content1 = test_file.read_bytes()
     obj = inputs['Metadata']
 
     content = main.get_file_content_from_s3(obj['Bucket'], obj['Key'])
