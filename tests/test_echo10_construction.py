@@ -1,7 +1,7 @@
-import main
 import json
-from datetime import datetime
 from pathlib import Path
+
+import main
 
 
 def test_get_file_content_from_s3(inputs):
@@ -19,9 +19,12 @@ def test_get_file_content_from_s3(inputs):
                b'      [\n        -175.19286980698257,\n        51.22303\n      ],\n' \
                b'      [\n        -175.19286980698257,\n        52.739079\n      ],\n' \
                b'      [\n        -179.13033705784176,\n        52.739079\n      ]\n    ],\n' \
-               b'    "reference_scenes": [\n      "S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A"\n    ],\n' \
-               b'    "secondary_scenes": [\n      "S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884"\n    ],\n' \
-               b'    "sensing_start": "2020-11-18T18:02:43.000000Z",\n    "sensing_stop": "2020-11-18T18:03:02.000000Z",\n' \
+               b'    "reference_scenes": [\n' \
+               b'      "S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A"\n    ],\n' \
+               b'    "secondary_scenes": [\n' \
+               b'      "S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884"\n    ],\n' \
+               b'    "sensing_start":' \
+               b' "2020-11-18T18:02:43.000000Z",\n    "sensing_stop": "2020-11-18T18:03:02.000000Z",\n' \
                b'    "orbit_number": [\n      35306,\n      34781\n    ],\n    "platform": [\n      "Sentinel-1A",\n' \
                b'      "Sentinel-1A"\n    ],\n    "beam_mode": "IW",\n    "orbit_direction": "descending",\n' \
                b'    "dataset_type": "slc",\n    "product_type": "interferogram",\n    "polarization": "HH",\n' \
@@ -40,27 +43,18 @@ def test_write_to_file(tmp_path):
     assert target.exists()
     assert target.read_text() == 'hello world'
 
-'''
-def test_upload_file_to_s3(local_file, bucket, key, content_type='application/xml'):
-    pass
-
-
-def test_upload_content_to_s3(s3_object, content):
-    pass
-
-'''
-
 
 def test_get_s3_file_size(obj):
     obj = {'Bucket': 'grfn-content-test',
-     'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'}
+           'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'}
 
     length = main.get_s3_file_size(obj)
     assert length == 49203991
 
 
 def test_get_sds_metadata(obj):
-    obj = {'Bucket': 'ingest-test-aux', 'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json'}
+    obj = {'Bucket': 'ingest-test-aux',
+           'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json'}
     sds_metadata1 = {
         'label': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6',
         'location': {'type': 'Polygon',

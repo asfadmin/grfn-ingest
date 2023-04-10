@@ -1,8 +1,8 @@
 import shutil
 from datetime import datetime
 from pathlib import Path
-from uuid import uuid4
 import json
+from uuid import uuid4
 
 import pytest
 
@@ -27,7 +27,7 @@ def get_mock_job():
             'job_type': job_type,
             'job_id': str(uuid4()),
             'request_time': request_time.isoformat(timespec='seconds'),
-           'status_code': status_code,
+            'status_code': status_code,
             'user_id': user_id,
             'name': name,
             'job_parameters': job_parameters,
