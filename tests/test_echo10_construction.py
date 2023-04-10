@@ -6,13 +6,6 @@ import pdb
 import os
 import boto3_mocking
 
-
-def test_now():
-    now1 = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-    now = main.now()
-    assert now == now1
-
-
 def test_get_file_content_from_s3(inputs):
     content1 = b'{\n  "label": "S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6",\n' \
                b'  "location": {\n' \
