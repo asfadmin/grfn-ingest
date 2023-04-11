@@ -18,11 +18,13 @@ def test_write_to_file(tmp_path):
     assert target.read_text() == 'hello world'
 
 
-def test_get_s3_file_size():
-    obj = {'Bucket': 'grfn-content-test',
-           'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'}
-
-    assert main.get_s3_file_size(obj) == 49203991
+def test_get_s3_file_size(s3_stubber):
+    obj = {
+        'Bucket': 'grfn-content-test',
+        'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'
+    }
+    s3_stubber.add_response(method='head_object', expected_params=obj, service_response={'ContentLength': 123})
+    assert main.get_s3_file_size(obj) == 123
 
 
 def test_get_sds_metadata(test_data_dir):

@@ -16,13 +16,14 @@ CONFIG = json.loads(os.getenv('CONFIG'))
 
 TEMPLATE_FILE = pathlib.Path(__file__).resolve().parent / 'echo10.template'
 
+s3 = boto3.resource('s3')
+
 
 def now():
     return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def get_file_content_from_s3(bucket, key):
-    s3 = boto3.resource('s3')
     obj = s3.Object(bucket, key)
     response = obj.get()
     contents = response['Body'].read()
@@ -35,8 +36,7 @@ def write_to_file(file_name, content):
 
 
 def upload_file_to_s3(local_file, bucket, key, content_type='application/xml'):
-    s3 = boto3.client('s3')
-    s3.upload_file(local_file, bucket, key, ExtraArgs={'ContentType': content_type})
+    s3.meta.client.upload_file(local_file, bucket, key, ExtraArgs={'ContentType': content_type})
 
 
 def upload_content_to_s3(s3_object, content):
@@ -46,7 +46,6 @@ def upload_content_to_s3(s3_object, content):
 
 
 def get_s3_file_size(obj):
-    s3 = boto3.resource('s3')
     obj = s3.Object(obj['Bucket'], obj['Key'])
     return obj.content_length
 
