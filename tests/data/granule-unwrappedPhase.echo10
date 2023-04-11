@@ -1,0 +1,308 @@
+<Granule xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
+    <GranuleUR>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6-unwrappedPhase</GranuleUR>
+    <InsertTime>2023-04-07T18:23:39Z</InsertTime>
+    <LastUpdate>2023-04-07T18:23:39Z</LastUpdate>
+    <Collection>
+        <DataSetId>Sentinel-1 Interferograms - Unwrapped Phase (BETA)</DataSetId>
+    </Collection>
+    <DataGranule>
+        
+        <ProducerGranuleId>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6</ProducerGranuleId>
+        <DayNightFlag>UNSPECIFIED</DayNightFlag>
+        <ProductionDateTime>2023-03-23T00:34:17.970611Z</ProductionDateTime>
+    </DataGranule>
+    <Temporal>
+        <RangeDateTime>
+            <BeginningDateTime>2020-11-18T18:02:43.000000Z</BeginningDateTime>
+            <EndingDateTime>2020-11-18T18:03:02.000000Z</EndingDateTime>
+        </RangeDateTime>
+    </Temporal>
+    <Spatial>
+        <HorizontalSpatialDomain>
+            <Geometry>
+                <GPolygon>
+                  <Boundary> 
+                  
+                    <Point>
+                    <PointLongitude>-175.564331</PointLongitude>
+                    <PointLatitude>51.22303</PointLatitude>
+                    </Point>
+                  
+                    <Point>
+                    <PointLongitude>-179.13033705784176</PointLongitude>
+                    <PointLatitude>51.61511015273788</PointLatitude>
+                    </Point>
+                  
+                    <Point>
+                    <PointLongitude>-178.851135</PointLongitude>
+                    <PointLatitude>52.739079</PointLatitude>
+                    </Point>
+                  
+                    <Point>
+                    <PointLongitude>-175.19286980698257</PointLongitude>
+                    <PointLatitude>52.345011494426714</PointLatitude>
+                    </Point>
+                  
+                </Boundary>
+                </GPolygon>
+            </Geometry>
+        </HorizontalSpatialDomain>
+    </Spatial>
+    <OrbitCalculatedSpatialDomains>
+        
+        <OrbitCalculatedSpatialDomain>
+          <OrbitNumber>35306</OrbitNumber>
+        </OrbitCalculatedSpatialDomain>
+        
+        <OrbitCalculatedSpatialDomain>
+          <OrbitNumber>34781</OrbitNumber>
+        </OrbitCalculatedSpatialDomain>
+        
+    </OrbitCalculatedSpatialDomains>
+    <Platforms>
+        
+        <Platform>
+            <ShortName>SENTINEL-1A</ShortName>
+            <Instruments>
+                <Instrument>
+                    <ShortName>SENTINEL-1A C-Band SAR</ShortName>
+                    <Sensors>
+                        <Sensor>
+                            <ShortName>IW</ShortName>
+                        </Sensor>
+                    </Sensors>
+                </Instrument>
+            </Instruments>
+        </Platform>
+        
+    </Platforms>
+    <AdditionalAttributes>
+        
+        <AdditionalAttribute>
+            <Name>GROUP_ID</Name>
+            <Values>
+                
+                    <Value>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>ASCENDING_DESCENDING</Name>
+            <Values>
+                
+                    <Value>descending</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>BEAM_MODE_TYPE</Name>
+            <Values>
+                
+                    <Value>slc</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>BEAM_MODE</Name>
+            <Values>
+                
+                    <Value>IW</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>BEAM_MODE_DESC</Name>
+            <Values>
+                
+                    <Value>interferogram</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>POLARIZATION</Name>
+            <Values>
+                
+                    <Value>HH</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>LOOK_DIRECTION</Name>
+            <Values>
+                
+                    <Value>right</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>PATH_NUMBER</Name>
+            <Values>
+                
+                    <Value>59</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>NEAR_START_LON</Name>
+            <Values>
+                
+                    <Value>-179.13033705784176</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>NEAR_START_LAT</Name>
+            <Values>
+                
+                    <Value>51.22303</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>FAR_START_LON</Name>
+            <Values>
+                
+                    <Value>-175.19286980698257</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>FAR_START_LAT</Name>
+            <Values>
+                
+                    <Value>51.22303</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>FAR_END_LON</Name>
+            <Values>
+                
+                    <Value>-175.19286980698257</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>FAR_END_LAT</Name>
+            <Values>
+                
+                    <Value>52.739079</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>NEAR_END_LON</Name>
+            <Values>
+                
+                    <Value>-179.13033705784176</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>NEAR_END_LAT</Name>
+            <Values>
+                
+                    <Value>52.739079</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>ASF_PLATFORM</Name>
+            <Values>
+                
+                    <Value>Sentinel-1 Interferogram (BETA)</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>PROCESSING_TYPE</Name>
+            <Values>
+                
+                    <Value>GUNW_UNW</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>PROCESSING_TYPE_DISPLAY</Name>
+            <Values>
+                
+                    <Value>Unwrapped Phase, GeoTIFF</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>PROCESSING_DESCRIPTION</Name>
+            <Values>
+                
+                    <Value>Sentinel-1 SLC interferometric products generated by JPL using ISCE v2.0.0, delivered by ASF</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>THUMBNAIL_URL</Name>
+            <Values>
+                
+                    <Value>https://grfn-public-test.asf.alaska.edu/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>PERPENDICULAR_BASELINE</Name>
+            <Values>
+                
+                    <Value>13.7661</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>MISSION_NAME</Name>
+            <Values>
+                
+                    <Value>S1 I-grams (BETA) - Other</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+    </AdditionalAttributes>
+    <InputGranules>
+        
+        <InputGranule>[Reference] S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A</InputGranule>
+        
+        <InputGranule>[Secondary] S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884</InputGranule>
+        
+    </InputGranules>
+    <OnlineAccessURLs>
+        <OnlineAccessURL>
+            <URL>https://services-test.asf.alaska.edu/geospatial/reformat?product=S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc&amp;layer=science/grids/data/unwrappedPhase</URL>
+        </OnlineAccessURL>
+    </OnlineAccessURLs>
+    <Orderable>true</Orderable>
+    <Visible>true</Visible>
+    <AssociatedBrowseImageUrls>
+        <ProviderBrowseUrl>
+            <URL>https://grfn-public-test.asf.alaska.edu/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png</URL>
+        </ProviderBrowseUrl>
+    </AssociatedBrowseImageUrls>
+</Granule>
