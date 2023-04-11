@@ -23,21 +23,25 @@ def test_write_to_file(tmp_path):
 
 def test_get_s3_file_size(s3_stubber):
     obj = {
-        'Bucket': 'grfn-content-test',
-        'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc'
+        'Bucket': 'myBucket',
+        'Key': 'myKey'
     }
     s3_stubber.add_response(method='head_object', expected_params=obj, service_response={'ContentLength': 123})
     assert main.get_s3_file_size(obj) == 123
 
 
-def test_get_sds_metadata(test_data_dir):
-    obj = {'Bucket': 'ingest-test-aux',
-           'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json'}
+def test_get_sds_metadata(test_data_dir, s3_stubber):
+    obj = {
+        'Bucket': 'ingest-test-aux',
+        'Key': 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.json'
+    }
 
     sds_metadata_file = test_data_dir / 'sds_metadata.json'
     sds_metadata = json.loads(sds_metadata_file.read_text())
 
-    assert main.get_sds_metadata(obj) == sds_metadata
+    with sds_metadata_file.open() as f:
+        s3_stubber.add_response(method='get_object', expected_params=obj, service_response={'Body': f})
+        assert main.get_sds_metadata(obj) == sds_metadata
 
 
 def test_get_mission(config):
