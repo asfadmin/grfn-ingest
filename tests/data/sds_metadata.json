@@ -71,8 +71,6 @@
     "polarization": "HH",
     "look_direction": "right",
     "track_number": 59,
-    "perpendicular_baseline": 13.7661,
-    "frame_number": 1,
-    "temporal_baseline": 24
+    "perpendicular_baseline": 13.7661
   }
 }
