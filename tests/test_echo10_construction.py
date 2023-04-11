@@ -1,4 +1,5 @@
 import json
+import unittest.mock
 
 import main
 
@@ -68,7 +69,7 @@ def test_get_granule_data(test_data_dir, inputs, config, mocker):
 
 
 def test_render_granule_data_as_echo10(test_data_dir):
-    echo10_file = test_data_dir / 'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.echo10'
+    echo10_file = test_data_dir / 'granule.echo10'
     content = echo10_file.read_text()
 
     granule_data_file = test_data_dir / 'granule_data.json'
@@ -82,9 +83,9 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
     granule_data = json.loads(granule_data_file.read_text())
     mocker.patch('main.get_granule_data', return_value=granule_data)
 
-    mocker.patch('main.upload_content_to_s3', return_value=None)
+    mocker.patch('main.upload_content_to_s3')
 
-    echo10_s3_objects1 =\
+    echo10_s3_objects =\
         [{'bucket': 'ingest-test-aux', 'key':
             'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.echo10'},
          {'bucket': 'ingest-test-aux', 'key':
@@ -96,5 +97,27 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
          {'bucket': 'ingest-test-aux', 'key':
              'S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6-connectedComponents.echo10'}]
 
-    echo10_s3_objects = main.create_granule_echo10_in_s3(inputs, config)
-    assert echo10_s3_objects == echo10_s3_objects1
+    assert main.create_granule_echo10_in_s3(inputs, config) == echo10_s3_objects
+
+    assert main.upload_content_to_s3.mock_calls == [
+        unittest.mock.call(
+            echo10_s3_objects[0],
+            (test_data_dir / 'granule.echo10').read_text(),
+        ),
+        unittest.mock.call(
+            echo10_s3_objects[1],
+            (test_data_dir / 'granule-unwrappedPhase.echo10').read_text()
+        ),
+        unittest.mock.call(
+            echo10_s3_objects[2],
+            (test_data_dir / 'granule-coherence.echo10').read_text()
+        ),
+        unittest.mock.call(
+            echo10_s3_objects[3],
+            (test_data_dir / 'granule-amplitude.echo10').read_text()
+        ),
+        unittest.mock.call(
+            echo10_s3_objects[4],
+            (test_data_dir / 'granule-connectedComponents.echo10').read_text()
+        ),
+    ]
