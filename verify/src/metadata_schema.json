@@ -123,6 +123,28 @@
         },
         "perpendicular_baseline": {
           "type": "number"
+        },
+        "version": {
+          "type": "string"
+        },
+        "weather_model": {
+          "type": "string",
+          "enum": [
+            "None",
+            "ERA5",
+            "ERA5T",
+            "GMAO",
+            "HRES",
+            "HRRR"
+          ]
+        },
+        "temporal_baseline_days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_number": {
+          "type": "integer",
+          "minimum": 1
         }
       }
     }
