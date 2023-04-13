@@ -51,7 +51,7 @@ Resources:
     Properties:
       FunctionName: !Ref Name
       Code: src/
-      Handler: main.lambda_handler
+      Handler: verify.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python3.8
