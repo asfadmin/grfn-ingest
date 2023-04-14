@@ -91,7 +91,7 @@ def get_granule_data(inputs, config):
         'beginning_date_time': granule_metadata['sensing_start'],
         'ending_date_time': granule_metadata['sensing_stop'],
         'orbits': granule_metadata['orbit_number'],
-        'platforms': [p.upper() for p in set(granule_metadata['platform'])],
+        'platforms': [p.upper() for p in granule_metadata['platform']],
         'sensor_short_name': granule_metadata['beam_mode'],
         'polygon': polygon,
         'additional_attributes': {

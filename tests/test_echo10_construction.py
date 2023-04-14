@@ -1,6 +1,6 @@
 import json
 import unittest.mock
-
+import pdb
 import main
 
 
@@ -56,13 +56,13 @@ def test_get_granule_data(test_data_dir, inputs, config, mocker):
 
     mocker.patch('main.now', return_value='2023-04-07T18:23:39Z')
 
-    sds_metadata_file = test_data_dir / 'sds_metadata.json'
+    sds_metadata_file = test_data_dir / 'sds_metadata_v3.json'
     sds_metadata = json.loads(sds_metadata_file.read_text())
     mocker.patch('main.get_sds_metadata', return_value=sds_metadata)
 
     mocker.patch('main.get_s3_file_size', return_value=49203991)
 
-    granule_data_file = test_data_dir / 'granule_data.json'
+    granule_data_file = test_data_dir / 'granule_data_v3.json'
     granule_data = json.loads(granule_data_file.read_text())
 
     assert main.get_granule_data(inputs, config['granule_data']) == granule_data
