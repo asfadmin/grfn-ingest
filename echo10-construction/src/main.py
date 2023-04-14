@@ -12,7 +12,7 @@ from shapely.geometry import Polygon
 
 log = getLogger()
 log.setLevel('INFO')
-CONFIG = json.loads(os.getenv('CONFIG'))
+# CONFIG = json.loads(os.getenv('CONFIG'))
 
 TEMPLATE_FILE = pathlib.Path(__file__).resolve().parent / 'echo10.template'
 
@@ -119,6 +119,7 @@ def get_granule_data(inputs, config):
             'THUMBNAIL_URL': browse_url,
             'PERPENDICULAR_BASELINE': granule_metadata['perpendicular_baseline'],
             'MISSION_NAME': mission,
+            'VERSION': granule_metadata['version'],
         },
         'input_granules': input_granules,
         'visible': 'true',
@@ -126,6 +127,16 @@ def get_granule_data(inputs, config):
         'online_access_url': online_access_url,
         'browse_url': browse_url,
     }
+
+    if granule_metadata['temporal_baseline_days'] != -1:
+        data['additional_attributes']['TEMPORAL_BASELINE_DAYS'] = granule_metadata['temporal_baseline_days']
+
+    if granule_metadata['weather_model'] != -1:
+        data['additional_attributes']['WEATHER_MODEL'] = granule_metadata['weather_model']
+
+    if granule_metadata['frame_number'] != -1:
+        data['additional_attributes']['FRAME_NUMBER'] = granule_metadata['frame_number']
+
     return data
 
 
