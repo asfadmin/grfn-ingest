@@ -128,13 +128,13 @@ def get_granule_data(inputs, config):
         'browse_url': browse_url,
     }
 
-    if granule_metadata['temporal_baseline_days'] != -1:
+    if 'temporal_baseline_days' in granule_metadata:
         data['additional_attributes']['TEMPORAL_BASELINE_DAYS'] = granule_metadata['temporal_baseline_days']
 
-    if granule_metadata['weather_model'] != -1:
+    if 'weather_model' in granule_metadata:
         data['additional_attributes']['WEATHER_MODEL'] = granule_metadata['weather_model']
 
-    if granule_metadata['frame_number'] != -1:
+    if 'frame_number' in granule_metadata:
         data['additional_attributes']['FRAME_NUMBER'] = granule_metadata['frame_number']
 
     return data
