@@ -55,7 +55,8 @@
         "polarization",
         "look_direction",
         "track_number",
-        "perpendicular_baseline"
+        "perpendicular_baseline",
+        "version"
       ],
       "properties": {
         "ogr_bbox": {
