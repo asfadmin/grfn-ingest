@@ -25,6 +25,7 @@ def config(test_data_dir):
         return json.load(f)
 
 
+# TODO how to configure this for all the lambdas?
 @pytest.fixture
 def s3_stubber():
     with Stubber(main.s3.meta.client) as stubber:
