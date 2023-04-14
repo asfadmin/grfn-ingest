@@ -12,7 +12,7 @@ from shapely.geometry import Polygon
 
 log = getLogger()
 log.setLevel('INFO')
-# CONFIG = json.loads(os.getenv('CONFIG'))
+CONFIG = json.loads(os.getenv('CONFIG'))
 
 TEMPLATE_FILE = pathlib.Path(__file__).resolve().parent / 'echo10.template'
 
