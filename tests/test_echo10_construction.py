@@ -85,7 +85,7 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
     mocker.patch('main.get_granule_data', return_value=granule_data)
 
     mocker.patch('main.upload_content_to_s3')
-    
+
     echo10_s3_objects = \
         [{'bucket': 'ingest-test-aux', 'key':
             'S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.echo10'},
