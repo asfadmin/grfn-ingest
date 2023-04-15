@@ -1,5 +1,5 @@
 <Granule xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
-    <GranuleUR>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6</GranuleUR>
+    <GranuleUR>S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0</GranuleUR>
     <InsertTime>2023-04-07T18:23:39Z</InsertTime>
     <LastUpdate>2023-04-07T18:23:39Z</LastUpdate>
     <Collection>
@@ -9,14 +9,14 @@
         
         <SizeMBDataGranule>46.92458248138428</SizeMBDataGranule>
         
-        <ProducerGranuleId>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6</ProducerGranuleId>
+        <ProducerGranuleId>S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0</ProducerGranuleId>
         <DayNightFlag>UNSPECIFIED</DayNightFlag>
-        <ProductionDateTime>2023-03-23T00:34:17.970611Z</ProductionDateTime>
+        <ProductionDateTime>2023-04-13T17:31:53.185420Z</ProductionDateTime>
     </DataGranule>
     <Temporal>
         <RangeDateTime>
-            <BeginningDateTime>2020-11-18T18:02:43.000000Z</BeginningDateTime>
-            <EndingDateTime>2020-11-18T18:03:02.000000Z</EndingDateTime>
+            <BeginningDateTime>2017-11-17T14:59:26.000000Z</BeginningDateTime>
+            <EndingDateTime>2017-11-17T14:59:53.000000Z</EndingDateTime>
         </RangeDateTime>
     </Temporal>
     <Spatial>
@@ -26,23 +26,23 @@
                   <Boundary> 
                   
                     <Point>
-                    <PointLongitude>-175.564331</PointLongitude>
-                    <PointLatitude>51.22303</PointLatitude>
+                    <PointLongitude>46.15097740003026</PointLongitude>
+                    <PointLatitude>35.47178147041337</PointLatitude>
                     </Point>
                   
                     <Point>
-                    <PointLongitude>-179.13033705784176</PointLongitude>
-                    <PointLatitude>51.61511015273788</PointLatitude>
+                    <PointLongitude>46.43256</PointLongitude>
+                    <PointLatitude>34.067913</PointLatitude>
                     </Point>
                   
                     <Point>
-                    <PointLongitude>-178.851135</PointLongitude>
-                    <PointLatitude>52.739079</PointLatitude>
+                    <PointLongitude>43.731243</PointLongitude>
+                    <PointLatitude>33.666508</PointLatitude>
                     </Point>
                   
                     <Point>
-                    <PointLongitude>-175.19286980698257</PointLongitude>
-                    <PointLatitude>52.345011494426714</PointLatitude>
+                    <PointLongitude>43.40146572358155</PointLongitude>
+                    <PointLatitude>35.07170234304424</PointLatitude>
                     </Point>
                   
                 </Boundary>
@@ -53,15 +53,29 @@
     <OrbitCalculatedSpatialDomains>
         
         <OrbitCalculatedSpatialDomain>
-          <OrbitNumber>35306</OrbitNumber>
+          <OrbitNumber>8323</OrbitNumber>
         </OrbitCalculatedSpatialDomain>
         
         <OrbitCalculatedSpatialDomain>
-          <OrbitNumber>34781</OrbitNumber>
+          <OrbitNumber>19219</OrbitNumber>
         </OrbitCalculatedSpatialDomain>
         
     </OrbitCalculatedSpatialDomains>
     <Platforms>
+        
+        <Platform>
+            <ShortName>SENTINEL-1B</ShortName>
+            <Instruments>
+                <Instrument>
+                    <ShortName>SENTINEL-1B C-Band SAR</ShortName>
+                    <Sensors>
+                        <Sensor>
+                            <ShortName>IW</ShortName>
+                        </Sensor>
+                    </Sensors>
+                </Instrument>
+            </Instruments>
+        </Platform>
         
         <Platform>
             <ShortName>SENTINEL-1A</ShortName>
@@ -84,7 +98,7 @@
             <Name>GROUP_ID</Name>
             <Values>
                 
-                    <Value>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6</Value>
+                    <Value>S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -93,7 +107,7 @@
             <Name>ASCENDING_DESCENDING</Name>
             <Values>
                 
-                    <Value>descending</Value>
+                    <Value>ascending</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -129,7 +143,7 @@
             <Name>POLARIZATION</Name>
             <Values>
                 
-                    <Value>HH</Value>
+                    <Value>VV</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -147,7 +161,7 @@
             <Name>PATH_NUMBER</Name>
             <Values>
                 
-                    <Value>59</Value>
+                    <Value>72</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -165,7 +179,7 @@
             <Name>NEAR_START_LON</Name>
             <Values>
                 
-                    <Value>-179.13033705784176</Value>
+                    <Value>43.40146572358155</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -174,7 +188,7 @@
             <Name>NEAR_START_LAT</Name>
             <Values>
                 
-                    <Value>51.22303</Value>
+                    <Value>33.666508</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -183,7 +197,7 @@
             <Name>FAR_START_LON</Name>
             <Values>
                 
-                    <Value>-175.19286980698257</Value>
+                    <Value>46.43256</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -192,7 +206,7 @@
             <Name>FAR_START_LAT</Name>
             <Values>
                 
-                    <Value>51.22303</Value>
+                    <Value>33.666508</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -201,7 +215,7 @@
             <Name>FAR_END_LON</Name>
             <Values>
                 
-                    <Value>-175.19286980698257</Value>
+                    <Value>46.43256</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -210,7 +224,7 @@
             <Name>FAR_END_LAT</Name>
             <Values>
                 
-                    <Value>52.739079</Value>
+                    <Value>35.47178147041337</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -219,7 +233,7 @@
             <Name>NEAR_END_LON</Name>
             <Values>
                 
-                    <Value>-179.13033705784176</Value>
+                    <Value>43.40146572358155</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -228,7 +242,7 @@
             <Name>NEAR_END_LAT</Name>
             <Values>
                 
-                    <Value>52.739079</Value>
+                    <Value>35.47178147041337</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -273,7 +287,7 @@
             <Name>THUMBNAIL_URL</Name>
             <Values>
                 
-                    <Value>https://grfn-public-test.asf.alaska.edu/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png</Value>
+                    <Value>https://grfn-public-test.asf.alaska.edu/S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.png</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -282,7 +296,7 @@
             <Name>PERPENDICULAR_BASELINE</Name>
             <Values>
                 
-                    <Value>13.7661</Value>
+                    <Value>62.9126</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -296,24 +310,60 @@
             </Values>
         </AdditionalAttribute>
         
+        <AdditionalAttribute>
+            <Name>VERSION</Name>
+            <Values>
+                
+                    <Value>3.0.0</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>TEMPORAL_BASELINE_DAYS</Name>
+            <Values>
+                
+                    <Value>6</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>WEATHER_MODEL</Name>
+            <Values>
+                
+                    <Value>ERA5</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
+            <Name>FRAME_NUMBER</Name>
+            <Values>
+                
+                    <Value>7122</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
     </AdditionalAttributes>
     <InputGranules>
         
-        <InputGranule>[Reference] S1A_IW_SLC__1SDV_20201118T180243_20201118T180302_035306_041FCE_A92A</InputGranule>
+        <InputGranule>[Reference] S1B_IW_SLC__1SDV_20171117T145926_20171117T145953_008323_00EBAB_AFB8</InputGranule>
         
-        <InputGranule>[Secondary] S1A_IW_SLC__1SDV_20201013T180243_20201013T180302_034781_040D9A_B884</InputGranule>
+        <InputGranule>[Secondary] S1A_IW_SLC__1SDV_20171111T150004_20171111T150032_019219_0208AF_EE89</InputGranule>
         
     </InputGranules>
     <OnlineAccessURLs>
         <OnlineAccessURL>
-            <URL>https://grfn-test.asf.alaska.edu/door/download/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc</URL>
+            <URL>https://grfn-test.asf.alaska.edu/door/download/S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.nc</URL>
         </OnlineAccessURL>
     </OnlineAccessURLs>
     <Orderable>true</Orderable>
     <Visible>true</Visible>
     <AssociatedBrowseImageUrls>
         <ProviderBrowseUrl>
-            <URL>https://grfn-public-test.asf.alaska.edu/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.png</URL>
+            <URL>https://grfn-public-test.asf.alaska.edu/S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.png</URL>
         </ProviderBrowseUrl>
     </AssociatedBrowseImageUrls>
 </Granule>
