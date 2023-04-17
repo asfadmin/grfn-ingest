@@ -1,7 +1,7 @@
-import verify
-
 import pytest
 from botocore.stub import Stubber
+
+import verify
 
 
 @pytest.fixture

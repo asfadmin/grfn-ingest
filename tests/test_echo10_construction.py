@@ -1,10 +1,10 @@
 import json
 import unittest.mock
 
-import echo10_construction
-
 import pytest
 from botocore.stub import Stubber
+
+import echo10_construction
 
 
 @pytest.fixture
