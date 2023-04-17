@@ -8,7 +8,7 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.1.0]
 ### Added
-- One required metadata property: `version`
+- One required top-level property: `version`
 - Three optional metadata properties: `weather_model`, `temporal_baseline_days`, `frame_number`
 
 ## [1.0.1]
