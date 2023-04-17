@@ -130,6 +130,7 @@
         },
         "weather_model": {
           "type": "array",
+          "minItems": 1,
           "items": {
             "type": "string",
             "enum": [
