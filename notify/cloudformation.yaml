@@ -90,7 +90,7 @@ Resources:
                 "default_code": "INGEST_ERROR"
               }
             }
-      Handler: main.lambda_handler
+      Handler: notify.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python3.8
