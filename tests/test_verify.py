@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 import verify
@@ -17,7 +19,7 @@ def test_get_file_content_from_s3(inputs, test_data_dir, s3_stubber):
         assert False
 
 
-def test_validate_metadata(mocker, monkeypatch):
+def test_validate_metadata(test_data_dir, mocker, monkeypatch):
     monkeypatch.chdir('verify/src/')
 
     mocker.patch('verify.get_file_content_from_s3', return_value='{"foo":')
@@ -29,4 +31,8 @@ def test_validate_metadata(mocker, monkeypatch):
         verify.validate_metadata({'Bucket': None, 'Key': None})
 
     # TODO add test cases for v2 and v3
-    assert False
+
+    # FIXME sds_metadata.json has version as a top-level property
+    sds_metadata_file = test_data_dir / 'sds_metadata.json'
+    mocker.patch('verify.get_file_content_from_s3', return_value=sds_metadata_file.read_text())
+    assert verify.validate_metadata({'Bucket': None, 'Key': None}) is None
