@@ -30,8 +30,10 @@ def test_validate_metadata(test_data_dir, mocker, monkeypatch):
     with pytest.raises(verify.INVALID_METADATA, match=r"^'label' is a required property$"):
         verify.validate_metadata({'Bucket': None, 'Key': None})
 
-    # TODO add test case for v3
-
     sds_metadata_file = test_data_dir / 'sds_metadata.json'
     mocker.patch('verify.get_file_content_from_s3', return_value=sds_metadata_file.read_text())
+    assert verify.validate_metadata({'Bucket': None, 'Key': None}) is None
+
+    sds_metadata_file_v3 = test_data_dir / 'sds_metadata_v3.json'
+    mocker.patch('verify.get_file_content_from_s3', return_value=sds_metadata_file_v3.read_text())
     assert verify.validate_metadata({'Bucket': None, 'Key': None}) is None
