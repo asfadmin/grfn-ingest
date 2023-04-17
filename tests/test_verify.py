@@ -1,3 +1,5 @@
+import pytest
+
 import verify
 
 
@@ -16,8 +18,15 @@ def test_get_file_content_from_s3(inputs, test_data_dir, s3_stubber):
 
 
 def test_validate_metadata(mocker, monkeypatch):
-    # TODO currently this fails when validating against the metadata schema, as expected;
-    #  finish writing all test cases
-    mocker.patch('verify.get_file_content_from_s3', return_value='{}')
     monkeypatch.chdir('verify/src/')
-    verify.validate_metadata({'Bucket': None, 'Key': None})
+
+    mocker.patch('verify.get_file_content_from_s3', return_value='{"foo":')
+    with pytest.raises(verify.INVALID_METADATA, match=r'^Expecting value: line 1 column 8 \(char 7\)$'):
+        verify.validate_metadata({'Bucket': None, 'Key': None})
+
+    mocker.patch('verify.get_file_content_from_s3', return_value='{"foo": "bar"}')
+    with pytest.raises(verify.INVALID_METADATA, match=r"^'label' is a required property$"):
+        verify.validate_metadata({'Bucket': None, 'Key': None})
+
+    # TODO add test cases for v2 and v3
+    assert False
