@@ -1,13 +1,17 @@
-import json
-
 import pytest
+from botocore.stub import Stubber
 
 import verify
 
 
+@pytest.fixture
+def s3_stubber():
+    with Stubber(verify.s3.meta.client) as stubber:
+        yield stubber
+        stubber.assert_no_pending_responses()
+
+
 def test_get_file_content_from_s3(inputs, test_data_dir, s3_stubber):
-    # FIXME this fails because the s3_stubber in conftest.py is only configured for
-    #  the echo10-construction lambda
     test_file = test_data_dir / 'sds_metadata.json'
     content = test_file.read_text()
 
@@ -15,8 +19,7 @@ def test_get_file_content_from_s3(inputs, test_data_dir, s3_stubber):
 
     with test_file.open() as f:
         s3_stubber.add_response(method='get_object', expected_params=obj, service_response={'Body': f})
-        # assert verify.get_file_content_from_s3(obj['Bucket'], obj['Key']) == content
-        assert False
+        assert verify.get_file_content_from_s3(obj['Bucket'], obj['Key']) == content
 
 
 def test_validate_metadata(test_data_dir, mocker, monkeypatch):

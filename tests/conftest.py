@@ -2,9 +2,6 @@ import json
 from pathlib import Path
 
 import pytest
-from botocore.stub import Stubber
-
-import main
 
 
 @pytest.fixture
@@ -25,9 +22,3 @@ def config(test_data_dir):
         return json.load(f)
 
 
-# TODO how to configure this for all the lambdas?
-@pytest.fixture
-def s3_stubber():
-    with Stubber(main.s3.meta.client) as stubber:
-        yield stubber
-        stubber.assert_no_pending_responses()
