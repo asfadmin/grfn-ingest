@@ -2,9 +2,6 @@ import json
 from pathlib import Path
 
 import pytest
-from botocore.stub import Stubber
-
-import main
 
 
 @pytest.fixture
@@ -23,10 +20,3 @@ def inputs(test_data_dir):
 def config(test_data_dir):
     with open(f'{test_data_dir}/config.json') as f:
         return json.load(f)
-
-
-@pytest.fixture
-def s3_stubber():
-    with Stubber(main.s3.meta.client) as stubber:
-        yield stubber
-        stubber.assert_no_pending_responses()

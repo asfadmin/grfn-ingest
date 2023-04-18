@@ -75,7 +75,7 @@ Resources:
                 "multipart_chunksize": 61644800
               }
             }
-      Handler: main.lambda_handler
+      Handler: ingest.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python3.8

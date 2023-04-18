@@ -71,7 +71,7 @@ Resources:
                 "step_function_arn": "${StepFunctionArn}"
               }
             }
-      Handler: main.lambda_handler
+      Handler: invoke.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python3.8
