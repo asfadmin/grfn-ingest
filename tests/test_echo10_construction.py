@@ -61,6 +61,7 @@ def test_get_mission(config):
     assert echo10_construction.get_mission(polygon, config['granule_data']['missions']) == 'S1 I-grams (BETA) - Other'
 
 
+# TODO: add a v3 version of this test
 def test_get_granule_data(test_data_dir, inputs, config, mocker):
 
     mocker.patch('echo10_construction.now', return_value='2023-04-07T18:23:39Z')
