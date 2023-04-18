@@ -87,6 +87,8 @@ def test_render_granule_data_as_echo10(test_data_dir):
     assert echo10_construction.render_granule_data_as_echo10(granule_data) == content
 
 
+# FIXME: this test fails since adding VERSION to v2/granule.echo10 and v2/granule_data.json; deleting
+#  it from both those files causes the test to pass again
 def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
 
     granule_data_file = test_data_dir / 'granule_data.json'
