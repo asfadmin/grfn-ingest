@@ -1,5 +1,6 @@
 ECHO10_CONSTRUCTION = ${PWD}/echo10-construction/src/
-export PYTHONPATH = ${ECHO10_CONSTRUCTION}
+VERIFY = ${PWD}/verify/src/
+export PYTHONPATH = ${ECHO10_CONSTRUCTION}:${VERIFY}
 export CONFIG = "{}"
 
 test_file ?= tests/

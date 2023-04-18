@@ -9,3 +9,4 @@ dependencies:
     - boto3
     - pytest-mock
     - -r echo10-construction/requirements.txt
+    - -r verify/requirements.txt
