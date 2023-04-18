@@ -23,6 +23,18 @@ def inputs(test_data_dir):
 
 
 @pytest.fixture
+def inputs_v3(test_data_dir_v3):
+    with open(f'{test_data_dir_v3}/inputs.json') as f:
+        return json.load(f)
+
+
+@pytest.fixture
 def config(test_data_dir):
     with open(f'{test_data_dir}/config.json') as f:
+        return json.load(f)
+
+
+@pytest.fixture
+def config_v3(test_data_dir_v3):
+    with open(f'{test_data_dir_v3}/config.json') as f:
         return json.load(f)

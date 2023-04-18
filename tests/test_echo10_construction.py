@@ -132,7 +132,7 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
     ]
 
 
-def test_create_granule_echo10_in_s3_v3(test_data_dir_v3, inputs, config, mocker):
+def test_create_granule_echo10_in_s3_v3(test_data_dir_v3, inputs_v3, config_v3, mocker):
 
     granule_data_file = test_data_dir_v3 / 'granule_data.json'
     granule_data = json.loads(granule_data_file.read_text())
@@ -152,7 +152,7 @@ def test_create_granule_echo10_in_s3_v3(test_data_dir_v3, inputs, config, mocker
          {'bucket': 'ingest-test-aux', 'key':
             'S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0-connectedComponents.echo10'}]
 
-    assert echo10_construction.create_granule_echo10_in_s3(inputs, config) == echo10_s3_objects
+    assert echo10_construction.create_granule_echo10_in_s3(inputs_v3, config_v3) == echo10_s3_objects
 
     assert echo10_construction.upload_content_to_s3.mock_calls == [
         unittest.mock.call(
