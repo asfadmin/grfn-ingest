@@ -6,7 +6,13 @@ import pytest
 
 @pytest.fixture
 def test_data_dir():
-    data_dir = Path(__file__).resolve().parent / 'data'
+    data_dir = Path(__file__).resolve().parent / 'data' / 'v2'
+    return data_dir
+
+
+@pytest.fixture
+def test_data_dir_v3():
+    data_dir = Path(__file__).resolve().parent / 'data' / 'v3'
     return data_dir
 
 

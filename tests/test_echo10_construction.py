@@ -86,7 +86,7 @@ def test_render_granule_data_as_echo10(test_data_dir):
     assert echo10_construction.render_granule_data_as_echo10(granule_data) == content
 
 
-def test_create_granule_echo10_in_s3_v2(test_data_dir, inputs, config, mocker):
+def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
 
     granule_data_file = test_data_dir / 'granule_data.json'
     granule_data = json.loads(granule_data_file.read_text())
@@ -132,9 +132,9 @@ def test_create_granule_echo10_in_s3_v2(test_data_dir, inputs, config, mocker):
     ]
 
 
-def test_create_granule_echo10_in_s3_v3(test_data_dir, inputs, config, mocker):
+def test_create_granule_echo10_in_s3_v3(test_data_dir_v3, inputs, config, mocker):
 
-    granule_data_file = test_data_dir / 'granule_data.json'
+    granule_data_file = test_data_dir_v3 / 'granule_data.json'
     granule_data = json.loads(granule_data_file.read_text())
     mocker.patch('echo10_construction.get_granule_data', return_value=granule_data)
 
@@ -157,22 +157,22 @@ def test_create_granule_echo10_in_s3_v3(test_data_dir, inputs, config, mocker):
     assert echo10_construction.upload_content_to_s3.mock_calls == [
         unittest.mock.call(
             echo10_s3_objects[0],
-            (test_data_dir / 'granule.echo10').read_text(),
+            (test_data_dir_v3 / 'granule.echo10').read_text(),
         ),
         unittest.mock.call(
             echo10_s3_objects[1],
-            (test_data_dir / 'granule-unwrappedPhase.echo10').read_text()
+            (test_data_dir_v3 / 'granule-unwrappedPhase.echo10').read_text()
         ),
         unittest.mock.call(
             echo10_s3_objects[2],
-            (test_data_dir / 'granule-coherence.echo10').read_text()
+            (test_data_dir_v3 / 'granule-coherence.echo10').read_text()
         ),
         unittest.mock.call(
             echo10_s3_objects[3],
-            (test_data_dir / 'granule-amplitude.echo10').read_text()
+            (test_data_dir_v3 / 'granule-amplitude.echo10').read_text()
         ),
         unittest.mock.call(
             echo10_s3_objects[4],
-            (test_data_dir / 'granule-connectedComponents.echo10').read_text()
+            (test_data_dir_v3 / 'granule-connectedComponents.echo10').read_text()
         ),
     ]

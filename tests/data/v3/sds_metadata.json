@@ -75,6 +75,6 @@
     "track_number": 72,
     "perpendicular_baseline": 62.9126,
     "frame_number": 7122,
-    "weather_model": "ERA5"
+    "weather_model": ["ERA5"]
   }
 }

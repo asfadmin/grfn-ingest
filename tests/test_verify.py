@@ -22,7 +22,7 @@ def test_get_file_content_from_s3(s3_stubber):
     assert verify.get_file_content_from_s3('myBucket', 'myKey') == 'myContent'
 
 
-def test_validate_metadata(test_data_dir, mocker, monkeypatch):
+def test_validate_metadata(test_data_dir, test_data_dir_v3, mocker, monkeypatch):
     monkeypatch.chdir('verify/src/')
 
     mocker.patch('verify.get_file_content_from_s3', return_value='{"foo":')
@@ -37,6 +37,6 @@ def test_validate_metadata(test_data_dir, mocker, monkeypatch):
     mocker.patch('verify.get_file_content_from_s3', return_value=sds_metadata_file.read_text())
     assert verify.validate_metadata({'Bucket': None, 'Key': None}) is None
 
-    sds_metadata_file_v3 = test_data_dir / 'sds_metadata_v3.json'
+    sds_metadata_file_v3 = test_data_dir_v3 / 'sds_metadata.json'
     mocker.patch('verify.get_file_content_from_s3', return_value=sds_metadata_file_v3.read_text())
     assert verify.validate_metadata({'Bucket': None, 'Key': None}) is None
