@@ -1,3 +1,4 @@
+import io
 import json
 import unittest.mock
 
@@ -14,15 +15,13 @@ def s3_stubber():
         stubber.assert_no_pending_responses()
 
 
-def test_get_file_content_from_s3(inputs, test_data_dir, s3_stubber):
-    test_file = test_data_dir / 'sds_metadata.json'
-    content = test_file.read_text()
-
-    obj = inputs['Metadata']
-
-    with test_file.open() as f:
-        s3_stubber.add_response(method='get_object', expected_params=obj, service_response={'Body': f})
-        assert echo10_construction.get_file_content_from_s3(obj['Bucket'], obj['Key']) == content
+def test_get_file_content_from_s3(s3_stubber):
+    s3_stubber.add_response(
+        method='get_object',
+        expected_params={'Bucket': 'myBucket', 'Key': 'myKey'},
+        service_response={'Body': io.StringIO('myContent')}
+    )
+    assert echo10_construction.get_file_content_from_s3('myBucket', 'myKey') == 'myContent'
 
 
 def test_write_to_file(tmp_path):
