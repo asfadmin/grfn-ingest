@@ -1,0 +1,14 @@
+{
+  "Product": {
+    "Bucket": "grfn-content-test",
+    "Key": "S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.nc"
+  },
+  "Metadata": {
+    "Bucket": "ingest-test-aux",
+    "Key": "S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.json"
+  },
+  "Browse": {
+    "Bucket": "grfn-public-test",
+    "Key": "S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.png"
+  }
+}
