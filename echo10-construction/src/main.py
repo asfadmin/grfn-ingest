@@ -119,7 +119,7 @@ def get_granule_data(inputs, config):
             'THUMBNAIL_URL': browse_url,
             'PERPENDICULAR_BASELINE': granule_metadata['perpendicular_baseline'],
             'MISSION_NAME': mission,
-            'VERSION': granule_metadata['version'],
+            'VERSION': sds_metadata['version'],
         },
         'input_granules': input_granules,
         'visible': 'true',
