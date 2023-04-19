@@ -64,10 +64,10 @@
     <Platforms>
         
         <Platform>
-            <ShortName>SENTINEL-1B</ShortName>
+            <ShortName>SENTINEL-1A</ShortName>
             <Instruments>
                 <Instrument>
-                    <ShortName>SENTINEL-1B C-Band SAR</ShortName>
+                    <ShortName>SENTINEL-1A C-Band SAR</ShortName>
                     <Sensors>
                         <Sensor>
                             <ShortName>IW</ShortName>
@@ -78,10 +78,10 @@
         </Platform>
         
         <Platform>
-            <ShortName>SENTINEL-1A</ShortName>
+            <ShortName>SENTINEL-1B</ShortName>
             <Instruments>
                 <Instrument>
-                    <ShortName>SENTINEL-1A C-Band SAR</ShortName>
+                    <ShortName>SENTINEL-1B C-Band SAR</ShortName>
                     <Sensors>
                         <Sensor>
                             <ShortName>IW</ShortName>
@@ -332,7 +332,9 @@
             <Name>WEATHER_MODEL</Name>
             <Values>
                 
-                    <Value>ERA5</Value>
+                    
+                     <Value>ERA5</Value>
+                    
                 
             </Values>
         </AdditionalAttribute>

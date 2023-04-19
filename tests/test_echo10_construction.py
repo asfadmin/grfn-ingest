@@ -1,7 +1,7 @@
 import io
 import json
 import unittest.mock
-
+import pdb
 import pytest
 from botocore.stub import Stubber
 
@@ -78,6 +78,22 @@ def test_get_granule_data(test_data_dir, inputs, config, mocker):
     assert echo10_construction.get_granule_data(inputs, config['granule_data']) == granule_data
 
 
+def test_get_granule_data_v3(test_data_dir_v3, inputs_v3, config_v3, mocker):
+
+    mocker.patch('echo10_construction.now', return_value='2023-04-07T18:23:39Z')
+
+    sds_metadata_file = test_data_dir_v3 / 'sds_metadata.json'
+    sds_metadata = json.loads(sds_metadata_file.read_text())
+    mocker.patch('echo10_construction.get_sds_metadata', return_value=sds_metadata)
+
+    mocker.patch('echo10_construction.get_s3_file_size', return_value=49203991)
+
+    granule_data_file = test_data_dir_v3 / 'granule_data.json'
+    granule_data = json.loads(granule_data_file.read_text())
+
+    assert echo10_construction.get_granule_data(inputs_v3, config_v3['granule_data']) == granule_data
+
+
 def test_render_granule_data_as_echo10(test_data_dir):
     echo10_file = test_data_dir / 'granule.echo10'
     content = echo10_file.read_text()
@@ -134,7 +150,7 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
 
 
 def test_create_granule_echo10_in_s3_v3(test_data_dir_v3, inputs_v3, config_v3, mocker):
-
+    pdb.set_trace()
     granule_data_file = test_data_dir_v3 / 'granule_data.json'
     granule_data = json.loads(granule_data_file.read_text())
     mocker.patch('echo10_construction.get_granule_data', return_value=granule_data)
