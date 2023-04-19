@@ -8,8 +8,9 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.1.0]
 ### Added
-- One required top-level property: `version`
-- Three optional metadata properties: `weather_model`, `temporal_baseline_days`, `frame_number`
+- `VERSION` attribute is now populated in CMR and `version` is now a required field in the input metadata file
+- Optionally populate new `WEATHER_MODEL`, `TEMPORAL_BASELINE_DAYS`, and `FRAME_NUMBER` attributes in CMR in support of
+  v3.0.0 GUNW products
 
 ## [1.0.1]
 ### Added
