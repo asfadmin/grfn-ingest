@@ -1,7 +1,7 @@
 import io
 import json
 import unittest.mock
-import pdb
+
 import pytest
 from botocore.stub import Stubber
 
