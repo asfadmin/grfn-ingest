@@ -149,7 +149,7 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
 
 
 def test_create_granule_echo10_in_s3_v3(test_data_dir_v3, inputs_v3, config_v3, mocker):
-    pdb.set_trace()
+
     granule_data_file = test_data_dir_v3 / 'granule_data.json'
     granule_data = json.loads(granule_data_file.read_text())
     mocker.patch('echo10_construction.get_granule_data', return_value=granule_data)
