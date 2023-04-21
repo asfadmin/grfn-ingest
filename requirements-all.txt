@@ -1,7 +1,7 @@
--r cmr-token/requirements.txt
--r echo10-construction/requirements.txt
--r echo10-to-cmr/requirements.txt
--r ingest/requirements.txt
--r invoke/requirements.txt
--r notify/requirements.txt
--r verify/requirements.txt
+-r requirements-cmr-token.txt
+-r requirements-ech10-construction.txt
+-r requirements-echo10-to-cmr.txt
+-r requirements-ingest.txt
+-r requirements-invoke.txt
+-r requirements-notify.txt
+-r requirements-verify.txt
