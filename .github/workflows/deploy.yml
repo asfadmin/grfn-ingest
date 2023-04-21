@@ -60,7 +60,7 @@ jobs:
           python -m pip install -r requirements-echo10-to-cmr.txt -t echo10-to-cmr/src/
           python -m pip install -r requirements-echo10-construction.txt -t echo10-construction/src/
           # crytography on AWS Lambda requires manylinux2014 per https://github.com/ASFHyP3/hyp3/issues/1190
-          python -m pip install -r cmr-token/requirements.txt --platform manylinux2014_x86_64 --only-binary=:all: -t cmr-token/src/
+          python -m pip install -r requirements-cmr-token.txt --platform manylinux2014_x86_64 --only-binary=:all: -t cmr-token/src/
       - name: package and deploy
         if: github.ref == matrix.deploy_ref
         shell: bash
