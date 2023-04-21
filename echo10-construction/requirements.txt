@@ -1,2 +1,2 @@
-Jinja2==2.11.3
-Shapely==1.7.0
+Jinja2
+Shapely
