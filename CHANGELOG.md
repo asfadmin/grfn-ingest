@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [PEP 440](https://www.python.org/dev/peps/pep-0440/)
 and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1]
+### Changed
+- Upgraded all dependencies and added `dependabot` configuration.
+### Fixed
+- Minor update to metadata schema for compatibility with latest version of `jsonschema`.
+
 ## [1.1.0]
 ### Added
 - `VERSION` attribute is now populated in CMR and `version` is now a required field in the input metadata file
