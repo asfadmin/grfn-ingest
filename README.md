@@ -48,7 +48,7 @@ Runtime inputs consist of the following staged files:
 From the repository root, run:
 
 ```bash
-aws --profile grfn sns publish --topic-arn "arn:aws:sns:us-east-1:406893895021:ingest-test-jobs" --message file://example-message.json
+aws --profile grfn sns publish --topic-arn "arn:aws:sns:us-east-1:406893895021:ingest-test-jobs" --message file://tests/example-message.json
 ```
 
 Wait a few minutes for the job to process (you can monitor it in the `ingest-test-jobs` Step Function).
