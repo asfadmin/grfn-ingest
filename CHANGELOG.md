@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [PEP 440](https://www.python.org/dev/peps/pep-0440/)
 and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0]
+### Added
+- `VERSION` attribute is now populated in CMR and `version` is now a required field in the input metadata file
+- Optionally populate new `WEATHER_MODEL`, `TEMPORAL_BASELINE_DAYS`, and `FRAME_NUMBER` attributes in CMR in support of
+  v3.0.0 GUNW products
+### Changed
+- Upgraded all dependencies and added `dependabot` configuration.
+### Fixed
+- Minor update to metadata schema for compatibility with latest version of `jsonschema`.
+
 ## [1.0.1]
 ### Added
 - Unit tests for echo10-construction lambda

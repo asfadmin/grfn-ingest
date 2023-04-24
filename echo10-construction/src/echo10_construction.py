@@ -91,7 +91,7 @@ def get_granule_data(inputs, config):
         'beginning_date_time': granule_metadata['sensing_start'],
         'ending_date_time': granule_metadata['sensing_stop'],
         'orbits': granule_metadata['orbit_number'],
-        'platforms': [p.upper() for p in set(granule_metadata['platform'])],
+        'platforms': sorted(set(p.upper() for p in granule_metadata['platform'])),
         'sensor_short_name': granule_metadata['beam_mode'],
         'polygon': polygon,
         'additional_attributes': {
@@ -119,6 +119,7 @@ def get_granule_data(inputs, config):
             'THUMBNAIL_URL': browse_url,
             'PERPENDICULAR_BASELINE': granule_metadata['perpendicular_baseline'],
             'MISSION_NAME': mission,
+            'VERSION': sds_metadata['version'],
         },
         'input_granules': input_granules,
         'visible': 'true',
@@ -126,6 +127,16 @@ def get_granule_data(inputs, config):
         'online_access_url': online_access_url,
         'browse_url': browse_url,
     }
+
+    if 'temporal_baseline_days' in granule_metadata:
+        data['additional_attributes']['TEMPORAL_BASELINE_DAYS'] = granule_metadata['temporal_baseline_days']
+
+    if 'weather_model' in granule_metadata:
+        data['additional_attributes']['WEATHER_MODEL'] = granule_metadata['weather_model']
+
+    if 'frame_number' in granule_metadata:
+        data['additional_attributes']['FRAME_NUMBER'] = granule_metadata['frame_number']
+
     return data
 
 
@@ -140,16 +151,21 @@ def create_granule_echo10_in_s3(inputs, config):
     echo10_s3_objects = []
     log.info('Creating echo10 file for %s', inputs['Product']['Key'])
     granule_data = get_granule_data(inputs, config['granule_data'])
+
     echo10_content = render_granule_data_as_echo10(granule_data)
     echo10_s3_object = {
         'bucket': config['output_bucket'],
         'key': granule_data['granule_ur'] + '.echo10',
     }
     echo10_s3_objects.append(echo10_s3_object)
+
     upload_content_to_s3(echo10_s3_object, echo10_content)
 
-    del granule_data['size_mb_data_granule']
-    del granule_data['additional_attributes']['BYTES']
+    if 'size_mb_data_granule' in granule_data:
+        del granule_data['size_mb_data_granule']
+
+    if 'BYTES' in granule_data['additional_attributes']:
+        del granule_data['additional_attributes']['BYTES']
 
     for product in config['derived_products']:
         virtual_granule_data = copy.deepcopy(granule_data)

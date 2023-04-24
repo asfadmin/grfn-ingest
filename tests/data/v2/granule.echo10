@@ -1,11 +1,13 @@
 <Granule xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
-    <GranuleUR>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6-unwrappedPhase</GranuleUR>
+    <GranuleUR>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6</GranuleUR>
     <InsertTime>2023-04-07T18:23:39Z</InsertTime>
     <LastUpdate>2023-04-07T18:23:39Z</LastUpdate>
     <Collection>
-        <DataSetId>Sentinel-1 Interferograms - Unwrapped Phase (BETA)</DataSetId>
+        <DataSetId>Sentinel-1 Interferograms (BETA)</DataSetId>
     </Collection>
     <DataGranule>
+        
+        <SizeMBDataGranule>46.92458248138428</SizeMBDataGranule>
         
         <ProducerGranuleId>S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6</ProducerGranuleId>
         <DayNightFlag>UNSPECIFIED</DayNightFlag>
@@ -151,6 +153,15 @@
         </AdditionalAttribute>
         
         <AdditionalAttribute>
+            <Name>BYTES</Name>
+            <Values>
+                
+                    <Value>49203991</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
+        <AdditionalAttribute>
             <Name>NEAR_START_LON</Name>
             <Values>
                 
@@ -235,7 +246,7 @@
             <Name>PROCESSING_TYPE</Name>
             <Values>
                 
-                    <Value>GUNW_UNW</Value>
+                    <Value>GUNW_STD</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -244,7 +255,7 @@
             <Name>PROCESSING_TYPE_DISPLAY</Name>
             <Values>
                 
-                    <Value>Unwrapped Phase, GeoTIFF</Value>
+                    <Value>Standard Product, NetCDF</Value>
                 
             </Values>
         </AdditionalAttribute>
@@ -285,6 +296,15 @@
             </Values>
         </AdditionalAttribute>
         
+        <AdditionalAttribute>
+            <Name>VERSION</Name>
+            <Values>
+                
+                    <Value>2.0.6</Value>
+                
+            </Values>
+        </AdditionalAttribute>
+        
     </AdditionalAttributes>
     <InputGranules>
         
@@ -295,7 +315,7 @@
     </InputGranules>
     <OnlineAccessURLs>
         <OnlineAccessURL>
-            <URL>https://services-test.asf.alaska.edu/geospatial/reformat?product=S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc&amp;layer=science/grids/data/unwrappedPhase</URL>
+            <URL>https://grfn-test.asf.alaska.edu/door/download/S1-GUNW-D-R-059-tops-20201118_20201013-180252-00179W_00051N-PP-1ec8-v2_0_6.nc</URL>
         </OnlineAccessURL>
     </OnlineAccessURLs>
     <Orderable>true</Orderable>

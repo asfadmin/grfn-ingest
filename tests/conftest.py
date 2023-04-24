@@ -2,14 +2,17 @@ import json
 from pathlib import Path
 
 import pytest
-from botocore.stub import Stubber
-
-import main
 
 
 @pytest.fixture
 def test_data_dir():
-    data_dir = Path(__file__).resolve().parent / 'data'
+    data_dir = Path(__file__).resolve().parent / 'data' / 'v2'
+    return data_dir
+
+
+@pytest.fixture
+def test_data_dir_v3():
+    data_dir = Path(__file__).resolve().parent / 'data' / 'v3'
     return data_dir
 
 
@@ -20,13 +23,18 @@ def inputs(test_data_dir):
 
 
 @pytest.fixture
+def inputs_v3(test_data_dir_v3):
+    with open(f'{test_data_dir_v3}/inputs.json') as f:
+        return json.load(f)
+
+
+@pytest.fixture
 def config(test_data_dir):
     with open(f'{test_data_dir}/config.json') as f:
         return json.load(f)
 
 
 @pytest.fixture
-def s3_stubber():
-    with Stubber(main.s3.meta.client) as stubber:
-        yield stubber
-        stubber.assert_no_pending_responses()
+def config_v3(test_data_dir_v3):
+    with open(f'{test_data_dir_v3}/config.json') as f:
+        return json.load(f)

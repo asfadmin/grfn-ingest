@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -53,14 +53,14 @@ jobs:
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r invoke/requirements.txt -t invoke/src/
-          python -m pip install -r verify/requirements.txt -t verify/src/
-          python -m pip install -r ingest/requirements.txt -t ingest/src/
-          python -m pip install -r notify/requirements.txt -t notify/src/
-          python -m pip install -r echo10-to-cmr/requirements.txt -t echo10-to-cmr/src/
-          python -m pip install -r echo10-construction/requirements.txt -t echo10-construction/src/
+          python -m pip install -r requirements-invoke.txt -t invoke/src/
+          python -m pip install -r requirements-verify.txt -t verify/src/
+          python -m pip install -r requirements-ingest.txt -t ingest/src/
+          python -m pip install -r requirements-notify.txt -t notify/src/
+          python -m pip install -r requirements-echo10-to-cmr.txt -t echo10-to-cmr/src/
+          python -m pip install -r requirements-echo10-construction.txt -t echo10-construction/src/
           # crytography on AWS Lambda requires manylinux2014 per https://github.com/ASFHyP3/hyp3/issues/1190
-          python -m pip install -r cmr-token/requirements.txt --platform manylinux2014_x86_64 --only-binary=:all: -t cmr-token/src/
+          python -m pip install -r requirements-cmr-token.txt --platform manylinux2014_x86_64 --only-binary=:all: -t cmr-token/src/
       - name: package and deploy
         if: github.ref == matrix.deploy_ref
         shell: bash
