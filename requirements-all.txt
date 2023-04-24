@@ -1,0 +1,7 @@
+-r requirements-cmr-token.txt
+-r requirements-ech10-construction.txt
+-r requirements-echo10-to-cmr.txt
+-r requirements-ingest.txt
+-r requirements-invoke.txt
+-r requirements-notify.txt
+-r requirements-verify.txt
