@@ -62,7 +62,7 @@ Review the published products in CMR UAT using the following link:
 You can also replace `.echo10` with `.json` or `.umm_json`.
 
 Re-running a new job with the same `ProductName` field will overwrite the existing records in CMR.
-Re-rerunning the exact same job should only change the `InsertTime` and `LastUpdate` fields.
+Re-running the exact same job should only change the `InsertTime` and `LastUpdate` fields.
 
 # Credits
 
