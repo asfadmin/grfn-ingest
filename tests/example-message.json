@@ -1,0 +1,20 @@
+{
+  "ProductName": "S1-GUNW-A-R-014-tops-20230116_20220214-153036-00038E_00022N-PP-3708-v2_0_6",
+  "DeliveryTime": "2023-04-19T20:06:35.712653",
+  "ResponseTopic": {
+    "Region": "us-east-1",
+    "Arn": "arn:aws:sns:us-east-1:406893895021:hyp3-ingest-responses"
+  },
+  "Browse": {
+    "Bucket": "grfn-test-data",
+    "Key": "S1-GUNW-A-R-014-tops-20230116_20220214-153036-00038E_00022N-PP-3708-v2_0_6.png"
+  },
+  "Metadata": {
+    "Bucket": "grfn-test-data",
+    "Key": "S1-GUNW-A-R-014-tops-20230116_20220214-153036-00038E_00022N-PP-3708-v2_0_6.json"
+  },
+  "Product": {
+    "Bucket": "grfn-test-data",
+    "Key": "S1-GUNW-A-R-014-tops-20230116_20220214-153036-00038E_00022N-PP-3708-v2_0_6.nc"
+  }
+}
