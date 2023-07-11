@@ -1,2 +1,2 @@
-boto3==1.26.118
-requests-pkcs12==1.15
+boto3==1.28.2
+requests-pkcs12==1.18

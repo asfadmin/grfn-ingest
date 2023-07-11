@@ -20,11 +20,6 @@ data.
 * **echo10-to-cmr:** A scheduled Lambda function that submits ECHO 10 XML metadata files to CMR.
 * **notify:** A Lambda function that sends ingest success/failure messages to the SNS response topic.
 
-# Build and Deployment Instructions
-
-1. Run steps in buildspec.yaml
-2. Deploy cloudformation-final.yaml
-
 # Top Level Inputs and Outputs
 
 ## Runtime Inputs
@@ -47,6 +42,27 @@ Runtime inputs consist of the following staged files:
 ### Product metadata reported to CmrGranuleUrl with these Collection Ids and Granule URs:
 * Sentinel-1 All Interferometric Products (BETA) \<product-name\>-All
 * Success/failure message sent to DefaultResponseTopicArn
+
+# Integration testing
+
+From the repository root, run:
+
+```bash
+aws --profile grfn sns publish --topic-arn "arn:aws:sns:us-east-1:406893895021:ingest-test-jobs" --message file://tests/example-message.json
+```
+
+Wait a few minutes for the job to process (you can monitor it in the `ingest-test-jobs` Step Function).
+
+There should be five CMR products published with each job:
+the base NetCDF file, plus four GeoTIFFs: amplitude, coherence, unwrapped phase, and connected components.
+
+Review the published products in CMR UAT using the following link:
+<https://cmr.uat.earthdata.nasa.gov/search/granules.echo10?provider=ASF&producer_granule_id=S1-GUNW-A-R-014-tops-20230116_20220214-153036-00038E_00022N-PP-3708-v2_0_6>
+
+You can also replace `.echo10` with `.json` or `.umm_json`.
+
+Re-running a new job with the same `ProductName` field will overwrite the existing records in CMR.
+Re-running the exact same job should only change the `InsertTime` and `LastUpdate` fields.
 
 # Credits
 

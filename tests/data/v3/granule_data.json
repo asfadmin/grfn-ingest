@@ -2,7 +2,7 @@
     "granule_ur": "S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0",
     "insert_time": "2023-04-07T18:23:39Z",
     "last_update": "2023-04-07T18:23:39Z",
-    "collection": "Sentinel-1 Interferograms (BETA)",
+    "collection": "Sentinel-1 Interferograms",
     "size_mb_data_granule": 46.92458248138428,
     "producer_granule_id": "S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0",
     "production_date_time": "2023-04-13T17:31:53.185420Z",
