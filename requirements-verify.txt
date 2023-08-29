@@ -1,2 +1,2 @@
 boto3==1.28.36
-jsonschema==4.18.0
+jsonschema==4.19.0
