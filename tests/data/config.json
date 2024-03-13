@@ -1,0 +1,8 @@
+{
+	"output_bucket": "ingest-test-aux",
+	"api_url": "https://services-test.asf.alaska.edu/geospatial/reformat",
+	"granule_data": {
+		"download_path": "https://grfn-test.asf.alaska.edu/door/download/{0}",
+		"browse_path": "https://grfn-public-test.asf.alaska.edu/{0}"
+	}
+}
