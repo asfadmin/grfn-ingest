@@ -65,15 +65,15 @@ def get_mission(polygon, missions):
     return None
 
 
-def get_granule_data(inputs, config):
-    sds_metadata = get_sds_metadata(inputs['Metadata'])
+def get_granule_data(input, config):
+    sds_metadata = get_sds_metadata(input['Metadata'])
     granule_metadata = sds_metadata['metadata']
 
     collection = config['collection']
     granule_ur = sds_metadata['label']
-    file_size = get_s3_file_size(inputs['Product'])
-    browse_url = config['browse_path'].format(inputs['Browse']['Key'])
-    online_access_url = config['download_path'].format(inputs['Product']['Key'])
+    file_size = get_s3_file_size(input['Product'])
+    browse_url = config['browse_path'].format(input['Browse']['Key'])
+    online_access_url = config['download_path'].format(input['Product']['Key'])
     polygon = sds_metadata['location']['coordinates'][0][:-1]
     mission = get_mission(polygon, config['missions'])
 
@@ -147,46 +147,17 @@ def render_granule_data_as_echo10(data):
     return template.render(data)
 
 
-def create_granule_echo10_in_s3(inputs, config):
-    echo10_s3_objects = []
-    log.info('Creating echo10 file for %s', inputs['Product']['Key'])
-    granule_data = get_granule_data(inputs, config['granule_data'])
-
-    echo10_content = render_granule_data_as_echo10(granule_data)
-    echo10_s3_object = {
+def create_granule_echo10_in_s3(input, config):
+    log.info('Creating echo10 file for %s', input['Product']['Key'])
+    sds_metadata = get_sds_metadata(input['Metadata'])
+    umm_json = get_granule_data(sds_metadata, config)
+    output_location = {
         'bucket': config['output_bucket'],
-        'key': granule_data['granule_ur'] + '.echo10',
+        'key': umm_json['GranuleUR'] + '.umm_json',
     }
-    echo10_s3_objects.append(echo10_s3_object)
+    upload_content_to_s3(output_location, json.dumps(umm_json))
 
-    upload_content_to_s3(echo10_s3_object, echo10_content)
-
-    if 'size_mb_data_granule' in granule_data:
-        del granule_data['size_mb_data_granule']
-
-    if 'BYTES' in granule_data['additional_attributes']:
-        del granule_data['additional_attributes']['BYTES']
-
-    for product in config['derived_products']:
-        virtual_granule_data = copy.deepcopy(granule_data)
-        log.info('Creating echo10 file for %s', inputs['Product']['Key'] + product['label'])
-        virtual_granule_data['collection'] = product['dataset_id']
-        virtual_granule_data['granule_ur'] = granule_data['granule_ur'] + '-' + product['label']
-        virtual_granule_data['additional_attributes']['PROCESSING_TYPE'] = product['processing_type']
-        virtual_granule_data['additional_attributes']['PROCESSING_TYPE_DISPLAY'] = product['processing_type_display']
-        virtual_granule_data['online_access_url'] = '{0}?product={1}&amp;layer={2}'.format(
-            config['api_url'], inputs['Product']['Key'], product['layer']
-        )
-        echo10_content = render_granule_data_as_echo10(virtual_granule_data)
-        echo10_s3_object = {
-            'bucket': config['output_bucket'],
-            'key': virtual_granule_data['granule_ur'] + '.echo10',
-        }
-        echo10_s3_objects.append(echo10_s3_object)
-
-        upload_content_to_s3(echo10_s3_object, echo10_content)
-
-    return echo10_s3_objects
+    return output_location
 
 
 def lambda_handler(event, context):
