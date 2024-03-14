@@ -1,28 +1,27 @@
-{
-    "MetadataSpecification": {
+{"MetadataSpecification": {
         "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5",
         "Name": "UMM-G",
         "Version": "1.6.5"
     },
-    "GranuleUR": granule_ur,
+    "GranuleUR": {{ granule_ur }},
     "CollectionReference": {
         "ShortName": "ARIA_S1_GUNW",
         "Version": 1
     },
     "RelatedUrls": [
         {
-            "URL": data_url,
+            "URL": {{ data_url }},
             "Type": "GET DATA"
         },
         {
-            "URL": vis_url,
+            "URL": {{ vis_url }},
             "Type": "GET RELATED VISUALIZATION"
         }
     ],
     "TemporalExtent": {
         "RangeDateTime": {
-            "BeginningDateTime": sensing_start,
-            "EndingDateTime": sensing_stop
+            "BeginningDateTime": {{ sensing_start }},
+            "EndingDateTime": {{ sensing_stop }}
         }
     },
     "SpatialExtent": {
@@ -31,7 +30,7 @@
                 "GPolygons": [
                     {
                         "Boundary": {
-                            "Points": polygon
+                            "Points": {{ polygon }}
                         }
                     }
                 ]
@@ -40,11 +39,11 @@
     },
     "ProviderDates": [
         {
-            "Date": creation_timestamp,
+            "Date": {{ timestamp }},
             "Type": "Insert"
         },
         {
-            "Date": upload_timestamp,
+            "Date": {{ timestamp }},
             "Type": "Update"
         }
     ]

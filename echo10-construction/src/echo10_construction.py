@@ -1,4 +1,3 @@
-import copy
 import json
 import os
 import pathlib
@@ -6,15 +5,14 @@ from datetime import datetime
 from logging import getLogger
 
 import boto3
-from jinja2 import Template
-from shapely.geometry import Polygon
-
+from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape, Template, FileSystemLoader
 
 log = getLogger()
 log.setLevel('INFO')
 CONFIG = json.loads(os.getenv('CONFIG'))
 
-TEMPLATE_FILE = pathlib.Path(__file__).resolve().parent / 'echo10.template'
+TEMPLATE_DIR = pathlib.Path(__file__).resolve().parent
+TEMPLATE_FILE = TEMPLATE_DIR / 'echo10.template'
 
 s3 = boto3.resource('s3')
 
@@ -51,8 +49,10 @@ def get_s3_file_size(obj):
 
 
 def get_sds_metadata(obj):
-    content = get_file_content_from_s3(obj['Bucket'], obj['Key'])
-    sds_metadata = json.loads(content)
+    #content = get_file_content_from_s3(obj['Bucket'], obj['Key'])
+    content = pathlib.Path(__file__).parents[2].resolve() / 'tests/data/sds_metadata.json'
+    with open(content) as f:
+        sds_metadata = json.load(f)
     return sds_metadata
 
 
@@ -67,7 +67,15 @@ def render_granule_data_as_echo10(data):
     with open(TEMPLATE_FILE, 'r') as t:
         template_text = t.read()
     template = Template(template_text)
-    return template.render(data)
+    return json.loads(template.render(data))
+
+
+def render_template(payload: dict) -> str:
+    loader = FileSystemLoader(str(TEMPLATE_DIR))
+    env = Environment(loader=loader, autoescape=select_autoescape('.json.j2'))
+    env.filters['jsonify'] = json.dumps
+    template = env.get_template(str(TEMPLATE_FILE))
+    return template.render(payload)
 
 
 def render_granule_metadata(sds_metadata, config):
@@ -83,16 +91,16 @@ def render_granule_metadata(sds_metadata, config):
         "sensing_start": sds_metadata['metadata']['sensing_start'],
         "sensing_stop": sds_metadata['metadata']['sensing_stop'],
         "polygon": polygon,
-        "upload_timestamp": now()
+        "timestamp": now()
     }
 
     return render_granule_data_as_echo10(data)
 
 
-def create_granule_echo10_in_s3(input, config):
-    log.info('Creating echo10 file for %s', input['Product']['Key'])
-    sds_metadata = get_sds_metadata(input['Metadata'])
-    umm_json = render_granule_metadata(sds_metadata, config)
+def create_granule_echo10_in_s3(inputs, config):
+    log.info('Creating echo10 file for %s', inputs['Product']['Key'])
+    sds_metadata = get_sds_metadata(inputs['Metadata'])
+    umm_json = json.loads(render_granule_metadata(sds_metadata, config))
     output_location = {
         'bucket': config['output_bucket'],
         'key': umm_json['GranuleUR'] + '.umm_json',
