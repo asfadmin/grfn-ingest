@@ -56,6 +56,13 @@ def get_sds_metadata(obj):
     return sds_metadata
 
 
+def format_polygon_echo10(polygon):
+    coordinates = []
+    for lat, long in polygon:
+        coordinates.append({"Longitude": long, "Latitude": lat})
+    return coordinates
+
+
 def render_granule_data_as_echo10(data):
     with open(TEMPLATE_FILE, 'r') as t:
         template_text = t.read()
@@ -65,18 +72,17 @@ def render_granule_data_as_echo10(data):
 
 def render_granule_metadata(sds_metadata, config):
     granule_ur = sds_metadata['label']
-    download_url = config['granule_data']['download_path'].strip
-    browse_url = config['browse_path'].format(input['Browse']['Key'])
-    polygon = sds_metadata['location']['coordinates'][0][:-1]
+    download_url = config['granule_data']['download_path'][:-3]
+    browse_url = config['granule_data']['browse_path'][:-3]
+    polygon = format_polygon_echo10(sds_metadata['location']['coordinates'][0][:-1])
 
     data = {
         'granule_ur': granule_ur,
-        'data_url': f'{download_url}/{granule_ur}.nc',
-        'vis_url': f'{browse_url}/{granule_ur}.png',
+        'data_url': f'{download_url}{granule_ur}.nc',
+        'vis_url': f'{browse_url}{granule_ur}.png',
         "sensing_start": sds_metadata['metadata']['sensing_start'],
         "sensing_stop": sds_metadata['metadata']['sensing_stop'],
         "polygon": polygon,
-        "creation_timestamp": sds_metadata['creation_timestamp'],
         "upload_timestamp": now()
     }
 
