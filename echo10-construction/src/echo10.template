@@ -1,96 +1,51 @@
-<Granule xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
-    <GranuleUR>{{ granule_ur }}</GranuleUR>
-    <InsertTime>{{ insert_time }}</InsertTime>
-    <LastUpdate>{{ last_update }}</LastUpdate>
-    <Collection>
-        <DataSetId>{{ collection }}</DataSetId>
-    </Collection>
-    <DataGranule>
-        {% if size_mb_data_granule %}
-        <SizeMBDataGranule>{{ size_mb_data_granule }}</SizeMBDataGranule>
-        {% endif %}
-        <ProducerGranuleId>{{ producer_granule_id }}</ProducerGranuleId>
-        <DayNightFlag>UNSPECIFIED</DayNightFlag>
-        <ProductionDateTime>{{ production_date_time }}</ProductionDateTime>
-    </DataGranule>
-    <Temporal>
-        <RangeDateTime>
-            <BeginningDateTime>{{ beginning_date_time }}</BeginningDateTime>
-            <EndingDateTime>{{ ending_date_time }}</EndingDateTime>
-        </RangeDateTime>
-    </Temporal>
-    <Spatial>
-        <HorizontalSpatialDomain>
-            <Geometry>
-                <GPolygon>
-                  <Boundary> 
-                  {% for point in polygon %}
-                    <Point>
-                    <PointLongitude>{{ point.0 }}</PointLongitude>
-                    <PointLatitude>{{ point.1 }}</PointLatitude>
-                    </Point>
-                  {% endfor %}
-                </Boundary>
-                </GPolygon>
-            </Geometry>
-        </HorizontalSpatialDomain>
-    </Spatial>
-    <OrbitCalculatedSpatialDomains>
-        {% for orbit in orbits %}
-        <OrbitCalculatedSpatialDomain>
-          <OrbitNumber>{{ orbit }}</OrbitNumber>
-        </OrbitCalculatedSpatialDomain>
-        {% endfor %}
-    </OrbitCalculatedSpatialDomains>
-    <Platforms>
-        {% for platform in platforms %}
-        <Platform>
-            <ShortName>{{ platform }}</ShortName>
-            <Instruments>
-                <Instrument>
-                    <ShortName>{{ platform }} C-Band SAR</ShortName>
-                    <Sensors>
-                        <Sensor>
-                            <ShortName>{{ sensor_short_name }}</ShortName>
-                        </Sensor>
-                    </Sensors>
-                </Instrument>
-            </Instruments>
-        </Platform>
-        {% endfor %}
-    </Platforms>
-    <AdditionalAttributes>
-        {% for name, value in additional_attributes.items() %}
-        <AdditionalAttribute>
-            <Name>{{ name }}</Name>
-            <Values>
-                {% if value is iterable and value is not string %}
-                    {% for v in value %}
-                     <Value>{{ v }}</Value>
-                    {% endfor %}
-                {% else %}
-                    <Value>{{ value }}</Value>
-                {% endif %}
-            </Values>
-        </AdditionalAttribute>
-        {% endfor %}
-    </AdditionalAttributes>
-    <InputGranules>
-        {% for granule in input_granules %}
-        <InputGranule>{{ granule }}</InputGranule>
-        {% endfor %}
-    </InputGranules>
-    <OnlineAccessURLs>
-        <OnlineAccessURL>
-            <URL>{{ online_access_url }}</URL>
-        </OnlineAccessURL>
-    </OnlineAccessURLs>
-    <Orderable>{{ orderable }}</Orderable>
-    <Visible>{{ visible }}</Visible>
-    <AssociatedBrowseImageUrls>
-        <ProviderBrowseUrl>
-            <URL>{{ browse_url }}</URL>
-        </ProviderBrowseUrl>
-    </AssociatedBrowseImageUrls>
-</Granule>
-
+{
+    "MetadataSpecification": {
+        "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5",
+        "Name": "UMM-G",
+        "Version": "1.6.5"
+    },
+    "GranuleUR": granule_ur,
+    "CollectionReference": {
+        "ShortName": "ARIA_S1_GUNW",
+        "Version": 1
+    },
+    "RelatedUrls": [
+        {
+            "URL": data_url,
+            "Type": "GET DATA"
+        },
+        {
+            "URL": vis_url,
+            "Type": "GET RELATED VISUALIZATION"
+        }
+    ],
+    "TemporalExtent": {
+        "RangeDateTime": {
+            "BeginningDateTime": sensing_start,
+            "EndingDateTime": sensing_stop
+        }
+    },
+    "SpatialExtent": {
+        "HorizontalSpatialDomain": {
+            "Geometry": {
+                "GPolygons": [
+                    {
+                        "Boundary": {
+                            "Points": polygon
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "ProviderDates": [
+        {
+            "Date": creation_timestamp,
+            "Type": "Insert"
+        },
+        {
+            "Date": upload_timestamp,
+            "Type": "Update"
+        }
+    ]
+}
