@@ -58,16 +58,16 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
 
     mocker.patch('echo10_construction.upload_content_to_s3')
 
-    echo10_s3_objects = [{
+    echo10_s3_object = {
         'bucket': 'ingest-test-aux',
-        'key': 'S1-GUNW-A-R-072-tops-20171117_20171111-145939-00043E_00034N-PP-428e-v3_0_0.umm_json',
-    }]
+        'key': 'S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.umm_json',
+    }
 
-    assert echo10_construction.create_granule_echo10_in_s3(inputs, config) == echo10_s3_objects
+    assert echo10_construction.create_granule_echo10_in_s3(inputs, config) == echo10_s3_object
 
     assert echo10_construction.upload_content_to_s3.mock_calls == [
         unittest.mock.call(
-            echo10_s3_objects[0],
-            (test_data_dir / 'granule.umm_json.').read_text(),
+            echo10_s3_object,
+            (test_data_dir / 'granule.umm_json').read_text(),
         ),
     ]
