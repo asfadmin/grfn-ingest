@@ -71,7 +71,7 @@ def render_granule_metadata(sds_metadata, config) -> dict:
         "GranuleUR": granule_ur,
         "CollectionReference": {
             "ShortName": "ARIA_S1_GUNW",
-            "Version": 1
+            "Version": "1"
         },
         "RelatedUrls": [
             {
