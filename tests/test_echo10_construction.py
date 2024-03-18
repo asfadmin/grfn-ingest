@@ -55,7 +55,7 @@ def test_get_sds_metadata(test_data_dir, s3_stubber):
 
 
 def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
-
+    mocker.patch('echo10_construction.now', return_value='2024-03-02T22:12:36.000Z')
     mocker.patch('echo10_construction.upload_content_to_s3')
 
     echo10_s3_object = {
@@ -68,6 +68,6 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
     assert echo10_construction.upload_content_to_s3.mock_calls == [
         unittest.mock.call(
             echo10_s3_object,
-            (test_data_dir / 'granule.umm_json').read_text(),
+            json.dumps(json.loads((test_data_dir / 'granule.umm_json').read_text())),
         ),
     ]
