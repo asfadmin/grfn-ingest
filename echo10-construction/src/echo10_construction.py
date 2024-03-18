@@ -127,7 +127,7 @@ def create_granule_echo10_in_s3(inputs, config):
         'bucket': config['output_bucket'],
         'key': umm_json['GranuleUR'] + '.umm_json',
     }
-    upload_content_to_s3(output_location, json.dumps(umm_json))
+    upload_content_to_s3(output_location, json.dumps(umm_json, sort_keys=True))
 
     return output_location
 

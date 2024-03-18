@@ -68,6 +68,6 @@ def test_create_granule_echo10_in_s3(test_data_dir, inputs, config, mocker):
     assert echo10_construction.upload_content_to_s3.mock_calls == [
         unittest.mock.call(
             echo10_s3_object,
-            json.dumps(json.loads((test_data_dir / 'granule.umm_json').read_text())),
+            json.dumps(json.loads((test_data_dir / 'granule.umm_json').read_text()), sort_keys=True),
         ),
     ]
