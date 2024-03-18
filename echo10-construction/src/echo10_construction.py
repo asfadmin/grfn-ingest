@@ -50,7 +50,7 @@ def get_sds_metadata(obj):
 
 def format_polygon(polygon):
     coordinates = []
-    for lat, long in polygon:
+    for long, lat in reversed(polygon):
         coordinates.append({"Latitude": lat, "Longitude": long})
     return coordinates
 
