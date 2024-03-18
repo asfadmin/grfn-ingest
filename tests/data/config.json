@@ -1,7 +1,7 @@
 {
 	"output_bucket": "ingest-test-aux",
 	"granule_data": {
-		"download_path": "https://grfn-test.asf.alaska.edu/door/download/{0}",
-		"browse_path": "https://grfn-public-test.asf.alaska.edu/{0}"
+		"download_path": "https://grfn-test.asf.alaska.edu/door/download/",
+		"browse_path": "https://grfn-public-test.asf.alaska.edu/"
 	}
 }

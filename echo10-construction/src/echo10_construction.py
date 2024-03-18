@@ -1,6 +1,5 @@
 import json
 import os
-import pathlib
 from datetime import datetime
 from logging import getLogger
 
@@ -49,7 +48,7 @@ def get_sds_metadata(obj):
     return json.loads(content)
 
 
-def format_polygon_echo10(polygon):
+def format_polygon(polygon):
     coordinates = []
     for lat, long in polygon:
         coordinates.append({"Latitude": lat, "Longitude": long})
@@ -58,60 +57,60 @@ def format_polygon_echo10(polygon):
 
 def render_granule_metadata(sds_metadata, config) -> dict:
     granule_ur = sds_metadata['label']
-    download_url = config['granule_data']['download_path'][:-3]
-    browse_url = config['granule_data']['browse_path'][:-3]
-    polygon = format_polygon_echo10(sds_metadata['location']['coordinates'][0])
+    download_url = config['granule_data']['download_path']
+    browse_url = config['granule_data']['browse_path']
+    polygon = format_polygon(sds_metadata['location']['coordinates'][0])
 
     return {
-        "MetadataSpecification": {
-            "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5",
-            "Name": "UMM-G",
-            "Version": "1.6.5"
+        'MetadataSpecification': {
+            'URL': 'https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5',
+            'Name': 'UMM-G',
+            'Version': '1.6.5',
         },
-        "GranuleUR": granule_ur,
-        "CollectionReference": {
-            "ShortName": "ARIA_S1_GUNW",
-            "Version": "1"
+        'GranuleUR': granule_ur,
+        'CollectionReference': {
+            'ShortName': 'ARIA_S1_GUNW',
+            'Version': '1',
         },
-        "RelatedUrls": [
+        'RelatedUrls': [
             {
-                "URL": f'{download_url}{granule_ur}.nc',
-                "Type": "GET DATA"
+                'URL': f'{download_url}{granule_ur}.nc',
+                'Type': 'GET DATA',
             },
             {
-                "URL": f'{browse_url}{granule_ur}.png',
-                "Type": "GET RELATED VISUALIZATION"
-            }
+                'URL': f'{browse_url}{granule_ur}.png',
+                'Type': 'GET RELATED VISUALIZATION',
+            },
         ],
-        "TemporalExtent": {
-            "RangeDateTime": {
-                "BeginningDateTime": sds_metadata['metadata']['sensing_start'],
-                "EndingDateTime": sds_metadata['metadata']['sensing_stop']
-            }
+        'TemporalExtent': {
+            'RangeDateTime': {
+                'BeginningDateTime': sds_metadata['metadata']['sensing_start'],
+                'EndingDateTime': sds_metadata['metadata']['sensing_stop'],
+            },
         },
-        "SpatialExtent": {
-            "HorizontalSpatialDomain": {
-                "Geometry": {
-                    "GPolygons": [
+        'SpatialExtent': {
+            'HorizontalSpatialDomain': {
+                'Geometry': {
+                    'GPolygons': [
                         {
-                            "Boundary": {
-                                "Points": polygon
-                            }
-                        }
-                    ]
-                }
-            }
+                            'Boundary': {
+                                'Points': polygon,
+                            },
+                        },
+                    ],
+                },
+            },
         },
-        "ProviderDates": [
+        'ProviderDates': [
             {
-                "Date": now(),
-                "Type": "Insert"
+                'Date': now(),
+                'Type': 'Insert',
             },
             {
-                "Date": now(),
-                "Type": "Update"
-            }
-        ]
+                'Date': now(),
+                'Type': 'Update',
+            },
+        ],
     }
 
 
