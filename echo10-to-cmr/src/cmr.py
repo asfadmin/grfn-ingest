@@ -15,7 +15,7 @@ log = getLogger()
 def send_request(session, base_url, metadata_content):
     metadata = json.loads(metadata_content)
     granule_native_id = metadata['GranuleUR']
-    content_type = f'pplication/vnd.nasa.cmr.umm+json;version={metadata["MetadataSpecification"]["Version"]}'
+    content_type = f'application/vnd.nasa.cmr.umm+json;version={metadata["MetadataSpecification"]["Version"]}'
     url = urljoin(base_url, granule_native_id)
     response = session.put(url, headers={'Content-Type': content_type}, data=metadata_content)
     log.info('Response text: %s', response.text)
