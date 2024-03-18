@@ -56,7 +56,6 @@ def format_polygon_echo10(polygon):
     coordinates = []
     for lat, long in polygon:
         coordinates.append({"Latitude": lat, "Longitude": long})
-    print(len(coordinates))
     return coordinates
 
 
