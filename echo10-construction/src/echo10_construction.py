@@ -5,14 +5,10 @@ from datetime import datetime
 from logging import getLogger
 
 import boto3
-from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape, Template, FileSystemLoader
 
 log = getLogger()
 log.setLevel('INFO')
 CONFIG = json.loads(os.getenv('CONFIG'))
-
-TEMPLATE_DIR = pathlib.Path(__file__).resolve().parent
-TEMPLATE_FILE = TEMPLATE_DIR / 'echo10.template'
 
 s3 = boto3.resource('s3')
 
@@ -49,7 +45,7 @@ def get_s3_file_size(obj):
 
 
 def get_sds_metadata(obj):
-    #content = get_file_content_from_s3(obj['Bucket'], obj['Key'])
+    # content = get_file_content_from_s3(obj['Bucket'], obj['Key'])
     content = pathlib.Path(__file__).parents[2].resolve() / 'tests/data/sds_metadata.json'
     with open(content) as f:
         sds_metadata = json.load(f)
@@ -63,44 +59,69 @@ def format_polygon_echo10(polygon):
     return coordinates
 
 
-def render_granule_data_as_echo10(data):
-    with open(TEMPLATE_FILE, 'r') as t:
-        template_text = t.read()
-    template = Template(template_text)
-    return json.loads(template.render(data))
-
-
-def render_template(payload: dict) -> str:
-    loader = FileSystemLoader(str(TEMPLATE_DIR))
-    env = Environment(loader=loader, autoescape=select_autoescape('.json.j2'))
-    env.filters['jsonify'] = json.dumps
-    template = env.get_template(str(TEMPLATE_FILE))
-    return template.render(payload)
-
-
-def render_granule_metadata(sds_metadata, config):
+def render_granule_metadata(sds_metadata, config) -> dict:
     granule_ur = sds_metadata['label']
     download_url = config['granule_data']['download_path'][:-3]
     browse_url = config['granule_data']['browse_path'][:-3]
     polygon = format_polygon_echo10(sds_metadata['location']['coordinates'][0][:-1])
 
-    data = {
-        'granule_ur': granule_ur,
-        'data_url': f'{download_url}{granule_ur}.nc',
-        'vis_url': f'{browse_url}{granule_ur}.png',
-        "sensing_start": sds_metadata['metadata']['sensing_start'],
-        "sensing_stop": sds_metadata['metadata']['sensing_stop'],
-        "polygon": polygon,
-        "timestamp": now()
+    return {
+        "MetadataSpecification": {
+            "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5",
+            "Name": "UMM-G",
+            "Version": "1.6.5"
+        },
+        "GranuleUR": granule_ur,
+        "CollectionReference": {
+            "ShortName": "ARIA_S1_GUNW",
+            "Version": 1
+        },
+        "RelatedUrls": [
+            {
+                "URL": f'{download_url}{granule_ur}.nc',
+                "Type": "GET DATA"
+            },
+            {
+                "URL": f'{browse_url}{granule_ur}.png',
+                "Type": "GET RELATED VISUALIZATION"
+            }
+        ],
+        "TemporalExtent": {
+            "RangeDateTime": {
+                "BeginningDateTime": sds_metadata['metadata']['sensing_start'],
+                "EndingDateTime": sds_metadata['metadata']['sensing_stop']
+            }
+        },
+        "SpatialExtent": {
+            "HorizontalSpatialDomain": {
+                "Geometry": {
+                    "GPolygons": [
+                        {
+                            "Boundary": {
+                                "Points": polygon
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "ProviderDates": [
+            {
+                "Date": now(),
+                "Type": "Insert"
+            },
+            {
+                "Date": now(),
+                "Type": "Update"
+            }
+        ]
     }
-
-    return render_granule_data_as_echo10(data)
 
 
 def create_granule_echo10_in_s3(inputs, config):
     log.info('Creating echo10 file for %s', inputs['Product']['Key'])
     sds_metadata = get_sds_metadata(inputs['Metadata'])
-    umm_json = json.loads(render_granule_metadata(sds_metadata, config))
+    umm_json = render_granule_metadata(sds_metadata, config)
     output_location = {
         'bucket': config['output_bucket'],
         'key': umm_json['GranuleUR'] + '.umm_json',
