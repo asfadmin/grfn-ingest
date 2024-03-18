@@ -74,11 +74,11 @@ def render_granule_metadata(sds_metadata, config) -> dict:
         },
         'RelatedUrls': [
             {
-                'URL': f'{download_url}{granule_ur}.nc',
+                'URL': f'{download_url}/{granule_ur}.nc',
                 'Type': 'GET DATA',
             },
             {
-                'URL': f'{browse_url}{granule_ur}.png',
+                'URL': f'{browse_url}/{granule_ur}.png',
                 'Type': 'GET RELATED VISUALIZATION',
             },
         ],
