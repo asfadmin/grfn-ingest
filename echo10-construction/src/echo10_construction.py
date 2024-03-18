@@ -45,11 +45,8 @@ def get_s3_file_size(obj):
 
 
 def get_sds_metadata(obj):
-    # content = get_file_content_from_s3(obj['Bucket'], obj['Key'])
-    content = pathlib.Path(__file__).parents[2].resolve() / 'tests/data/sds_metadata.json'
-    with open(content) as f:
-        sds_metadata = json.load(f)
-    return sds_metadata
+    content = get_file_content_from_s3(obj['Bucket'], obj['Key'])
+    return json.loads(content)
 
 
 def format_polygon_echo10(polygon):
