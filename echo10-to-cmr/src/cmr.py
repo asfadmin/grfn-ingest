@@ -19,7 +19,7 @@ def send_request(session, base_url, metadata_content):
     url = urljoin(base_url, granule_native_id)
     response = session.put(url, headers={'Content-Type': content_type}, data=metadata_content)
     log.info('Response text: %s', response.text)
-    return response.json()
+    return response
 
 
 def get_session(config, s3):
@@ -53,7 +53,7 @@ def push_granule_metadata_to_cmr(session, metadata_content, config, s3):
         session.headers.update({'Authorization': token})
         response = send_request(session, config['granule_url'], metadata_content)
     response.raise_for_status()
-    return response
+    return response.json()
 
 
 def process_task(task_input, config, session, s3):
