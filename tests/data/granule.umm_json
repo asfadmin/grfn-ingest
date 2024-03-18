@@ -21,8 +21,8 @@
     ],
     "TemporalExtent": {
         "RangeDateTime": {
-            "BeginningDateTime": "2024-02-12T03:26:21.285Z",
-            "EndingDateTime": "2024-02-12T03:27:14.053Z"
+            "BeginningDateTime": "2024-02-12T03:26:21.285000Z",
+            "EndingDateTime": "2024-02-12T03:27:14.053000Z"
         }
     },
     "SpatialExtent": {
