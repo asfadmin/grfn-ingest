@@ -56,6 +56,7 @@ def format_polygon_echo10(polygon):
     coordinates = []
     for lat, long in polygon:
         coordinates.append({"Latitude": lat, "Longitude": long})
+    print(len(coordinates))
     return coordinates
 
 
@@ -63,7 +64,7 @@ def render_granule_metadata(sds_metadata, config) -> dict:
     granule_ur = sds_metadata['label']
     download_url = config['granule_data']['download_path'][:-3]
     browse_url = config['granule_data']['browse_path'][:-3]
-    polygon = format_polygon_echo10(sds_metadata['location']['coordinates'][0][:-1])
+    polygon = format_polygon_echo10(sds_metadata['location']['coordinates'][0])
 
     return {
         "MetadataSpecification": {
