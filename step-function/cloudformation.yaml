@@ -14,7 +14,7 @@ Parameters:
   NotifyLambdaArn:
     Type: String
 
-  Echo10ConstructionLambdaArn:
+  MetadataConstructionLambdaArn:
     Type: String
 
 Outputs:
@@ -30,7 +30,7 @@ Resources:
   CmrActivity:
     Type: AWS::StepFunctions::Activity
     Properties:
-      Name: !Sub "${Name}-echo10-to-cmr"
+      Name: !Sub "${Name}-metadata-to-cmr"
 
   Role:
     Type: AWS::IAM::Role
@@ -54,7 +54,7 @@ Resources:
             - !Ref VerifyLambdaArn
             - !Ref IngestLambdaArn
             - !Ref NotifyLambdaArn
-            - !Ref Echo10ConstructionLambdaArn
+            - !Ref MetadataConstructionLambdaArn
 
   StepFunction:
     Type: AWS::StepFunctions::StateMachine
@@ -65,6 +65,6 @@ Resources:
       DefinitionSubstitutions:
         VerifyLambdaArn: !Ref VerifyLambdaArn
         IngestLambdaArn: !Ref IngestLambdaArn
-        Echo10ConstructionLambdaArn: !Ref Echo10ConstructionLambdaArn
+        MetadataConstructionLambdaArn: !Ref MetadataConstructionLambdaArn
         CmrActivity: !Ref CmrActivity
         NotifyLambdaArn: !Ref NotifyLambdaArn
