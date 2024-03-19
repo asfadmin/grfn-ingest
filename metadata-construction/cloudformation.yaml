@@ -79,7 +79,7 @@ Resources:
                 "browse_path": "${BrowseBaseUrl}"
               }
             }
-      Handler: echo10_construction.lambda_handler
+      Handler: metadata_construction.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
       Runtime: python3.8

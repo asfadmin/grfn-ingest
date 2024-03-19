@@ -114,8 +114,8 @@ def render_granule_metadata(sds_metadata, config) -> dict:
     }
 
 
-def create_granule_echo10_in_s3(inputs, config):
-    log.info('Creating echo10 file for %s', inputs['Product']['Key'])
+def create_granule_metadata_in_s3(inputs, config):
+    log.info('Creating metadata file for %s', inputs['Product']['Key'])
     sds_metadata = get_sds_metadata(inputs['Metadata'])
     umm_json = render_granule_metadata(sds_metadata, config)
     output_location = {
@@ -128,5 +128,5 @@ def create_granule_echo10_in_s3(inputs, config):
 
 
 def lambda_handler(event, context):
-    output = create_granule_echo10_in_s3(event, CONFIG)
+    output = create_granule_metadata_in_s3(event, CONFIG)
     return output

@@ -1,6 +1,6 @@
-ECHO10_CONSTRUCTION = ${PWD}/echo10-construction/src/
+METADATA_CONSTRUCTION = ${PWD}/metadata-construction/src/
 VERIFY = ${PWD}/verify/src/
-export PYTHONPATH = ${ECHO10_CONSTRUCTION}:${VERIFY}
+export PYTHONPATH = ${METADATA_CONSTRUCTION}:${VERIFY}
 export CONFIG = "{}"
 
 test_file ?= tests/

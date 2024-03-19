@@ -76,7 +76,7 @@ Resources:
         VerifyLambdaArn: !GetAtt VerifyStack.Outputs.LambdaArn
         NotifyLambdaArn: !GetAtt NotifyStack.Outputs.LambdaArn
         IngestLambdaArn: !GetAtt IngestStack.Outputs.LambdaArn
-        Echo10ConstructionLambdaArn: !GetAtt Echo10ConstructionStack.Outputs.LambdaArn
+        MetadataConstructionLambdaArn: !GetAtt MetadataConstructionStack.Outputs.LambdaArn
       TemplateURL: step-function/cloudformation.yaml
 
   InvokeStack:
@@ -96,17 +96,17 @@ Resources:
         Name: !Sub "${AWS::StackName}-verify"
       TemplateURL: verify/cloudformation.yaml
 
-  Echo10ConstructionStack:
+  MetadataConstructionStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Name: !Sub "${AWS::StackName}-echo10-construction"
+        Name: !Sub "${AWS::StackName}-metadata-construction"
         PrivateBucket: !Ref PrivateBucket
         PublicBucket: !Ref PublicBucket
         AuxBucket: !Ref AuxBucket
         DistributionBaseUrl: !Ref DistributionBaseUrl
         BrowseBaseUrl: !Ref BrowseBaseUrl
-      TemplateURL: echo10-construction/cloudformation.yaml
+      TemplateURL: metadata-construction/cloudformation.yaml
 
   CmrTokenStack:
     Type: AWS::CloudFormation::Stack
