@@ -15,9 +15,9 @@ data.
 * **step-function:** A step function defining the workflow to ingest a single GRFN data product.
 * **verify:** A Lambda function that validates the received message as well as the files and metadata in the source S3 bucket.
 * **ingest:** A Lambda function that copies product files from the source S3 bucket to the output S3 buckets.
-* **echo10-construction:** A Lambda function that generates an ECHO 10 XML metadata file for a particular product.
+* **metadata-construction:** A Lambda function that generates an ECHO 10 XML metadata file for a particular product.
 * **cmr-token** A Lambda function that generates an access token for the CMR ingest API.
-* **echo10-to-cmr:** A scheduled Lambda function that submits ECHO 10 XML metadata files to CMR.
+* **metadata-to-cmr:** A scheduled Lambda function that submits ECHO 10 XML metadata files to CMR.
 * **notify:** A Lambda function that sends ingest success/failure messages to the SNS response topic.
 
 # Top Level Inputs and Outputs

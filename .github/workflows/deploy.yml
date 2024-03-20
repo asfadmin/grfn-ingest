@@ -57,8 +57,8 @@ jobs:
           python -m pip install -r requirements-verify.txt -t verify/src/
           python -m pip install -r requirements-ingest.txt -t ingest/src/
           python -m pip install -r requirements-notify.txt -t notify/src/
-          python -m pip install -r requirements-echo10-to-cmr.txt -t echo10-to-cmr/src/
-          python -m pip install -r requirements-echo10-construction.txt -t echo10-construction/src/
+          python -m pip install -r requirements-metadata-to-cmr.txt -t metadata-to-cmr/src/
+          python -m pip install -r requirements-metadata-construction.txt -t metadata-construction/src/
           # crytography on AWS Lambda requires manylinux2014 per https://github.com/ASFHyP3/hyp3/issues/1190
           python -m pip install -r requirements-cmr-token.txt --platform manylinux2014_x86_64 --only-binary=:all: -t cmr-token/src/
       - name: package and deploy
