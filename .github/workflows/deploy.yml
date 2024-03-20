@@ -5,6 +5,7 @@ on:
     branches:
       - prod
       - test
+      - dev
 
 jobs:
   deploy:
