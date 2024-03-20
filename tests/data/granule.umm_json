@@ -132,9 +132,9 @@
             "Date": "2024-03-02T22:12:36.000Z",
             "Type": "Update"
         }
-    ]
-    "Platforms": {[
+    ],
+    "Platforms": [
             "Sentinel-1A",
-            "Sentinel-1A"]
-    }
+            "Sentinel-1A"
+            ]
 }
