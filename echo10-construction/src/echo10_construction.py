@@ -111,7 +111,18 @@ def render_granule_metadata(sds_metadata, config) -> dict:
                 'Type': 'Update',
             },
         ],
-        "Platforms": sds_metadata['metadata']['platform']
+        "Platforms": sds_metadata['metadata']['platform'],
+        "OrbitDirectionTypeEnum": sds_metadata['metadata']['orbit_direction'][0].upper(),
+        "InputGranules": sds_metadata['metadata']['reference_scenes'] + sds_metadata['metadata']['secondary_scenes'],
+        "AdditionalAttributes": {
+            "ASCENDING_DESCENDING": sds_metadata['metadata']['orbit_direction'],
+            "BEAM_MODE":  sds_metadata['metadata']['beam_mode'],
+            "POLARIZATION":  sds_metadata['metadata']['polarization'],
+            "PERPENDICULAR_BASELINE":  sds_metadata['metadata']['perpendicular_baseline'],
+            "VERSION":  sds_metadata['metadata']['version'],
+            "FRAME_NUMBER": sds_metadata['metadata']['frame_number'],
+            "TEMPORAL_BASELINE_DAYS":  sds_metadata['metadata']['temporal_baseline_days']
+        }
     }
 
 
