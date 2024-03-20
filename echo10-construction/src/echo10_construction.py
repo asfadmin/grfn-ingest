@@ -111,10 +111,9 @@ def render_granule_metadata(sds_metadata, config) -> dict:
                 'Type': 'Update',
             },
         ],
-        "Platforms":
-            {
-                "items": {sds_metadata['metadata']['platform']}
-            }
+        "Platforms": {
+            sds_metadata['metadata']['platform']
+        }
     }
 
 

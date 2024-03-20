@@ -133,4 +133,8 @@
             "Type": "Update"
         }
     ]
+    "Platforms": {[
+            "Sentinel-1A",
+            "Sentinel-1A"]
+    }
 }
