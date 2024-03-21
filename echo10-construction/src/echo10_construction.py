@@ -126,8 +126,7 @@ def render_granule_metadata(sds_metadata, config) -> dict:
             {"ShortName": platform} for platform in set(sds_metadata['metadata']['platform'])
         ],
         "OrbitCalculatedSpatialDomains": [
-            {"OrbitNumber": sds_metadata['metadata']['orbit_number'][0]},
-            {"OrbitNumber": sds_metadata['metadata']['orbit_number'][1]}
+            {"OrbitNumber: orbit} for orbit in sds_metadata['metadata']['orbit_number]
         ],
         "InputGranules": sds_metadata['metadata']['reference_scenes'] + sds_metadata['metadata']['secondary_scenes'],
         "AdditionalAttributes": [
