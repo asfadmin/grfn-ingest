@@ -143,13 +143,13 @@
                       "S1A_IW_SLC__1SDV_20240107T032622_20240107T032650_051995_06487A_6B83",
                       "S1A_IW_SLC__1SDV_20240107T032648_20240107T032715_051995_06487A_DBAE"
                       ],
-    "AdditionalAttributes": {
-            "ASCENDING_DESCENDING": "descending",
-            "BEAM_MODE":  "IW",
-            "POLARIZATION":  "VV",
-            "PERPENDICULAR_BASELINE": 56.0596,
-            "VERSION":  "3.0.0",
-            "FRAME_NUMBER": 19116,
-            "TEMPORAL_BASELINE_DAYS": 36
-            }
+    "AdditionalAttributes": [
+            {"Name": "ASCENDING_DESCENDING", "Values": ["descending"]},
+            {"Name": "BEAM_MODE",  "Values": ["IW"]},
+            {"Name": "POLARIZATION", "Values": ["VV"]},
+            {"Name": "PERPENDICULAR_BASELINE", "Values": [56.0596]},
+            {"Name": "VERSION", "Values": ["3.0.0"]},
+            {"Name": "FRAME_NUMBER", "Values": [19116]},
+            {"Name": "TEMPORAL_BASELINE_DAYS", "Values": [36]}
+            ]
 }

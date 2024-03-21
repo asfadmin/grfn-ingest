@@ -114,15 +114,15 @@ def render_granule_metadata(sds_metadata, config) -> dict:
         "Platforms": sds_metadata['metadata']['platform'],
         "OrbitDirectionTypeEnum": sds_metadata['metadata']['orbit_direction'][0].upper(),
         "InputGranules": sds_metadata['metadata']['reference_scenes'] + sds_metadata['metadata']['secondary_scenes'],
-        "AdditionalAttributes": {
-            "ASCENDING_DESCENDING": sds_metadata['metadata']['orbit_direction'],
-            "BEAM_MODE":  sds_metadata['metadata']['beam_mode'],
-            "POLARIZATION":  sds_metadata['metadata']['polarization'],
-            "PERPENDICULAR_BASELINE":  sds_metadata['metadata']['perpendicular_baseline'],
-            "VERSION":  sds_metadata['metadata']['version'],
-            "FRAME_NUMBER": sds_metadata['metadata']['frame_number'],
-            "TEMPORAL_BASELINE_DAYS":  sds_metadata['metadata']['temporal_baseline_days']
-        }
+        "AdditionalAttributes": [
+            {"Name": "ASCENDING_DESCENDING", "Values": [sds_metadata['metadata']['orbit_direction']]},
+            {"Name": "BEAM_MODE",  "Values": [sds_metadata['metadata']['beam_mode']]},
+            {"Name": "POLARIZATION", "Values": [sds_metadata['metadata']['polarization']]},
+            {"Name": "PERPENDICULAR_BASELINE", "Values": [sds_metadata['metadata']['perpendicular_baseline']]},
+            {"Name": "VERSION", "Values": [sds_metadata['metadata']['version']]},
+            {"Name": "FRAME_NUMBER", "Values": [sds_metadata['metadata']['frame_number']]},
+            {"Name": "TEMPORAL_BASELINE_DAYS", "Values": [sds_metadata['metadata']['temporal_baseline_days']]}
+        ]
     }
 
 
