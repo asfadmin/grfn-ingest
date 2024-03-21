@@ -135,9 +135,10 @@
     ],
     "DataGranule": {
         "ArchiveAndDistributionInformation": [
-            "Name": "S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.nc",
-            "SizeInBytes": 123,
-            "Format": "netCDF"
+            {
+                "Name": "S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.nc",
+                "SizeInBytes": 123
+            }
         ],
         "DayNightFlag": "Unspecified",
         "ProductionDateTime": "2024-03-02T15:10:21.482183Z"
