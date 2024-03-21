@@ -133,10 +133,21 @@
             "Type": "Update"
         }
     ],
-    "Platforms": [
-            "Sentinel-1A",
-            "Sentinel-1A"
-            ],
+        "Platforms": [
+          {
+            "ShortName": "SENTINEL-1A",
+            "Instruments": [
+              {
+                "ShortName": "SENTINEL-1A C-Band SAR",
+                "ComposedOf": [
+                  {
+                    "ShortName": "IW"
+                  }
+                ]
+              }
+            ]
+          }
+  ],
     "OrbitDirectionTypeEnum": "D",
     "InputGranules": ["S1A_IW_SLC__1SDV_20240212T032621_20240212T032649_052520_065A36_7976",
                       "S1A_IW_SLC__1SDV_20240212T032646_20240212T032714_052520_065A36_4F51",

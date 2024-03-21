@@ -4,6 +4,7 @@ from datetime import datetime
 from logging import getLogger
 
 import boto3
+import numpy as np
 
 log = getLogger()
 log.setLevel('INFO')
@@ -54,6 +55,26 @@ def format_polygon(polygon):
         coordinates.append({"Latitude": lat, "Longitude": long})
     return coordinates
 
+
+def format_platforms(metadata):
+    platforms = []
+    for platform in np.unique(metadata['platform']):
+        platforms.append(
+                {
+                    "ShortName": platform.upper(),
+                    "Instruments": [
+                        {
+                            "ShortName": f"{platform.upper()} C-Band SAR",
+                            "ComposedOf": [
+                                {
+                                    "ShortName": metadata["beam_mode"]
+                                }
+                            ]
+                        }
+                    ]
+                }
+        )
+        return platforms
 
 def render_granule_metadata(sds_metadata, config) -> dict:
     granule_ur = sds_metadata['label']
@@ -111,12 +132,12 @@ def render_granule_metadata(sds_metadata, config) -> dict:
                 'Type': 'Update',
             },
         ],
-        "Platforms": sds_metadata['metadata']['platform'],
+        "Platforms": format_platforms(sds_metadata['metadata']),
         "OrbitDirectionTypeEnum": sds_metadata['metadata']['orbit_direction'][0].upper(),
         "InputGranules": sds_metadata['metadata']['reference_scenes'] + sds_metadata['metadata']['secondary_scenes'],
         "AdditionalAttributes": [
             {"Name": "ASCENDING_DESCENDING", "Values": [sds_metadata['metadata']['orbit_direction']]},
-            {"Name": "BEAM_MODE",  "Values": [sds_metadata['metadata']['beam_mode']]},
+            {"Name": "BEAM_MODE", "Values": [sds_metadata['metadata']['beam_mode']]},
             {"Name": "POLARIZATION", "Values": [sds_metadata['metadata']['polarization']]},
             {"Name": "PERPENDICULAR_BASELINE", "Values": [sds_metadata['metadata']['perpendicular_baseline']]},
             {"Name": "VERSION", "Values": [sds_metadata['metadata']['version']]},
