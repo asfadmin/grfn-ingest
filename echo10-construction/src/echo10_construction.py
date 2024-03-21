@@ -55,17 +55,6 @@ def format_polygon(polygon):
     return coordinates
 
 
-def format_platforms(metadata):
-    platforms = []
-    for platform in set(metadata['platform']):
-        platforms.append(
-            {
-                "ShortName": platform
-            }
-        )
-    return platforms
-
-
 def render_granule_metadata(sds_metadata, config) -> dict:
     granule_ur = sds_metadata['label']
     download_url = config['granule_data']['download_path']
@@ -126,7 +115,7 @@ def render_granule_metadata(sds_metadata, config) -> dict:
             {"ShortName": platform} for platform in set(sds_metadata['metadata']['platform'])
         ],
         "OrbitCalculatedSpatialDomains": [
-            {"OrbitNumber: orbit} for orbit in sds_metadata['metadata']['orbit_number]
+            {"OrbitNumber": orbit} for orbit in sds_metadata['metadata']['orbit_number']
         ],
         "InputGranules": sds_metadata['metadata']['reference_scenes'] + sds_metadata['metadata']['secondary_scenes'],
         "AdditionalAttributes": [
