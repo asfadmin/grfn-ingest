@@ -4,7 +4,6 @@ from datetime import datetime
 from logging import getLogger
 
 import boto3
-import numpy as np
 
 log = getLogger()
 log.setLevel('INFO')
@@ -58,7 +57,7 @@ def format_polygon(polygon):
 
 def format_platforms(metadata):
     platforms = []
-    for platform in np.unique(metadata['platform']):
+    for platform in set(metadata['platform']):
         platforms.append(
                 {
                     "ShortName": platform.upper(),
