@@ -122,7 +122,9 @@ def render_granule_metadata(sds_metadata, config) -> dict:
                 'Type': 'Update',
             },
         ],
-        "Platforms": format_platforms(sds_metadata['metadata']),
+        "Platforms": [
+            {"ShortName": platform} for platform in set(sds_metadata['metadata']['platform'])
+        ],
         "OrbitCalculatedSpatialDomains": [
             {"OrbitNumber": sds_metadata['metadata']['orbit_number'][0]},
             {"OrbitNumber": sds_metadata['metadata']['orbit_number'][1]}
