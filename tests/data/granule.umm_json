@@ -134,19 +134,9 @@
         }
     ],
         "Platforms": [
-          {
-            "ShortName": "SENTINEL-1A",
-            "Instruments": [
-              {
-                "ShortName": "SENTINEL-1A C-Band SAR",
-                "ComposedOf": [
-                  {
-                    "ShortName": "IW"
-                  }
-                ]
-              }
-            ]
-          }
+        {
+          "ShortName": "Sentinel-1A"
+        }
   ],
     "OrbitCalculatedSpatialDomains": [
         {"OrbitNumber": 52520},
