@@ -45,7 +45,6 @@
     "metadata": {
       "type": "object",
       "required": [
-        "ogr_bbox",
         "reference_scenes",
         "secondary_scenes",
         "sensing_start",
@@ -54,22 +53,13 @@
         "platform",
         "beam_mode",
         "orbit_direction",
-        "dataset_type",
-        "product_type",
         "polarization",
-        "look_direction",
         "track_number",
-        "perpendicular_baseline"
+        "perpendicular_baseline",
+        "temporal_baseline_days",
+        "frame_number"
       ],
       "properties": {
-        "ogr_bbox": {
-          "type": "array",
-          "minItems": 4,
-          "maxItems": 4,
-          "items": {
-            "#ref": "#/definitions/coordinate"
-          }
-        },
         "reference_scenes": {
           "$ref": "#/definitions/granule_list"
         },
@@ -106,19 +96,9 @@
           "type": "string",
           "enum": ["ascending", "descending"]
         },
-        "dataset_type": {
-          "type": "string"
-        },
-        "product_type": {
-          "type": "string"
-        },
         "polarization": {
           "type": "string",
           "enum": ["VV", "HH", "VV+VH", "HH+HV"]
-        },
-        "look_direction": {
-          "type": "string",
-          "enum": ["right", "left"]
         },
         "track_number": {
           "type": "integer",
