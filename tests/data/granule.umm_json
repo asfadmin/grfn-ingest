@@ -137,7 +137,7 @@
         "ArchiveAndDistributionInformation": [
             {
                 "Name": "S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.nc",
-                "SizeInBytes": 123
+                "SizeInBytes": 456
             }
         ],
         "DayNightFlag": "Unspecified",

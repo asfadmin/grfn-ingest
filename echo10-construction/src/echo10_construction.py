@@ -55,7 +55,7 @@ def format_polygon(polygon):
     return coordinates
 
 
-def render_granule_metadata(sds_metadata, config) -> dict:
+def render_granule_metadata(sds_metadata, config, products) -> dict:
     granule_ur = sds_metadata['label']
     download_url = config['granule_data']['download_path']
     browse_url = config['granule_data']['browse_path']
@@ -111,6 +111,16 @@ def render_granule_metadata(sds_metadata, config) -> dict:
                 'Type': 'Update',
             },
         ],
+        "DataGranule": {
+            "ArchiveAndDistributionInformation": [
+                {
+                    "Name": products['Key'],
+                    "SizeInBytes": get_s3_file_size(products)
+                }
+            ],
+            "DayNightFlag": "Unspecified",
+            "ProductionDateTime": sds_metadata['creation_timestamp']
+        },
         "Platforms": [
             {"ShortName": platform} for platform in set(sds_metadata['metadata']['platform'])
         ],
@@ -133,7 +143,7 @@ def render_granule_metadata(sds_metadata, config) -> dict:
 def create_granule_echo10_in_s3(inputs, config):
     log.info('Creating echo10 file for %s', inputs['Product']['Key'])
     sds_metadata = get_sds_metadata(inputs['Metadata'])
-    umm_json = render_granule_metadata(sds_metadata, config)
+    umm_json = render_granule_metadata(sds_metadata, config, inputs['Product'])
     output_location = {
         'bucket': config['output_bucket'],
         'key': umm_json['GranuleUR'] + '.umm_json',
