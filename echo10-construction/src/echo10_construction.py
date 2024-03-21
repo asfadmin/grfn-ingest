@@ -63,7 +63,7 @@ def format_platforms(metadata):
                 "ShortName": platform
             }
         )
-        return platforms
+    return platforms
 
 
 def render_granule_metadata(sds_metadata, config) -> dict:
