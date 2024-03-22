@@ -122,7 +122,7 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
             "ProductionDateTime": sds_metadata['creation_timestamp']
         },
         "Platforms": [
-            {"ShortName": platform} for platform in set(sds_metadata['metadata']['platform'])
+            {"ShortName": platform} for platform in sorted(set(sds_metadata['metadata']['platform']))
         ],
         "OrbitCalculatedSpatialDomains": [
             {"OrbitNumber": orbit} for orbit in sds_metadata['metadata']['orbit_number']
