@@ -64,7 +64,7 @@ def test_create_granule_metadata_in_s3(test_data_dir, inputs, config, mocker):
 
     metadata_s3_object = {
         'bucket': 'ingest-test-aux',
-        'key': 'S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.umm_json',
+        'key': 'S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.umm.json',
     }
 
     assert metadata_construction.create_granule_metadata_in_s3(inputs, config) == metadata_s3_object
@@ -72,6 +72,6 @@ def test_create_granule_metadata_in_s3(test_data_dir, inputs, config, mocker):
     assert metadata_construction.upload_content_to_s3.mock_calls == [
         unittest.mock.call(
             metadata_s3_object,
-            json.dumps(json.loads((test_data_dir / 'granule.umm_json').read_text()), sort_keys=True),
+            json.dumps(json.loads((test_data_dir / 'granule.umm.json').read_text()), sort_keys=True),
         ),
     ]
