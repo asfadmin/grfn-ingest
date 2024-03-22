@@ -35,7 +35,7 @@
       "Type": "Task",
       "Resource": "${IngestLambdaArn}",
       "ResultPath": "$.IngestResults",
-      "Next": "Echo10Construction",
+      "Next": "MetadataConstruction",
       "Retry": [
         {
           "ErrorEquals": [
@@ -53,12 +53,12 @@
         }
       ]
     },
-    "Echo10Construction": {
+    "MetadataConstruction": {
       "Type": "Task",
-      "Resource": "${Echo10ConstructionLambdaArn}",
+      "Resource": "${MetadataConstructionLambdaArn}",
       "InputPath": "$.IngestResults",
       "ResultPath": "$.ConstructionResults",
-      "Next": "Echo10ToCMR",
+      "Next": "MetadataToCMR",
       "Retry": [
         {
           "ErrorEquals": [
@@ -76,7 +76,7 @@
         }
       ]
     },
-    "Echo10ToCMR": {
+    "MetadataToCMR": {
       "Type": "Task",
       "Resource": "${CmrActivity}",
       "TimeoutSeconds": 30,
