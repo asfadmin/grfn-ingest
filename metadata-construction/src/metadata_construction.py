@@ -55,11 +55,6 @@ def format_polygon(polygon):
     return coordinates
 
 
-def add_weather_model(sds_metadata):
-    if sds_metadata['metadata'].get('weather_model'):
-        return {"Name": "WEATHER_MODEL", "Values": sds_metadata['metadata']['weather_model']}
-
-
 def render_granule_metadata(sds_metadata, config, product) -> dict:
     granule_ur = sds_metadata['label']
     download_url = config['granule_data']['download_path']
