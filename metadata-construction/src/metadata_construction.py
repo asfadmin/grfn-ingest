@@ -135,6 +135,7 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
             {"Name": "PERPENDICULAR_BASELINE", "Values": [str(sds_metadata['metadata']['perpendicular_baseline'])]},
             {"Name": "VERSION", "Values": [sds_metadata['metadata']['version']]},
             {"Name": "FRAME_NUMBER", "Values": [str(sds_metadata['metadata']['frame_number'])]},
+            {"Name": "PATH_NUMBER", "Values": [str(sds_metadata['metadata']['track_number'])]},
             {"Name": "TEMPORAL_BASELINE_DAYS", "Values": [str(sds_metadata['metadata']['temporal_baseline_days'])]}
         ]
     }

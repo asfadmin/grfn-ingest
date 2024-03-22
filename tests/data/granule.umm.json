@@ -200,6 +200,12 @@
       ]
     },
     {
+      "Name": "PATH_NUMBER",
+      "Values": [
+        "123"
+      ]
+    },
+    {
       "Name": "TEMPORAL_BASELINE_DAYS",
       "Values": [
         "36"
