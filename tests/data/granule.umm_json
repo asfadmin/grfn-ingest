@@ -164,6 +164,7 @@
             {"Name": "PERPENDICULAR_BASELINE", "Values": ["56.0596"]},
             {"Name": "VERSION", "Values": ["3.0.0"]},
             {"Name": "FRAME_NUMBER", "Values": ["19116"]},
+            {"Name": "PATH_NUMBER", "Values": ["123"]},
             {"Name": "TEMPORAL_BASELINE_DAYS", "Values": ["36"]}
             ]
 }
