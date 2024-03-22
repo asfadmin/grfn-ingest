@@ -55,7 +55,7 @@ def format_polygon(polygon):
     return coordinates
 
 
-def render_granule_metadata(sds_metadata, config, products) -> dict:
+def render_granule_metadata(sds_metadata, config, product) -> dict:
     granule_ur = sds_metadata['label']
     download_url = config['granule_data']['download_path']
     browse_url = config['granule_data']['browse_path']
@@ -114,8 +114,8 @@ def render_granule_metadata(sds_metadata, config, products) -> dict:
         "DataGranule": {
             "ArchiveAndDistributionInformation": [
                 {
-                    "Name": products['Key'],
-                    "SizeInBytes": get_s3_file_size(products)
+                    "Name": product['Key'],
+                    "SizeInBytes": get_s3_file_size(product)
                 }
             ],
             "DayNightFlag": "Unspecified",
