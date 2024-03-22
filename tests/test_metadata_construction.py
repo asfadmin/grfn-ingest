@@ -60,6 +60,7 @@ def test_create_granule_metadata_in_s3(test_data_dir, inputs, config, mocker):
 
     sds_metadata =json.loads((test_data_dir / 'sds_metadata.json').read_text())
     mocker.patch('metadata_construction.get_sds_metadata', return_value=sds_metadata)
+    mocker.patch('metadata_construction.get_s3_file_size', return_value=456)
 
     metadata_s3_object = {
         'bucket': 'ingest-test-aux',
