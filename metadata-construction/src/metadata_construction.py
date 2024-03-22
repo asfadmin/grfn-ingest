@@ -55,7 +55,7 @@ def format_polygon(polygon):
     return coordinates
 
 
-def render_granule_metadata(sds_metadata, config, product) -> dict:
+def render_granule_metadata(sds_metadata, config, product, browse) -> dict:
     granule_ur = sds_metadata['label']
     download_url = config['granule_data']['download_path']
     browse_url = config['granule_data']['browse_path']
@@ -74,11 +74,11 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
         },
         'RelatedUrls': [
             {
-                'URL': f'{download_url}/{granule_ur}.nc',
+                'URL': f'{download_url}/{product["Key"]}',
                 'Type': 'GET DATA',
             },
             {
-                'URL': f'{browse_url}/{granule_ur}.png',
+                'URL': f'{browse_url}/{browse["Key"]}',
                 'Type': 'GET RELATED VISUALIZATION',
             },
         ],
@@ -114,7 +114,7 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
         "DataGranule": {
             "ArchiveAndDistributionInformation": [
                 {
-                    "Name": product['Key'],
+                    "Name": os.path.basename(product['Key']),
                     "SizeInBytes": get_s3_file_size(product)
                 }
             ],
@@ -150,7 +150,7 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
 def create_granule_metadata_in_s3(inputs, config):
     log.info('Creating metadata file for %s', inputs['Product']['Key'])
     sds_metadata = get_sds_metadata(inputs['Metadata'])
-    umm_json = render_granule_metadata(sds_metadata, config, inputs['Product'])
+    umm_json = render_granule_metadata(sds_metadata, config, inputs['Product'], inputs['Browse'])
     output_location = {
         'bucket': config['output_bucket'],
         'key': umm_json['GranuleUR'] + '.umm.json',

@@ -63,7 +63,7 @@
   "DataGranule": {
     "ArchiveAndDistributionInformation": [
       {
-        "Name": "product/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.nc",
+        "Name": "S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.nc",
         "SizeInBytes": 789
       }
     ],
@@ -111,11 +111,11 @@
   "RelatedUrls": [
     {
       "Type": "GET DATA",
-      "URL": "https://download-path.asf.alaska.edu/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.nc"
+      "URL": "https://download-path.asf.alaska.edu/product/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.nc"
     },
     {
       "Type": "GET RELATED VISUALIZATION",
-      "URL": "https://browse-path.asf.alaska.edu/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.png"
+      "URL": "https://browse-path.asf.alaska.edu/browse/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.png"
     }
   ],
   "SpatialExtent": {
