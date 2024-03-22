@@ -47,6 +47,13 @@
       "Values": [
         "36"
       ]
+    },
+    {
+      "Name": "WEATHER_MODEL",
+      "Values": [
+        "HRRR",
+        "HRES"
+      ]
     }
   ],
   "CollectionReference": {

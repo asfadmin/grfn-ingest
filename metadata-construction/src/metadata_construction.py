@@ -61,7 +61,7 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
     browse_url = config['granule_data']['browse_path']
     polygon = format_polygon(sds_metadata['location']['coordinates'][0])
 
-    return {
+    umm = {
         'MetadataSpecification': {
             'URL': 'https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5',
             'Name': 'UMM-G',
@@ -139,6 +139,12 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
             {"Name": "TEMPORAL_BASELINE_DAYS", "Values": [str(sds_metadata['metadata']['temporal_baseline_days'])]}
         ]
     }
+
+    if 'weather_model' in sds_metadata['metadata']:
+        umm['AdditionalAttributes'].append({"Name": "WEATHER_MODEL",
+                                            "Values": sds_metadata['metadata']['weather_model']})
+
+    return umm
 
 
 def create_granule_metadata_in_s3(inputs, config):

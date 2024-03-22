@@ -146,8 +146,8 @@
     "perpendicular_baseline": 57.4856,
     "frame_number": 2747,
     "weather_model": [
-      "HRES",
-      "HRRR"
+      "HRRR",
+      "HRES"
     ]
   }
 }
