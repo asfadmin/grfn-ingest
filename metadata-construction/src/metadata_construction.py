@@ -146,7 +146,7 @@ def create_granule_metadata_in_s3(inputs, config):
     umm_json = render_granule_metadata(sds_metadata, config, inputs['Product'])
     output_location = {
         'bucket': config['output_bucket'],
-        'key': umm_json['GranuleUR'] + '.umm_json',
+        'key': umm_json['GranuleUR'] + '.umm.json',
     }
     upload_content_to_s3(output_location, json.dumps(umm_json, sort_keys=True))
 
