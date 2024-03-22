@@ -11,12 +11,6 @@ def test_data_dir():
 
 
 @pytest.fixture
-def inputs(test_data_dir):
-    with open(f'{test_data_dir}/inputs.json') as f:
-        return json.load(f)
-
-
-@pytest.fixture
 def config(test_data_dir):
     with open(f'{test_data_dir}/config.json') as f:
         return json.load(f)

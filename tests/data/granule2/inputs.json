@@ -1,0 +1,14 @@
+{
+  "Browse": {
+    "Bucket": "browse-bucket",
+    "Key": "browse/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.png"
+  },
+  "Metadata": {
+    "Bucket": "metadata-bucket",
+    "Key": "metadata/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.json"
+  },
+  "Product": {
+    "Bucket": "product-bucket",
+    "Key": "product/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.nc"
+  }
+}
