@@ -140,9 +140,9 @@ def render_granule_metadata(sds_metadata, config, product) -> dict:
         ]
     }
 
-    if sds_metadata['metadata'].get('weather_model'):
+    if 'weather_model' in sds_metadata['metadata']:
         umm['AdditionalAttributes'].append({"Name": "WEATHER_MODEL",
-                                            "Values": sds_metadata['metadata'].get('weather_model')})
+                                            "Values": sds_metadata['metadata']['weather_model']})
 
     return umm
 
