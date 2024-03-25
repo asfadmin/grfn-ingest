@@ -5,7 +5,6 @@ on:
     branches:
       - prod
       - test
-      - dev
 
 jobs:
   deploy:
@@ -30,15 +29,6 @@ jobs:
             cmr_base_url: https://cmr.uat.earthdata.nasa.gov
             cmr_provider: ASF
             deploy_ref: refs/heads/test
-
-          - environment: ingest-dev
-            private_bucket: grfn-content-dev
-            public_bucket: grfn-public-dev
-            distribution_base_url: https://grfn-test.asf.alaska.edu/door/download
-            browse_base_url: https://grfn-public-test.asf.alaska.edu
-            cmr_base_url: https://cmr.uat.earthdata.nasa.gov
-            cmr_provider: ASF
-            deploy_ref: refs/heads/dev
 
     environment:
       name: ${{ matrix.environment }}

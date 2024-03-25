@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [PEP 440](https://www.python.org/dev/peps/pep-0440/)
 and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.2]
+## [2.0.0]
+This release supports publishing v3 GUNW products to production CMR. CMR metadata has been significantly revised to reflect the current state of these products, align with other recently developed ASF CMR collections, and better support ASF search tooling.
+
 ### Changed
-- `echo10_construction.py` is updated to support the latest version of GUNW products.
+- Granules are now published to the `ARIA_S1_GUNW` collection in CMR instead of the `SENTINEL-1_INTERFEROGRAMS` collection.
+- Granules are now published using the UMM-G json metadata format instead of the ECHO 10 xml format.
+- Granule metadata content has been significantly revised.
+- `perpendicular_baseline`, `temporal_baseline_days`, and `frame_number` are now required fields in the SDS metadata file instead of being optional.
+### Removed
+- Ingest of v2 GUNW products is no longer supported.
+- Virtual geotiff products are no longer published to CMR.
 
 ## [1.2.1]
 ### Changed
