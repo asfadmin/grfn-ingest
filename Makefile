@@ -5,4 +5,4 @@ export CONFIG = "{}"
 
 test_file ?= tests/
 pytest:
-	pytest -vv $(test_file)
+	pytest $(test_file)
