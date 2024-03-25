@@ -1,0 +1,7 @@
+{
+  "output_bucket": "output-bucket",
+  "granule_data": {
+    "download_path": "https://download-path.asf.alaska.edu",
+    "browse_path": "https://browse-path.asf.alaska.edu"
+  }
+}

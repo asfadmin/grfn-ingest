@@ -17,7 +17,6 @@ jobs:
             public_bucket: grfn-public-prod
             distribution_base_url: https://grfn.asf.alaska.edu/door/download
             browse_base_url: https://grfn-public-prod.asf.alaska.edu
-            reformat_api_url: https://services.asf.alaska.edu/geospatial/reformat
             cmr_base_url: https://cmr.earthdata.nasa.gov
             cmr_provider: ASF
             deploy_ref: refs/heads/prod
@@ -27,7 +26,6 @@ jobs:
             public_bucket: grfn-public-test
             distribution_base_url: https://grfn-test.asf.alaska.edu/door/download
             browse_base_url: https://grfn-public-test.asf.alaska.edu
-            reformat_api_url: https://services-test.asf.alaska.edu/geospatial/reformat
             cmr_base_url: https://cmr.uat.earthdata.nasa.gov
             cmr_provider: ASF
             deploy_ref: refs/heads/test
@@ -57,8 +55,8 @@ jobs:
           python -m pip install -r requirements-verify.txt -t verify/src/
           python -m pip install -r requirements-ingest.txt -t ingest/src/
           python -m pip install -r requirements-notify.txt -t notify/src/
-          python -m pip install -r requirements-echo10-to-cmr.txt -t echo10-to-cmr/src/
-          python -m pip install -r requirements-echo10-construction.txt -t echo10-construction/src/
+          python -m pip install -r requirements-metadata-to-cmr.txt -t metadata-to-cmr/src/
+          python -m pip install -r requirements-metadata-construction.txt -t metadata-construction/src/
           # crytography on AWS Lambda requires manylinux2014 per https://github.com/ASFHyP3/hyp3/issues/1190
           python -m pip install -r requirements-cmr-token.txt --platform manylinux2014_x86_64 --only-binary=:all: -t cmr-token/src/
       - name: package and deploy
@@ -80,7 +78,6 @@ jobs:
                 PublicBucket='${{ matrix.public_bucket }}' \
                 DistributionBaseUrl='${{ matrix.distribution_base_url }}' \
                 BrowseBaseUrl='${{ matrix.browse_base_url }}' \
-                ReformatApiUrl='${{ matrix.reformat_api_url }}' \
                 DefaultResponseTopicArn='${{ secrets.DEFAULT_RESPONSE_TOPIC_ARN }}' \
                 DefaultResponseTopicRegion='${{ secrets.DEFAULT_RESPONSE_TOPIC_REGION }}' \
                 SdsAccountNumber='${{ secrets.SDS_ACCOUNT_NUMBER }}' \

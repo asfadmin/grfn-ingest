@@ -1,0 +1,229 @@
+{
+  "AdditionalAttributes": [
+    {
+      "Name": "ASCENDING_DESCENDING",
+      "Values": [
+        "ascending"
+      ]
+    },
+    {
+      "Name": "BEAM_MODE",
+      "Values": [
+        "IW"
+      ]
+    },
+    {
+      "Name": "POLARIZATION",
+      "Values": [
+        "VV"
+      ]
+    },
+    {
+      "Name": "PERPENDICULAR_BASELINE",
+      "Values": [
+        "57.4856"
+      ]
+    },
+    {
+      "Name": "VERSION",
+      "Values": [
+        "3.0.1"
+      ]
+    },
+    {
+      "Name": "FRAME_NUMBER",
+      "Values": [
+        "2747"
+      ]
+    },
+    {
+      "Name": "PATH_NUMBER",
+      "Values": [
+        "18"
+      ]
+    },
+    {
+      "Name": "TEMPORAL_BASELINE_DAYS",
+      "Values": [
+        "36"
+      ]
+    },
+    {
+      "Name": "WEATHER_MODEL",
+      "Values": [
+        "HRRR",
+        "HRES"
+      ]
+    }
+  ],
+  "CollectionReference": {
+    "ShortName": "ARIA_S1_GUNW",
+    "Version": "1"
+  },
+  "DataGranule": {
+    "ArchiveAndDistributionInformation": [
+      {
+        "Name": "S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.nc",
+        "SizeInBytes": 789
+      }
+    ],
+    "DayNightFlag": "Unspecified",
+    "ProductionDateTime": "2024-03-22T08:06:38.607757Z"
+  },
+  "GranuleUR": "S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1",
+  "InputGranules": [
+    "S1A_IW_SLC__1SDV_20230329T232719_20230329T232746_047865_05C06B_C11E",
+    "S1A_IW_SLC__1SDV_20230329T232744_20230329T232812_047865_05C06B_9386",
+    "S1B_IW_SLC__1SDV_20230221T232719_20230221T232745_047340_05AEAE_8D7B",
+    "S1B_IW_SLC__1SDV_20230221T232743_20230221T232811_047340_05AEAE_981D"
+  ],
+  "MetadataSpecification": {
+    "Name": "UMM-G",
+    "URL": "https://cdn.earthdata.nasa.gov/umm/granule/v1.6.5",
+    "Version": "1.6.5"
+  },
+  "OrbitCalculatedSpatialDomains": [
+    {
+      "OrbitNumber": 47865
+    },
+    {
+      "OrbitNumber": 47340
+    }
+  ],
+  "Platforms": [
+    {
+      "ShortName": "Sentinel-1A"
+    },
+    {
+      "ShortName": "Sentinel-1B"
+    }
+  ],
+  "ProviderDates": [
+    {
+      "Date": "2024-03-22T10:08:43.000Z",
+      "Type": "Insert"
+    },
+    {
+      "Date": "2024-03-22T10:08:43.000Z",
+      "Type": "Update"
+    }
+  ],
+  "RelatedUrls": [
+    {
+      "Type": "GET DATA",
+      "URL": "https://download-path.asf.alaska.edu/product/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.nc"
+    },
+    {
+      "Type": "GET RELATED VISUALIZATION",
+      "URL": "https://browse-path.asf.alaska.edu/browse/S1-GUNW-A-R-018-tops-20230329_20230221-232745-00072W_00038S-PP-1cfc-v3_0_1.png"
+    }
+  ],
+  "SpatialExtent": {
+    "HorizontalSpatialDomain": {
+      "Geometry": {
+        "GPolygons": [
+          {
+            "Boundary": {
+              "Points": [
+                {
+                  "Latitude": -37.43845557709951,
+                  "Longitude": -71.088154343761
+                },
+                {
+                  "Latitude": -37.63130067836205,
+                  "Longitude": -71.0206855689116
+                },
+                {
+                  "Latitude": -37.42417895379595,
+                  "Longitude": -70.10626591506461
+                },
+                {
+                  "Latitude": -37.68484259237643,
+                  "Longitude": -70.01098485276503
+                },
+                {
+                  "Latitude": -37.56568446679363,
+                  "Longitude": -69.5019096895951
+                },
+                {
+                  "Latitude": -37.459393330218404,
+                  "Longitude": -69.0566394230276
+                },
+                {
+                  "Latitude": -37.56703501124253,
+                  "Longitude": -69.01547889360272
+                },
+                {
+                  "Latitude": -37.35564963855437,
+                  "Longitude": -68.1507159694866
+                },
+                {
+                  "Latitude": -36.68760628849636,
+                  "Longitude": -68.41109313506928
+                },
+                {
+                  "Latitude": -36.019089312074684,
+                  "Longitude": -68.66685734409843
+                },
+                {
+                  "Latitude": -36.020073879356936,
+                  "Longitude": -68.6716811133144
+                },
+                {
+                  "Latitude": -35.857617424181015,
+                  "Longitude": -68.73316196920756
+                },
+                {
+                  "Latitude": -36.0649728442111,
+                  "Longitude": -69.54802532449655
+                },
+                {
+                  "Latitude": -35.79751453349513,
+                  "Longitude": -69.64590714657756
+                },
+                {
+                  "Latitude": -35.91297819237887,
+                  "Longitude": -70.11270706640265
+                },
+                {
+                  "Latitude": -36.02551493608475,
+                  "Longitude": -70.57702608897159
+                },
+                {
+                  "Latitude": -35.90917281361428,
+                  "Longitude": -70.61807585428566
+                },
+                {
+                  "Latitude": -36.015520679295875,
+                  "Longitude": -71.06311893454271
+                },
+                {
+                  "Latitude": -36.12858809256168,
+                  "Longitude": -71.54597172064202
+                },
+                {
+                  "Latitude": -36.649663452218704,
+                  "Longitude": -71.369602980597
+                },
+                {
+                  "Latitude": -36.647882653620094,
+                  "Longitude": -71.36054301106373
+                },
+                {
+                  "Latitude": -37.43845557709951,
+                  "Longitude": -71.088154343761
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "TemporalExtent": {
+    "RangeDateTime": {
+      "BeginningDateTime": "2023-03-29T23:27:19.000000Z",
+      "EndingDateTime": "2023-03-29T23:28:12.000000Z"
+    }
+  }
+}

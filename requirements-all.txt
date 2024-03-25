@@ -1,6 +1,6 @@
 -r requirements-cmr-token.txt
--r requirements-echo10-construction.txt
--r requirements-echo10-to-cmr.txt
+-r requirements-metadata-construction.txt
+-r requirements-metadata-to-cmr.txt
 -r requirements-ingest.txt
 -r requirements-invoke.txt
 -r requirements-notify.txt
