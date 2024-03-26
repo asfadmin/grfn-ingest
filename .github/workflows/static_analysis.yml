@@ -17,7 +17,7 @@ jobs:
       - run: |
           python -m pip install --upgrade pip
           python -m pip install flake8 flake8-import-order flake8-builtins  # FIXME add flake8-blind-except
-      - run: flake8 --max-line-length=120 --import-order-style=pycharm --statistics --application-import-names echo10_construction verify
+      - run: flake8 --max-line-length=120 --import-order-style=pycharm --statistics --application-import-names metadata_construction verify
 
   cfn-lint:
     runs-on: ubuntu-latest

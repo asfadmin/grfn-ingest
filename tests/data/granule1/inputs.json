@@ -1,0 +1,14 @@
+{
+  "Product": {
+    "Bucket": "grfn-content-test",
+    "Key": "S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.nc"
+  },
+  "Metadata": {
+    "Bucket": "ingest-test-aux",
+    "Key": "S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.json"
+  },
+  "Browse": {
+    "Bucket": "grfn-public-test",
+    "Key": "S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0.png"
+  }
+}
