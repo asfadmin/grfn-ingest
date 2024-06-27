@@ -78,5 +78,5 @@ Resources:
       Handler: ingest.lambda_handler
       MemorySize: 128
       Role: !GetAtt Role.Arn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 180
