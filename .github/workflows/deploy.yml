@@ -6,6 +6,8 @@ on:
       - prod
       - test
 
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -44,7 +46,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: 3.12
 
       - name: install dependencies
         if: github.ref == matrix.deploy_ref
