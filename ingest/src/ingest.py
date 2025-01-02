@@ -51,7 +51,7 @@ def lambda_handler(event, context):
         'Browse': {
             'Bucket': config['browse_bucket'],
             'Key': browse_output_key,
-        }
+        },
     }
     log.info('Done processing %s', event['ProductName'])
     return output
