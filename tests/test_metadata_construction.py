@@ -19,7 +19,7 @@ def test_get_file_content_from_s3(s3_stubber):
     s3_stubber.add_response(
         method='get_object',
         expected_params={'Bucket': 'myBucket', 'Key': 'myKey'},
-        service_response={'Body': io.StringIO('myContent')}
+        service_response={'Body': io.StringIO('myContent')},
     )
     assert metadata_construction.get_file_content_from_s3('myBucket', 'myKey') == 'myContent'
 
@@ -32,10 +32,7 @@ def test_write_to_file(tmp_path):
 
 
 def test_get_s3_file_size(s3_stubber):
-    obj = {
-        'Bucket': 'myBucket',
-        'Key': 'myKey'
-    }
+    obj = {'Bucket': 'myBucket', 'Key': 'myKey'}
     s3_stubber.add_response(method='head_object', expected_params=obj, service_response={'ContentLength': 123})
     assert metadata_construction.get_s3_file_size(obj) == 123
 
@@ -43,7 +40,7 @@ def test_get_s3_file_size(s3_stubber):
 def test_get_sds_metadata(test_data_dir, s3_stubber):
     obj = {
         'Bucket': 'ingest-test-aux',
-        'Key': 'S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0'
+        'Key': 'S1-GUNW-D-R-123-tops-20240212_20240107-032647-00038E_00036N-PP-2e78-v3_0_0',
     }
 
     sds_metadata_file = test_data_dir / 'granule1' / 'sds_metadata.json'
@@ -55,7 +52,7 @@ def test_get_sds_metadata(test_data_dir, s3_stubber):
 
 
 def test_create_granule_metadata_in_s3_g1(test_data_dir, mocker):
-    sds_metadata =json.loads((test_data_dir / 'granule1'/ 'sds_metadata.json').read_text())
+    sds_metadata = json.loads((test_data_dir / 'granule1' / 'sds_metadata.json').read_text())
     inputs = json.loads((test_data_dir / 'granule1' / 'inputs.json').read_text())
     config = json.loads((test_data_dir / 'granule1' / 'config.json').read_text())
 
@@ -80,7 +77,7 @@ def test_create_granule_metadata_in_s3_g1(test_data_dir, mocker):
 
 
 def test_create_granule_metadata_in_s3_g2(test_data_dir, mocker):
-    sds_metadata =json.loads((test_data_dir / 'granule2'/ 'sds_metadata.json').read_text())
+    sds_metadata = json.loads((test_data_dir / 'granule2' / 'sds_metadata.json').read_text())
     inputs = json.loads((test_data_dir / 'granule2' / 'inputs.json').read_text())
     config = json.loads((test_data_dir / 'granule2' / 'config.json').read_text())
 
