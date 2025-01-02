@@ -5,6 +5,7 @@ from os import getenv
 import boto3
 from botocore.client import Config
 from botocore.exceptions import ClientError
+
 from cmr import get_session, process_task
 
 
@@ -44,8 +45,11 @@ def daemon_loop(config, get_remaining_time_in_millis_fcn):
     sfn_client = get_sfn_client(config['sfn_connect_timeout'])
     while True:
         if get_remaining_time_in_millis_fcn() < config['max_task_time_in_millis']:
-            log.info('Remaining time %s less than max task time %s.  Exiting.', get_remaining_time_in_millis_fcn(),
-                     config['max_task_time_in_millis'])
+            log.info(
+                'Remaining time %s less than max task time %s.  Exiting.',
+                get_remaining_time_in_millis_fcn(),
+                config['max_task_time_in_millis'],
+            )
             break
 
         task = get_task(sfn_client, config['activity'])

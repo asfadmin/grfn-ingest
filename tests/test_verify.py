@@ -17,7 +17,7 @@ def test_get_file_content_from_s3(s3_stubber):
     s3_stubber.add_response(
         method='get_object',
         expected_params={'Bucket': 'myBucket', 'Key': 'myKey'},
-        service_response={'Body': io.StringIO('myContent')}
+        service_response={'Body': io.StringIO('myContent')},
     )
     assert verify.get_file_content_from_s3('myBucket', 'myKey') == 'myContent'
 

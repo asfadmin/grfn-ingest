@@ -6,6 +6,7 @@ from logging import getLogger
 import boto3
 import requests_pkcs12
 
+
 log = getLogger()
 log.setLevel('INFO')
 s3 = boto3.client('s3')

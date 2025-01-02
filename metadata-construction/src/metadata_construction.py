@@ -5,6 +5,7 @@ from logging import getLogger
 
 import boto3
 
+
 log = getLogger()
 log.setLevel('INFO')
 CONFIG = json.loads(os.getenv('CONFIG'))
@@ -51,7 +52,7 @@ def get_sds_metadata(obj):
 def format_polygon(polygon):
     coordinates = []
     for long, lat in reversed(polygon):
-        coordinates.append({"Latitude": lat, "Longitude": long})
+        coordinates.append({'Latitude': lat, 'Longitude': long})
     return coordinates
 
 
@@ -111,38 +112,32 @@ def render_granule_metadata(sds_metadata, config, product, browse) -> dict:
                 'Type': 'Update',
             },
         ],
-        "DataGranule": {
-            "ArchiveAndDistributionInformation": [
-                {
-                    "Name": os.path.basename(product['Key']),
-                    "SizeInBytes": get_s3_file_size(product)
-                }
+        'DataGranule': {
+            'ArchiveAndDistributionInformation': [
+                {'Name': os.path.basename(product['Key']), 'SizeInBytes': get_s3_file_size(product)}
             ],
-            "DayNightFlag": "Unspecified",
-            "ProductionDateTime": sds_metadata['creation_timestamp']
+            'DayNightFlag': 'Unspecified',
+            'ProductionDateTime': sds_metadata['creation_timestamp'],
         },
-        "Platforms": [
-            {"ShortName": platform} for platform in sorted(set(sds_metadata['metadata']['platform']))
+        'Platforms': [{'ShortName': platform} for platform in sorted(set(sds_metadata['metadata']['platform']))],
+        'OrbitCalculatedSpatialDomains': [{'OrbitNumber': orbit} for orbit in sds_metadata['metadata']['orbit_number']],
+        'InputGranules': sds_metadata['metadata']['reference_scenes'] + sds_metadata['metadata']['secondary_scenes'],
+        'AdditionalAttributes': [
+            {'Name': 'ASCENDING_DESCENDING', 'Values': [sds_metadata['metadata']['orbit_direction']]},
+            {'Name': 'BEAM_MODE', 'Values': [sds_metadata['metadata']['beam_mode']]},
+            {'Name': 'POLARIZATION', 'Values': [sds_metadata['metadata']['polarization']]},
+            {'Name': 'PERPENDICULAR_BASELINE', 'Values': [str(sds_metadata['metadata']['perpendicular_baseline'])]},
+            {'Name': 'VERSION', 'Values': [sds_metadata['metadata']['version']]},
+            {'Name': 'FRAME_NUMBER', 'Values': [str(sds_metadata['metadata']['frame_number'])]},
+            {'Name': 'PATH_NUMBER', 'Values': [str(sds_metadata['metadata']['track_number'])]},
+            {'Name': 'TEMPORAL_BASELINE_DAYS', 'Values': [str(sds_metadata['metadata']['temporal_baseline_days'])]},
         ],
-        "OrbitCalculatedSpatialDomains": [
-            {"OrbitNumber": orbit} for orbit in sds_metadata['metadata']['orbit_number']
-        ],
-        "InputGranules": sds_metadata['metadata']['reference_scenes'] + sds_metadata['metadata']['secondary_scenes'],
-        "AdditionalAttributes": [
-            {"Name": "ASCENDING_DESCENDING", "Values": [sds_metadata['metadata']['orbit_direction']]},
-            {"Name": "BEAM_MODE", "Values": [sds_metadata['metadata']['beam_mode']]},
-            {"Name": "POLARIZATION", "Values": [sds_metadata['metadata']['polarization']]},
-            {"Name": "PERPENDICULAR_BASELINE", "Values": [str(sds_metadata['metadata']['perpendicular_baseline'])]},
-            {"Name": "VERSION", "Values": [sds_metadata['metadata']['version']]},
-            {"Name": "FRAME_NUMBER", "Values": [str(sds_metadata['metadata']['frame_number'])]},
-            {"Name": "PATH_NUMBER", "Values": [str(sds_metadata['metadata']['track_number'])]},
-            {"Name": "TEMPORAL_BASELINE_DAYS", "Values": [str(sds_metadata['metadata']['temporal_baseline_days'])]}
-        ]
     }
 
     if 'weather_model' in sds_metadata['metadata']:
-        umm['AdditionalAttributes'].append({"Name": "WEATHER_MODEL",
-                                            "Values": sds_metadata['metadata']['weather_model']})
+        umm['AdditionalAttributes'].append(
+            {'Name': 'WEATHER_MODEL', 'Values': sds_metadata['metadata']['weather_model']}
+        )
 
     return umm
 

@@ -35,7 +35,7 @@ def get_file_content_from_s3(bucket, key):
 
 
 def get_json_from_file(filename):
-    with open(filename, 'r') as f:
+    with open(filename) as f:
         content = f.read()
     return json.loads(content)
 

@@ -39,8 +39,9 @@ def invoke_ingest(config):
             log.warning('Processed %s of %s messages.  Exiting.', messages_processed, config['max_messages_to_process'])
             break
 
-        messages = queue.receive_messages(MaxNumberOfMessages=config['max_messages_per_receive'],
-                                          WaitTimeSeconds=config['wait_time_in_seconds'])
+        messages = queue.receive_messages(
+            MaxNumberOfMessages=config['max_messages_per_receive'], WaitTimeSeconds=config['wait_time_in_seconds']
+        )
         if not messages:
             log.info('No messages found.  Exiting.')
             break
