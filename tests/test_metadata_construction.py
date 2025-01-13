@@ -68,7 +68,7 @@ def test_create_granule_metadata_in_s3_g1(test_data_dir, mocker):
 
     assert metadata_construction.create_granule_metadata_in_s3(inputs, config) == metadata_s3_object
 
-    assert metadata_construction.upload_content_to_s3.mock_calls == [
+    assert metadata_construction.upload_content_to_s3.mock_calls == [  # type: ignore[attr-defined]
         unittest.mock.call(
             metadata_s3_object,
             json.dumps(json.loads((test_data_dir / 'granule1' / 'granule.umm.json').read_text()), sort_keys=True),
@@ -93,7 +93,7 @@ def test_create_granule_metadata_in_s3_g2(test_data_dir, mocker):
 
     assert metadata_construction.create_granule_metadata_in_s3(inputs, config) == metadata_s3_object
 
-    assert metadata_construction.upload_content_to_s3.mock_calls == [
+    assert metadata_construction.upload_content_to_s3.mock_calls == [  # type: ignore[attr-defined]
         unittest.mock.call(
             metadata_s3_object,
             json.dumps(json.loads((test_data_dir / 'granule2' / 'granule.umm.json').read_text()), sort_keys=True),

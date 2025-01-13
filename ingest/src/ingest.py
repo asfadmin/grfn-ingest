@@ -10,7 +10,7 @@ from boto3.s3.transfer import TransferConfig
 log = getLogger()
 log.setLevel('INFO')
 s3 = boto3.resource('s3')
-config = json.loads(os.getenv('CONFIG'))
+config = json.loads(os.environ['CONFIG'])
 
 
 def copy_s3_object(copy_source, dest_bucket, dest_key, transfer_config):

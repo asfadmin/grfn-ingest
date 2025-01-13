@@ -5,7 +5,4 @@ dependencies:
   - python=3.12
   - pip
   - pip:
-    - pytest
-    - boto3
-    - pytest-mock
     - -r requirements-all.txt

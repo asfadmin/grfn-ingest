@@ -1,14 +1,14 @@
 import json
+import os
 from datetime import datetime
 from logging import getLogger
-from os import getenv
 
 import boto3
 
 
 log = getLogger()
 log.setLevel('INFO')
-CONFIG = json.loads(getenv('CONFIG'))
+CONFIG = json.loads(os.environ['CONFIG'])
 
 
 def create_response(event, error_config):
