@@ -8,7 +8,7 @@ import boto3
 
 log = getLogger()
 log.setLevel('INFO')
-CONFIG = json.loads(os.getenv('CONFIG'))
+CONFIG = json.loads(os.environ['CONFIG'])
 
 s3 = boto3.resource('s3')
 
