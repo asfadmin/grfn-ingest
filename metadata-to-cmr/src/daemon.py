@@ -1,6 +1,6 @@
 import json
+import os
 from logging import getLogger
-from os import getenv
 
 import boto3
 from botocore.client import Config
@@ -11,7 +11,7 @@ from cmr import get_session, process_task
 
 log = getLogger()
 log.setLevel('INFO')
-CONFIG = json.loads(getenv('CONFIG'))
+CONFIG = json.loads(os.environ['CONFIG'])
 
 
 def get_sfn_client(connect_timeout):

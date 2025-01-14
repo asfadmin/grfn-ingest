@@ -1,13 +1,13 @@
 import json
+import os
 from logging import getLogger
-from os import getenv
 
 import boto3
 
 
 log = getLogger()
 log.setLevel('INFO')
-CONFIG = json.loads(getenv('CONFIG'))
+CONFIG = json.loads(os.environ['CONFIG'])
 
 sqs = boto3.resource('sqs')
 sfn = boto3.client('stepfunctions')
