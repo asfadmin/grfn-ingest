@@ -11,7 +11,7 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - SNS success/failure responses are no longer sent to the data provider.
     - Removed the `Notify` step of the ingest workflow
     - Removed the `DefaultResponseTopicRegion` and `DefaultResponseTopicArn` cloudformation parameters
-    - The optional `ResponseTopic` parameter in publish messages is still accepted but will be ignored.
+    - The optional `ResponseTopic` parameter in publish messages is still accepted but is now unused.
     - The `DeliveryTime` parameter in publish messages is now optional and unused.
 
 ## [2.0.2]
