@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [PEP 440](https://www.python.org/dev/peps/pep-0440/)
 and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0]
+### Removed
+- SNS success/failure responses are no longer sent to the data provider.
+    - Removed the `Notify` step of the ingest workflow
+    - Removed the `DefaultResponseTopicRegion` and `DefaultResponseTopicArn` cloudformation parameters
+    - The optional `ResponseTopic` parameter in publish messages is still accepted but will be ignored.
+    - The `DeliveryTime` parameter in publish messages is now optional and unused.
+
 ## [2.0.2]
 ### Added
 - Added `mypy` to static analysis workflow.

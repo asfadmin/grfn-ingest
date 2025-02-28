@@ -11,9 +11,6 @@ Parameters:
   IngestLambdaArn:
     Type: String
 
-  NotifyLambdaArn:
-    Type: String
-
   MetadataConstructionLambdaArn:
     Type: String
 
@@ -53,7 +50,6 @@ Resources:
             Resource:
             - !Ref VerifyLambdaArn
             - !Ref IngestLambdaArn
-            - !Ref NotifyLambdaArn
             - !Ref MetadataConstructionLambdaArn
 
   StepFunction:
@@ -67,4 +63,3 @@ Resources:
         IngestLambdaArn: !Ref IngestLambdaArn
         MetadataConstructionLambdaArn: !Ref MetadataConstructionLambdaArn
         CmrActivity: !Ref CmrActivity
-        NotifyLambdaArn: !Ref NotifyLambdaArn

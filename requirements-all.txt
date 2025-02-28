@@ -3,7 +3,6 @@
 -r requirements-metadata-to-cmr.txt
 -r requirements-ingest.txt
 -r requirements-invoke.txt
--r requirements-notify.txt
 -r requirements-verify.txt
 boto3
 pytest
