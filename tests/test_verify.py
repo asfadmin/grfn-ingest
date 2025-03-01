@@ -26,11 +26,11 @@ def test_validate_metadata(test_data_dir, mocker, monkeypatch):
     monkeypatch.chdir('verify/src/')
 
     mocker.patch('verify.get_file_content_from_s3', return_value='{"foo":')
-    with pytest.raises(verify.INVALID_METADATA, match=r'^Expecting value: line 1 column 8 \(char 7\)$'):
+    with pytest.raises(verify.InvalidMetadata, match=r'^Expecting value: line 1 column 8 \(char 7\)$'):
         verify.validate_metadata({'Bucket': None, 'Key': None})
 
     mocker.patch('verify.get_file_content_from_s3', return_value='{"foo": "bar"}')
-    with pytest.raises(verify.INVALID_METADATA, match=r"^'label' is a required property$"):
+    with pytest.raises(verify.InvalidMetadata, match=r"^'label' is a required property$"):
         verify.validate_metadata({'Bucket': None, 'Key': None})
 
     sds_metadata_file = test_data_dir / 'granule1' / 'sds_metadata.json'

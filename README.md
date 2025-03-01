@@ -18,7 +18,6 @@ data.
 * **metadata-construction:** A Lambda function that generates a CMR-compliant metadata file for a particular product.
 * **cmr-token** A Lambda function that generates an access token for the CMR ingest API.
 * **metadata-to-cmr:** A scheduled Lambda function that submits metadata files to CMR.
-* **notify:** A Lambda function that sends ingest success/failure messages to the SNS response topic.
 
 # Top Level Inputs and Outputs
 
@@ -41,7 +40,6 @@ Runtime inputs consist of the following staged files:
 
 ### Product metadata reported to CmrGranuleUrl with these Collection Ids and Granule URs:
 * Sentinel-1 All Interferometric Products (BETA) \<product-name\>-All
-* Success/failure message sent to DefaultResponseTopicArn
 
 # Integration testing
 
