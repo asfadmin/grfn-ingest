@@ -52,7 +52,7 @@ aws --profile grfn sns publish --topic-arn "arn:aws:sns:us-east-1:406893895021:i
 Wait a few minutes for the job to process (you can monitor it in the `ingest-test-jobs` Step Function).
 
 Review the published product in CMR UAT using the following link:
-<https://cmr.uat.earthdata.nasa.gov/search/granules.umm_json?provider=ASF&producer_granule_id=S1-GUNW-A-R-106-tops-20240517_20230429-002707-00093W_00001S-PP-67fa-v3_0_1>
+<https://cmr.uat.earthdata.nasa.gov/search/granules.umm_json?provider=ASF&granule_ur=S1-GUNW-A-R-106-tops-20240517_20230429-002707-00093W_00001S-PP-67fa-v3_0_1>
 
 Re-running a new job with the same `ProductName` field will overwrite the existing records in CMR.
 Re-running the exact same job should only change the `revison-date` and `ProviderDate` fields.
