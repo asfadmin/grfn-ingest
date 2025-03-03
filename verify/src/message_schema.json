@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "required": ["ProductName", "DeliveryTime", "Metadata", "Browse", "Product"],
+  "required": ["ProductName", "Metadata", "Browse", "Product"],
   "additionalProperties": false,
   "properties": {
     "ProductName": {
