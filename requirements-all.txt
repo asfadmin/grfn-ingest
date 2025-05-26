@@ -8,5 +8,5 @@ boto3
 pytest
 pytest-mock
 cfn-lint==1.35.1
-ruff==0.11.10
+ruff==0.11.11
 mypy==1.15.0
